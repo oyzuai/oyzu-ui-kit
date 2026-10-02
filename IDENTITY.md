@@ -41,3 +41,7 @@ Browser checks cover generation, manual overrides, returning to automatic genera
 
 The identifier lives on the right side of the name label row, above the name input. A pencil switches the value to an inline editor in the same position. Enter ends editing without submitting the form; the reset icon resumes generation. Saved identifiers remain selectable in that row with a lock icon. Explanatory text is available to assistive technology and through control titles; only validation errors and collision suggestions expand below the name.
 Editing uses a compact left-aligned input with confirm and cancel controls. Enter confirms valid input and returns to the compact display. Escape or cancel restores the previous identifier and generation mode. Confirming invalid input keeps the editor open.
+
+## Editing saved resources
+
+Saved workspace and connection forms use the same locked identifier row with a copy control and announced clipboard feedback. Copy failure leaves the identifier selectable and displays a manual-copy hint. Save is disabled until trimmed values change. Cancel closes an unchanged form immediately; changed drafts require Keep editing or Discard. Failed operations preserve the draft and immutable identifier. CopyIdentifier owns clipboard feedback; FlowDialog owns pending/error/close behavior; application callbacks own updates and preserve the identifier.

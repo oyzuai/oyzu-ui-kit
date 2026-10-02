@@ -50,13 +50,15 @@ export function ConnectionCard({
           }
           setOpen(next);
         }}
-        dirty={name !== connection.name}
+        dirty={name.trim() !== connection.name}
+        submitDisabled={name.trim() === connection.name}
         submitLabel="Save changes"
         onSubmit={async () => {
           if (name.trim().length < 2) {
             setError("Use at least 2 characters.");
             return;
           }
+          setError(undefined);
           await onRename(name.trim());
           setOpen(false);
         }}
@@ -65,7 +67,10 @@ export function ConnectionCard({
           mode="saved"
           nameLabel="Connection name"
           value={{ name, identifier: connection.identifier }}
-          onNameChange={setName}
+          onNameChange={(next) => {
+            setName(next);
+            setError(undefined);
+          }}
           nameError={error}
         />
       </FlowDialog>

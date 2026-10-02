@@ -1066,3 +1066,23 @@ h3 {
     gap: 2px;
   }
 }
+
+.copy-identifier {
+  position: relative;
+  display: inline-flex;
+}
+.copy-error {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  z-index: 5;
+  width: 210px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: white;
+  color: var(--foreground);
+  box-shadow: 0 3px 14px #06144d18;
+  font-size: 11px;
+  line-height: 1.5;
+}

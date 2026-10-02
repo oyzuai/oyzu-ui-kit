@@ -22,6 +22,7 @@ type FlowDialogProps = {
   submitLabel: string;
   onSubmit: () => Promise<void>;
   onBack?: () => void;
+  submitDisabled?: boolean;
 };
 
 /** Shared editing lifecycle. Callers own validation, values and persistence. */
@@ -36,6 +37,7 @@ export function FlowDialog({
   submitLabel,
   onSubmit,
   onBack,
+  submitDisabled = false,
 }: FlowDialogProps) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
@@ -52,7 +54,7 @@ export function FlowDialog({
   }
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (pending) return;
+    if (pending || submitDisabled) return;
     setError("");
     setPending(true);
     try {
@@ -74,11 +76,7 @@ export function FlowDialog({
         className="flow-dialog"
         showCloseButton={!pending}
         onEscapeKeyDown={(event) => {
-          if (
-            (event.target as HTMLElement).matches(
-              "[data-handles-escape]",
-            )
-          )
+          if ((event.target as HTMLElement).matches("[data-handles-escape]"))
             event.preventDefault();
         }}
       >
@@ -148,7 +146,7 @@ export function FlowDialog({
                     Back
                   </Button>
                 )}
-                <Button type="submit" disabled={pending}>
+                <Button type="submit" disabled={pending || submitDisabled}>
                   {pending && <LoaderCircle className="animate-spin" />}
                   {pending ? "Saving…" : submitLabel}
                 </Button>
@@ -160,4 +158,3 @@ export function FlowDialog({
     </Dialog>
   );
 }
-

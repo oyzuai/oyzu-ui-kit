@@ -278,10 +278,14 @@ export default function App({
                           open={editing}
                           onOpenChange={editOpen}
                           dirty={
-                            draft.name !== workspace.name ||
-                            draft.email !== workspace.email
+                            draft.name.trim() !== workspace.name ||
+                            draft.email.trim() !== workspace.email
                           }
                           submitLabel="Save changes"
+                          submitDisabled={
+                            draft.name.trim() === workspace.name &&
+                            draft.email.trim() === workspace.email
+                          }
                           onSubmit={saveWorkspace}
                         >
                           <IdentityFields

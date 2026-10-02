@@ -1,3 +1,4 @@
+import { CopyIdentifier } from "./copy-identifier";
 import { useId, useRef, useState } from "react";
 import { Check, X, LockKeyhole, Pencil, RotateCcw } from "lucide-react";
 import { TextField } from "./text-field";
@@ -92,7 +93,8 @@ export function IdentityFields(props: IdentityFieldsProps) {
         </button>
       ) : (
         <input
-          className="identifier-input" data-handles-escape={saved ? undefined : true}
+          className="identifier-input"
+          data-handles-escape={saved ? undefined : true}
           aria-label="Identifier"
           value={value.identifier}
           readOnly={saved}
@@ -145,7 +147,10 @@ export function IdentityFields(props: IdentityFieldsProps) {
         </>
       )}
       {saved ? (
-        <LockKeyhole size={11} aria-label="Identifier locked" />
+        <>
+          <LockKeyhole size={11} aria-label="Identifier locked" />
+          <CopyIdentifier key={value.identifier} value={value.identifier} />
+        </>
       ) : (
         !automatic && (
           <button
@@ -214,4 +219,3 @@ export function IdentityFields(props: IdentityFieldsProps) {
     </div>
   );
 }
-
