@@ -1,0 +1,287 @@
+.app-shell {
+  --navigation-width: 248px;
+}
+.app-shell.sidebar-collapsed {
+  --navigation-width: 72px;
+}
+.app-shell > .main-shell {
+  margin-left: var(--navigation-width);
+}
+.navigation-desktop {
+  width: var(--navigation-width);
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 16px 16px;
+  background: #eeefe8;
+  border-right: 1px solid var(--border);
+}
+.navigation-brand-row {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+.navigation-brand {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.navigation-brand img {
+  display: block;
+  height: auto;
+}
+.navigation-workspace {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 20px 8px;
+  margin: 18px 0;
+  border-block: 1px solid var(--border);
+  min-width: 0;
+}
+.navigation-workspace > span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  background: #dfe2d6;
+  font-size: 10px;
+  color: #313a28;
+}
+.navigation-workspace > div {
+  min-width: 0;
+}
+.navigation-workspace strong {
+  display: block;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.navigation-workspace small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted-foreground);
+  margin-top: 3px;
+}
+.navigation-groups {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1;
+  min-height: 0;
+  padding: 4px;
+  margin: 0 -4px;
+}
+.navigation-group {
+  margin-bottom: 16px;
+}
+.navigation-group-toggle {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.navigation-group-toggle > svg {
+  margin-left: auto;
+  transition: transform 0.15s ease;
+}
+.navigation-group-toggle[aria-expanded="false"] > svg {
+  transform: rotate(-90deg);
+}
+.navigation-active-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--primary);
+  border-radius: 50%;
+}
+.navigation-link {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 11px 10px;
+  min-height: 42px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  text-decoration: none;
+}
+.navigation-link svg {
+  flex-shrink: 0;
+}
+.navigation-link:hover {
+  color: var(--foreground);
+  background: #e2e5da;
+}
+.navigation-link[aria-current="page"] {
+  color: white;
+  background: var(--primary);
+}
+.navigation-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  flex-shrink: 0;
+}
+.navigation-collapse {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  min-height: 40px;
+  width: 100%;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.navigation-footer small {
+  display: block;
+  font: 9px monospace;
+  color: var(--muted-foreground);
+  padding: 14px 10px 0;
+}
+.is-collapsed {
+  padding-inline: 12px;
+}
+.is-collapsed .navigation-brand-row {
+  padding: 0 8px;
+}
+.is-collapsed .navigation-workspace {
+  padding: 12px 8px;
+  margin: 14px 0;
+}
+.is-collapsed .navigation-link {
+  justify-content: center;
+  padding-inline: 10px;
+}
+.is-collapsed .navigation-link > span,
+.is-collapsed .navigation-collapse > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.is-collapsed .navigation-collapse {
+  justify-content: center;
+}
+.navigation-rail .navigation-group-toggle {
+  display: none;
+}
+.navigation-rail .navigation-group {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.navigation-mobile-bar {
+  display: none;
+}
+.app-shell .editor-savebar {
+  left: calc(var(--navigation-width) + 3vw);
+}
+#main:focus {
+  outline: none;
+}
+@media (max-width: 760px) {
+  .navigation-desktop {
+    display: none;
+  }
+  .app-shell > .main-shell {
+    margin-left: 0;
+  }
+  .navigation-mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 20px;
+    background: #eeefe8;
+    border-bottom: 1px solid var(--border);
+  }
+  .navigation-menu-button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 44px;
+    padding: 8px;
+    font-size: 12px;
+  }
+  .navigation-mobile-drawer[data-slot="dialog-content"] {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(340px, calc(100vw - 32px));
+    max-width: none;
+    height: 100dvh;
+    max-height: 100dvh;
+    translate: none;
+    transform: none;
+    animation: none;
+    border-radius: 0;
+    background: #eeefe8;
+    padding: 28px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .navigation-mobile-drawer [data-slot="dialog-title"] {
+    font-size: 24px;
+    padding-right: 32px;
+  }
+  .navigation-mobile-drawer [data-slot="dialog-description"] {
+    font-size: 12px;
+  }
+  .navigation-mobile-drawer .navigation-groups {
+    margin-top: 12px;
+  }
+  .navigation-mobile-note {
+    font-size: 10px;
+    color: var(--muted-foreground);
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .navigation-mobile-drawer .navigation-link {
+    min-height: 44px;
+  }
+  .app-shell .editor-savebar {
+    left: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .navigation-group-toggle > svg {
+    transition: none;
+  }
+}
+
+/* Mobile navigation lives in the drawer; keep only page context below the masthead. */
+@media (max-width: 760px) {
+  .navigation-mobile-bar {
+    padding: 12px 20px;
+  }
+  .main-shell > .topbar {
+    min-height: 40px;
+    height: 40px;
+    padding: 0 20px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+  .topbar > .gallery-toggle,
+  .topbar > .account-shortcut,
+  .topbar > [data-slot="badge"] {
+    display: none;
+  }
+  .topbar > div {
+    min-width: 0;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .topbar > div span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

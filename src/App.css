@@ -3,6 +3,7 @@
   --foreground: var(--oyzu-navy);
   --primary: var(--oyzu-deep-blue);
   --primary-foreground: #ffffff;
+  --destructive: #a52c2d;
   --secondary: #f1f5fc;
   --secondary-foreground: var(--oyzu-navy);
   --muted: #f1f5fc;
@@ -951,9 +952,6 @@ h3 {
   color: var(--muted-foreground);
   font-size: 10px;
 }
-.identifier-prefix {
-  flex-shrink: 0;
-}
 .identifier-edit {
   display: inline-flex;
   align-items: center;
@@ -1085,4 +1083,21 @@ h3 {
   box-shadow: 0 3px 14px #06144d18;
   font-size: 11px;
   line-height: 1.5;
+}
+.account-shortcut {
+  font-size: 12px;
+  color: var(--muted-foreground);
+  text-decoration: none;
+}
+.account-shortcut:hover {
+  color: var(--primary);
+}
+a.nav-item {
+  text-decoration: none;
+}
+@media (max-width: 600px) {
+  .topbar {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
 }

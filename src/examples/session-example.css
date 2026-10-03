@@ -1,0 +1,113 @@
+.sidebar-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 4px;
+  text-align: left;
+  min-height: 56px;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+}
+.sidebar-account:hover {
+  background: rgba(6, 20, 77, 0.05);
+}
+.user-monogram {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  background: #06144d;
+  color: white;
+  font-size: 12px;
+  border-radius: 50%;
+}
+.sidebar-account-copy {
+  flex: 1;
+  min-width: 0;
+}
+.sidebar-account-copy strong,
+.sidebar-account-copy small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar-account-copy strong {
+  font-size: 12px;
+}
+.sidebar-account-copy small {
+  font-size: 10px;
+  color: var(--muted-foreground);
+}
+.account-popover {
+  width: 240px;
+  max-width: calc(100vw - 40px);
+  border-radius: 4px;
+  padding: 6px;
+}
+.account-popover strong,
+.account-popover small {
+  display: block;
+}
+.account-popover small {
+  font-weight: 400;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+.account-popover [role="menuitem"] {
+  min-height: 42px;
+}
+.session-page {
+  min-height: 100dvh;
+  background: #f5f4ef;
+  padding: 40px 6vw;
+  display: flex;
+  flex-direction: column;
+  color: #182226;
+}
+.session-content {
+  width: min(100%, 540px);
+  margin: clamp(60px, 12vh, 140px) auto;
+}
+.session-content h1 {
+  font-size: clamp(36px, 6vw, 60px);
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+  margin: 20px 0;
+}
+.session-content > p {
+  margin: 20px 0;
+  line-height: 1.6;
+}
+.session-demo {
+  border-top: 2px solid #182226;
+  border-bottom: 1px solid #b9bdb6;
+  padding: 24px 0;
+  margin: 30px 0;
+}
+.session-demo p {
+  margin: 12px 0 24px;
+}
+.session-demo button {
+  width: 100%;
+  min-height: 44px;
+}
+.session-caption {
+  font-size: 12px;
+  color: #52605f;
+}
+.session-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.session-page footer {
+  margin-top: auto;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+}
+.sidebar-account.compact {
+  justify-content: center;
+}

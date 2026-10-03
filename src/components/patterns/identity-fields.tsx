@@ -1,6 +1,6 @@
 import { CopyIdentifier } from "./copy-identifier";
 import { useId, useRef, useState } from "react";
-import { Check, X, LockKeyhole, Pencil, RotateCcw } from "lucide-react";
+import { Check, X, Pencil, RotateCcw } from "lucide-react";
 import { TextField } from "./text-field";
 import {
   identifierFromName,
@@ -65,9 +65,6 @@ export function IdentityFields(props: IdentityFieldsProps) {
     : "Lowercase letters, numbers, hyphens or underscores; up to 63 characters. Permanent after creation.";
   const accessory = (
     <div className="identifier-inline">
-      <span className="identifier-prefix" title={help}>
-        ID:
-      </span>
       {!saved && !editing ? (
         <button
           type="button"
@@ -148,7 +145,6 @@ export function IdentityFields(props: IdentityFieldsProps) {
       )}
       {saved ? (
         <>
-          <LockKeyhole size={11} aria-label="Identifier locked" />
           <CopyIdentifier key={value.identifier} value={value.identifier} />
         </>
       ) : (

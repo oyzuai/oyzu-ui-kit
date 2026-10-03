@@ -12,6 +12,6 @@ Official identity colors:
 - Deep blue: #0A1DBB
 - Bright blue: #0879FF
 
-The interface uses deep blue for primary actions, navy for primary text, and derived cool neutrals for surfaces. These UI neutrals are provisional design choices, not additional official brand colors. Bright blue is an accent; text/control contrast must be checked for the actual background.
+The interface uses deep blue for primary actions, navy for brand emphasis, charcoal for primary text, and warm neutrals for surfaces. These UI neutrals are provisional design choices, not additional official brand colors. Bright blue is an accent; text/control contrast must be checked for the actual background.
 
 Assets retain their original ownership and license status. Copying them introduces no new license grant. Update copies from the authoritative kit instead of editing logo masters here.

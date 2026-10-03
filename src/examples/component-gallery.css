@@ -1,0 +1,238 @@
+@import "../components/patterns/catalog.css";
+.component-gallery {
+  color: var(--foreground);
+}
+.gallery-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.gallery-jumps a {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 9px 13px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  text-decoration: none;
+}
+.gallery-jumps a:hover {
+  color: var(--oyzu-deep-blue);
+  border-color: var(--oyzu-bright-blue);
+}
+.gallery-section {
+  margin-top: 36px;
+  scroll-margin-top: 24px;
+}
+.gallery-section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 18px;
+}
+.gallery-section-heading > span {
+  font-family: monospace;
+  font-size: 10px;
+  color: var(--oyzu-deep-blue);
+  padding: 4px 6px;
+  background: #eaf0ff;
+  border-radius: 4px;
+}
+.gallery-section-heading h2 {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+.gallery-section-heading p {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.gallery-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  min-width: 0;
+}
+.gallery-demo-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+  font-size: 10px;
+  color: var(--muted-foreground);
+}
+.gallery-demo-options label,
+.gallery-demo-options button {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.gallery-demo-options button {
+  border: 0;
+  padding: 4px 0;
+  background: transparent;
+  color: inherit;
+}
+.gallery-demo-options > span {
+  margin-left: auto;
+}
+.gallery-two-columns,
+.feedback-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.control-form,
+.control-stack {
+  padding: 23px;
+}
+.control-form {
+  display: grid;
+  gap: 19px;
+  align-content: start;
+}
+.mini-heading h3 {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.mini-heading > span {
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.control-form [data-slot="select-trigger"] {
+  width: 100%;
+}
+.control-form textarea {
+  min-height: 95px;
+  font-size: 12px;
+  resize: vertical;
+}
+.optional {
+  font-weight: 400;
+  color: var(--muted-foreground);
+  margin-left: 4px;
+  font-size: 10px;
+}
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+.control-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.button-samples {
+  padding: 25px 0 10px;
+}
+.button-samples > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 13px;
+}
+.button-samples button {
+  font-size: 11px;
+}
+.control-stack [data-slot="accordion-trigger"] {
+  font-size: 12px;
+}
+.control-stack [data-slot="accordion-content"] {
+  font-size: 12px;
+  color: var(--muted-foreground);
+  line-height: 1.8;
+}
+.status-samples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  padding: 23px;
+  margin-bottom: 18px;
+}
+.gallery-section > .feedback-banner {
+  margin-bottom: 12px;
+}
+.state-switcher {
+  padding: 13px 17px;
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.loading-example {
+  max-width: 550px;
+  padding: 30px;
+  margin: auto;
+  display: grid;
+  gap: 18px;
+}
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.error-example {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  max-width: 550px;
+  padding: 32px;
+  margin: auto;
+}
+.error-example .feedback-banner {
+  width: 100%;
+}
+.sidebar .nav-item + .nav-item {
+  margin-top: 6px;
+}
+.sidebar .nav-item:not(.active) {
+  background: transparent;
+  color: var(--muted-foreground);
+}
+.gallery-toggle {
+  margin-left: auto;
+  margin-right: 15px;
+}
+@media (max-width: 1050px) {
+  .gallery-two-columns {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 760px) {
+  .gallery-toggle {
+    margin-right: 0;
+    font-size: 10px;
+  }
+  .topbar > [data-slot="badge"] {
+    display: none;
+  }
+  .control-form,
+  .control-stack {
+    padding: 18px;
+  }
+  .gallery-demo-options > span {
+    margin-left: 0;
+  }
+  .gallery-section-heading p {
+    font-size: 11px;
+  }
+}
+.gallery-notice {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 45;
+  width: min(400px, calc(100vw - 40px));
+  box-shadow: 0 8px 30px #06144d15;
+  border-radius: 8px;
+}

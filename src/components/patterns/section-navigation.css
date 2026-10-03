@@ -1,0 +1,53 @@
+.section-navigation-links {
+  display: grid;
+  gap: 6px;
+}
+.section-navigation-links a {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 9px;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.section-navigation-links a:hover {
+  background: #f0f4ff;
+}
+.section-navigation-links a[aria-current="page"] {
+  color: #0a1dbb;
+  background: #eaf0ff;
+  border-color: #d7e0ff;
+}
+.section-navigation-links svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.section-navigation-links strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 550;
+}
+.section-navigation-links small {
+  display: block;
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 3px;
+}
+.section-navigation-picker {
+  display: none;
+}
+@media (max-width: 760px) {
+  .section-navigation-links {
+    display: none;
+  }
+  .section-navigation-picker {
+    display: block;
+  }
+  .section-navigation-picker > button {
+    width: 100%;
+  }
+}

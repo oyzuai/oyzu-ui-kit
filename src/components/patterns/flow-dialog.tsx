@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, type ReactNode, type RefObject } from "react";
 import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ type FlowDialogProps = {
   onSubmit: () => Promise<void>;
   onBack?: () => void;
   submitDisabled?: boolean;
+  returnFocusRef?: RefObject<HTMLElement | null>;
 };
 
 /** Shared editing lifecycle. Callers own validation, values and persistence. */
@@ -38,6 +39,7 @@ export function FlowDialog({
   onSubmit,
   onBack,
   submitDisabled = false,
+  returnFocusRef,
 }: FlowDialogProps) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
@@ -75,6 +77,12 @@ export function FlowDialog({
       <DialogContent
         className="flow-dialog"
         showCloseButton={!pending}
+        onCloseAutoFocus={(event) => {
+          if (returnFocusRef?.current) {
+            event.preventDefault();
+            returnFocusRef.current.focus();
+          }
+        }}
         onEscapeKeyDown={(event) => {
           if ((event.target as HTMLElement).matches("[data-handles-escape]"))
             event.preventDefault();

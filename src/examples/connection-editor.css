@@ -1,0 +1,92 @@
+.connection-editor {
+  padding-bottom: 100px;
+}
+.connection-editor fieldset {
+  min-width: 0;
+}
+.editor-section {
+  display: grid;
+  gap: 22px;
+  padding: 0 0 32px;
+  margin: 0 0 32px;
+  border-bottom: 1px solid var(--border);
+}
+.editor-section h2 {
+  font-size: 23px;
+  letter-spacing: -0.6px;
+}
+.editor-section h2 span {
+  font: 11px monospace;
+  margin-right: 14px;
+  color: var(--primary);
+}
+.editor-section > p {
+  font-size: 13px;
+  color: var(--muted-foreground);
+  margin-top: -12px;
+}
+.editor-select {
+  display: grid;
+  gap: 10px;
+  font-size: 13px;
+}
+.editor-select select,
+.editor-demo select {
+  background: var(--card);
+  border: 1px solid var(--input);
+  border-radius: 3px;
+  padding: 12px;
+}
+.editor-advanced {
+  text-align: left;
+  color: var(--primary);
+  font-size: 13px;
+  padding: 10px 0;
+}
+.editor-demo {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+  padding-top: 24px;
+  font-size: 12px;
+}
+.editor-savebar {
+  position: fixed;
+  bottom: 16px;
+  left: calc(234px + 3vw);
+  right: 3vw;
+  z-index: 40;
+  background: var(--card);
+  border: 1px solid var(--input);
+  border-top: 2px solid var(--primary);
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: 0 5px 24px #18202418;
+}
+.editor-savebar > span {
+  font-size: 12px;
+}
+.editor-savebar > div {
+  display: flex;
+  gap: 8px;
+}
+.connection-editor > .feedback-banner {
+  margin-bottom: 24px;
+}
+@media (max-width: 760px) {
+  .editor-savebar {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    padding: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .editor-savebar > div {
+    margin-left: auto;
+  }
+}
