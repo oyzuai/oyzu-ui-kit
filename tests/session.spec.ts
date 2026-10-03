@@ -27,6 +27,10 @@ test("profile updates sidebar and logout/login handles retry and reload", async 
   await page
     .getByRole("button", { name: "Continue with demo account" })
     .click();
+  await page.getByRole("button", { name: "Engineering 3 projects" }).click();
+  await page
+    .getByRole("button", { name: "Checkout service Project", exact: true })
+    .click();
   await expect(page.getByLabel("Full name")).toBeVisible();
 });
 test("mobile account menu and signed out screen fit and are accessible", async ({

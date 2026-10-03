@@ -26,7 +26,7 @@
   text-decoration: none;
 }
 .page-example-nav a[aria-current] {
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
 }
 .page-list-toolbar {
   display: flex;
@@ -59,7 +59,7 @@
   display: block;
 }
 .project-title:hover strong {
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
   text-decoration: underline;
 }
 .project-title strong {
@@ -119,7 +119,7 @@
   margin-bottom: 20px;
 }
 .page-text-link {
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
   display: inline-flex;
   gap: 8px;
   align-items: center;
@@ -179,7 +179,7 @@
 }
 .page-rail-note svg {
   flex-shrink: 0;
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
   margin-top: 3px;
 }
 .page-connection {
@@ -372,7 +372,7 @@
   padding: 0 0 18px;
 }
 .project-name-cell .project-title {
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
   text-decoration: underline;
   text-decoration-color: #0a1dbb55;
   text-underline-offset: 3px;

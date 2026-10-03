@@ -1,13 +1,13 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 test("desktop groups, rail, persistence and history", async ({ page }) => {
-  await page.goto("/#pages/members");
+  await page.goto("/#pages/access-library");
   const nav = page.getByRole("navigation", {
     name: "Primary navigation",
     exact: true,
   });
   await expect(
-    nav.getByRole("link", { name: "Members & access" }),
+    nav.getByRole("link", { name: "People & access" }),
   ).toHaveAttribute("aria-current", "page");
   await nav.getByRole("button", { name: "Workspace", exact: true }).click();
   await expect(
@@ -27,14 +27,14 @@ test("desktop groups, rail, persistence and history", async ({ page }) => {
   await expect(page).toHaveURL(/#components$/);
   await page.goBack();
   await expect(
-    nav.getByRole("link", { name: "Members & access" }),
+    nav.getByRole("link", { name: "People & access" }),
   ).toHaveAttribute("aria-current", "page");
   await page.screenshot({ path: "test-results/sidebar-rail.png" });
   await page
     .getByRole("button", { name: "Expand sidebar", exact: true })
     .click();
   await expect(
-    nav.getByRole("link", { name: "Members & access" }),
+    nav.getByRole("link", { name: "People & access" }),
   ).toBeVisible();
   await page.screenshot({ path: "test-results/sidebar-desktop.png" });
 });
@@ -42,7 +42,7 @@ test("mobile drawer dismissal, navigation, focus and resize", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/#pages/members");
+  await page.goto("/#pages/access-library");
   const menu = page.getByRole("button", { name: "Open navigation" });
   await menu.click();
   await expect(page.getByRole("dialog")).toBeVisible();
@@ -53,7 +53,7 @@ test("mobile drawer dismissal, navigation, focus and resize", async ({
     name: "Mobile primary navigation",
   });
   await nav.getByRole("button", { name: "Connections", exact: true }).click();
-  await expect(page).toHaveURL(/#pages\/members$/);
+  await expect(page).toHaveURL(/#pages\/access-library$/);
   await page.screenshot({ path: "test-results/sidebar-mobile.png" });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await nav.getByRole("link", { name: "Account settings" }).click();

@@ -9,7 +9,7 @@ async function menu(
   await page.getByRole("menuitem", { name: action, exact: true }).click();
 }
 test.beforeEach(async ({ page }) => {
-  await page.goto("/#pages/members");
+  await page.goto("/#pages/member-patterns");
 });
 test("member filters and scope drawer describe active and pending access", async ({
   page,

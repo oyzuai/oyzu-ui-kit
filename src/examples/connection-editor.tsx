@@ -1,3 +1,4 @@
+import { DocumentEditor } from "@/components/patterns/document-editor";
 import { useEffect, useRef, useState } from "react";
 import { PageLayout } from "@/components/patterns/page-layout";
 import { IdentityFields } from "@/components/patterns/identity-fields";
@@ -41,7 +42,18 @@ export function ConnectionEditor({
   const [mode, setMode] = useState("normal");
   const [advanced, setAdvanced] = useState(false);
   const form = useRef<HTMLFormElement>(null);
-  const dirty = JSON.stringify(draft) !== JSON.stringify(saved ?? initial);
+  const [sourcePending, setSourcePending] = useState(false);
+  const projectDocument = (v: Draft) => ({
+    name: v.name,
+    identifier: v.identifier,
+    endpoint: v.endpoint,
+    authentication: v.auth,
+    secretReference: v.credential,
+    reviewChanges: v.review,
+    timeoutSeconds: v.timeout,
+  });
+  const dirty =
+    sourcePending || JSON.stringify(draft) !== JSON.stringify(saved ?? initial);
   useEffect(() => {
     onStateChange(dirty, busy);
   }, [dirty, busy, onStateChange]);
@@ -57,7 +69,7 @@ export function ConnectionEditor({
     setNotice("");
   }
   async function save() {
-    if (busy) return;
+    if (busy || sourcePending) return;
     const next: Record<string, string> = {};
     if (draft.name.trim().length < 2) next.name = "Use at least 2 characters.";
     const idError = identifierError(draft.identifier);
@@ -112,6 +124,7 @@ export function ConnectionEditor({
   }
   return (
     <PageLayout
+      variant="entity"
       eyebrow="WORKSPACE / CONNECTIONS"
       title={saved ? "Edit connection" : "Create connection"}
       description="Configure how your workspace connects to a service."
@@ -163,98 +176,137 @@ export function ConnectionEditor({
             Check the highlighted fields before saving.
           </p>
         )}
-        <fieldset disabled={busy}>
-          <section className="editor-section">
-            <h2>
-              <span>01</span> Basics
-            </h2>
-            <p>The name people recognize and the service to connect.</p>
-            {saved ? (
-              <IdentityFields
-                mode="saved"
-                nameLabel="Connection name"
-                value={draft}
-                nameError={errors.name}
-                onNameChange={(name) => update("name", name)}
+        <DocumentEditor
+          value={projectDocument(draft)}
+          saved={saved ? projectDocument(saved) : undefined}
+          disabled={busy}
+          onPendingChange={setSourcePending}
+          validate={(v) => {
+            if (saved && v.identifier !== saved.identifier)
+              throw Error("The saved identifier cannot change.");
+            const issue = identifierError(v.identifier as string);
+            if (issue) throw Error(issue);
+            if ((v.name as string).trim().length < 2)
+              throw Error("Enter a name with at least 2 characters.");
+            const url = new URL(v.endpoint as string);
+            if (url.protocol !== "https:" || url.username || url.password)
+              throw Error("Use HTTPS without embedded credentials.");
+            if (!["managed", "reference"].includes(v.authentication as string))
+              throw Error("Unsupported authentication type.");
+            if (
+              !/^\d+$/.test(v.timeoutSeconds as string) ||
+              Number(v.timeoutSeconds) < 1 ||
+              Number(v.timeoutSeconds) > 120
+            )
+              throw Error("Timeout must be from 1 to 120 seconds.");
+          }}
+          onApply={(v) => {
+            setDraft({
+              name: v.name as string,
+              identifier: v.identifier as string,
+              identifierSource: "custom",
+              endpoint: v.endpoint as string,
+              auth: v.authentication as string,
+              credential: (v.secretReference as string | null) ?? "",
+              review: v.reviewChanges as boolean,
+              timeout: v.timeoutSeconds as string,
+            });
+            setNotice("");
+          }}
+        >
+          <fieldset disabled={busy}>
+            <section className="editor-section">
+              <h2>
+                <span>01</span> Basics
+              </h2>
+              <p>The name people recognize and the service to connect.</p>
+              {saved ? (
+                <IdentityFields
+                  mode="saved"
+                  nameLabel="Connection name"
+                  value={draft}
+                  nameError={errors.name}
+                  onNameChange={(name) => update("name", name)}
+                />
+              ) : (
+                <IdentityFields
+                  mode="create"
+                  nameLabel="Connection name"
+                  value={draft}
+                  nameError={errors.name}
+                  identifierError={errors.identifier}
+                  onChange={(identity) =>
+                    setDraft((previous) => ({ ...previous, ...identity }))
+                  }
+                />
+              )}
+              <TextField
+                label="Service URL"
+                value={draft.endpoint}
+                onChange={(value) => update("endpoint", value)}
+                error={errors.endpoint}
+                placeholder="https://api.example.com"
+                hint="Used only as sample configuration; no request will be sent."
               />
-            ) : (
-              <IdentityFields
-                mode="create"
-                nameLabel="Connection name"
-                value={draft}
-                nameError={errors.name}
-                identifierError={errors.identifier}
-                onChange={(identity) =>
-                  setDraft((previous) => ({ ...previous, ...identity }))
-                }
+            </section>
+            <section className="editor-section">
+              <h2>
+                <span>02</span> Authentication
+              </h2>
+              <p>Choose how this connection would authenticate.</p>
+              <div className="editor-select">
+                <label htmlFor="connection-auth">Authentication method</label>
+                <select
+                  id="connection-auth"
+                  value={draft.auth}
+                  onChange={(event) => update("auth", event.target.value)}
+                >
+                  <option value="managed">Managed identity</option>
+                  <option value="reference">Credential reference</option>
+                </select>
+              </div>
+              {draft.auth === "reference" && (
+                <TextField
+                  label="Credential reference"
+                  value={draft.credential}
+                  onChange={(value) => update("credential", value)}
+                  error={errors.credential}
+                  hint="A reference name, such as source-control-token. Do not enter a secret."
+                />
+              )}
+            </section>
+            <section className="editor-section">
+              <h2>
+                <span>03</span> Behavior
+              </h2>
+              <SettingRow
+                title="Review changes"
+                description="Require review before changes are applied."
+                checked={draft.review}
+                onCheckedChange={(value) => update("review", value)}
               />
-            )}
-            <TextField
-              label="Service URL"
-              value={draft.endpoint}
-              onChange={(value) => update("endpoint", value)}
-              error={errors.endpoint}
-              placeholder="https://api.example.com"
-              hint="Used only as sample configuration; no request will be sent."
-            />
-          </section>
-          <section className="editor-section">
-            <h2>
-              <span>02</span> Authentication
-            </h2>
-            <p>Choose how this connection would authenticate.</p>
-            <div className="editor-select">
-              <label htmlFor="connection-auth">Authentication method</label>
-              <select
-                id="connection-auth"
-                value={draft.auth}
-                onChange={(event) => update("auth", event.target.value)}
+              <button
+                type="button"
+                className="editor-advanced"
+                aria-expanded={advanced}
+                aria-controls="editor-advanced"
+                onClick={() => setAdvanced(!advanced)}
               >
-                <option value="managed">Managed identity</option>
-                <option value="reference">Credential reference</option>
-              </select>
-            </div>
-            {draft.auth === "reference" && (
-              <TextField
-                label="Credential reference"
-                value={draft.credential}
-                onChange={(value) => update("credential", value)}
-                error={errors.credential}
-                hint="A reference name, such as source-control-token. Do not enter a secret."
-              />
-            )}
-          </section>
-          <section className="editor-section">
-            <h2>
-              <span>03</span> Behavior
-            </h2>
-            <SettingRow
-              title="Review changes"
-              description="Require review before changes are applied."
-              checked={draft.review}
-              onCheckedChange={(value) => update("review", value)}
-            />
-            <button
-              type="button"
-              className="editor-advanced"
-              aria-expanded={advanced}
-              aria-controls="editor-advanced"
-              onClick={() => setAdvanced(!advanced)}
-            >
-              {advanced ? "Hide" : "Show"} advanced settings
-            </button>
-            <div id="editor-advanced" hidden={!advanced}>
-              <TextField
-                label="Request timeout (seconds)"
-                inputMode="numeric"
-                value={draft.timeout}
-                onChange={(value) => update("timeout", value)}
-                error={errors.timeout}
-                hint="Between 1 and 120 seconds."
-              />
-            </div>
-          </section>
-        </fieldset>
+                {advanced ? "Hide" : "Show"} advanced settings
+              </button>
+              <div id="editor-advanced" hidden={!advanced}>
+                <TextField
+                  label="Request timeout (seconds)"
+                  inputMode="numeric"
+                  value={draft.timeout}
+                  onChange={(value) => update("timeout", value)}
+                  error={errors.timeout}
+                  hint="Between 1 and 120 seconds."
+                />
+              </div>
+            </section>
+          </fieldset>
+        </DocumentEditor>
         {(dirty || busy) && (
           <div className="editor-savebar">
             <span role="status">
@@ -264,12 +316,12 @@ export function ConnectionEditor({
               <Button
                 type="button"
                 variant="ghost"
-                disabled={busy}
+                disabled={busy || sourcePending}
                 onClick={reset}
               >
                 Cancel changes
               </Button>
-              <Button type="submit" disabled={busy}>
+              <Button type="submit" disabled={busy || sourcePending}>
                 {busy
                   ? "Saving…"
                   : saved

@@ -31,6 +31,7 @@ export type SidebarGroup = {
   }[];
 };
 export function NavigationSidebar({
+  contextWidget,
   accountWidget,
   groups,
   activeId,
@@ -41,6 +42,7 @@ export function NavigationSidebar({
   onCollapsedChange,
   onGroupsChange,
 }: {
+  contextWidget?: (compact: boolean) => ReactNode;
   accountWidget?: (compact: boolean) => ReactNode;
   groups: readonly SidebarGroup[];
   activeId: string;
@@ -183,15 +185,7 @@ export function NavigationSidebar({
         aria-label="Workspace sidebar"
       >
         <div className="navigation-brand-row">{brand(collapsed)}</div>
-        <div className="navigation-workspace">
-          <span aria-hidden="true">AS</span>
-          {!collapsed && (
-            <div>
-              <strong>{workspaceName}</strong>
-              <small>Demo workspace</small>
-            </div>
-          )}
-        </div>
+        {contextWidget?.(collapsed)}
         {links(false)}
         <footer className="navigation-footer">
           {accountWidget?.(collapsed)}
@@ -248,6 +242,7 @@ export function NavigationSidebar({
             <DialogDescription>
               {workspaceName} · Demo workspace
             </DialogDescription>
+            {contextWidget?.(false)}
             {links(true)}
             <div
               onClick={(event) => {

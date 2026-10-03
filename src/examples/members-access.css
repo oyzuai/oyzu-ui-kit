@@ -26,7 +26,7 @@
   min-height: 36px;
 }
 .member-name button {
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
   text-decoration: underline;
   text-underline-offset: 3px;
   text-align: left;
@@ -43,13 +43,13 @@
 }
 .member-status {
   font-size: 11px;
-  color: #235c3b;
-  background: #eaf0e8;
+  color: var(--text-success, #235c3b);
+  background: var(--surface-success, #eaf0e8);
   padding: 4px 7px;
 }
 .member-pending {
-  color: #805010;
-  background: #f5efdf;
+  color: var(--text-warning, #805010);
+  background: var(--surface-warning, #f5efdf);
 }
 .member-resent {
   display: block;

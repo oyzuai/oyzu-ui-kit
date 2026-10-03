@@ -1,7 +1,9 @@
 import {
+  Bot,
   FolderOpen,
   Users,
   Activity,
+  History,
   Settings2,
   Plug,
   SlidersHorizontal,
@@ -15,17 +17,30 @@ export const navigationGroups: SidebarGroup[] = [
     id: "workspace",
     label: "Workspace",
     items: [
+      { id: "automation", label: "Automation identities", href: "#pages/automation", icon: Bot },
+      {
+        id: "access-library",
+        label: "People & access",
+        href: "#pages/access-library",
+        icon: Users,
+      },
+      {
+        id: "access",
+        label: "Access assignments",
+        href: "#pages/access",
+        icon: Users,
+      },
+      {
+        id: "audit",
+        label: "Audit trail",
+        href: "#pages/audit",
+        icon: History,
+      },
       {
         id: "projects",
         label: "Projects",
         href: "#pages/resources",
         icon: FolderOpen,
-      },
-      {
-        id: "members",
-        label: "Members & access",
-        href: "#pages/members",
-        icon: Users,
       },
       {
         id: "activity",
@@ -46,9 +61,21 @@ export const navigationGroups: SidebarGroup[] = [
     label: "Connections",
     items: [
       {
+        id: "oauth",
+        label: "OAuth device flows",
+        href: "#pages/oauth",
+        icon: KeyRound,
+      },
+      {
+        id: "connection-detail",
+        label: "Connection detail",
+        href: "#pages/connection-detail",
+        icon: History,
+      },
+      {
         id: "setup",
         label: "Create connection",
-        href: "#pages/connection-wizard",
+        href: "#pages/connectors",
         icon: Plug,
       },
       {
@@ -91,6 +118,10 @@ export const navigationGroups: SidebarGroup[] = [
   },
 ];
 export function activeNavigation(hash: string) {
+  if (hash === "#pages/automation") return "automation";
+  if (hash.startsWith("#pages/user-groups") || hash.startsWith("#pages/access-library") || hash === "#pages/members") return "access-library";
+  if (hash.startsWith("#pages/access?") || hash === "#pages/access") return "access";
+  if (hash === "#pages/oauth") return "oauth";
   if (hash.startsWith("#account/")) return "account";
   if (
     ["#components", "#resources", "#controls", "#feedback", "#states"].includes(
@@ -98,8 +129,11 @@ export function activeNavigation(hash: string) {
     )
   )
     return "components";
+  if (hash === "#pages/connection-detail") return "connection-detail";
+  if (hash === "#pages/audit") return "audit";
   if (hash === "#pages/members") return "members";
   if (hash === "#pages/activity") return "activity";
+  if (hash.startsWith("#pages/connectors")) return "setup";
   if (hash === "#pages/connection-wizard") return "setup";
   if (hash === "#pages/connection") return "editor";
   if (hash === "#pages/secrets") return "secrets";

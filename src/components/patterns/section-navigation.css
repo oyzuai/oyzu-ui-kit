@@ -16,8 +16,8 @@
   background: #f0f4ff;
 }
 .section-navigation-links a[aria-current="page"] {
-  color: #0a1dbb;
-  background: #eaf0ff;
+  color: var(--text-link, #0a1dbb);
+  background: var(--surface-blue, #eaf0ff);
   border-color: #d7e0ff;
 }
 .section-navigation-links svg {

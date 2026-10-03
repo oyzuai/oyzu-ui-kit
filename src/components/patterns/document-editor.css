@@ -1,0 +1,223 @@
+.document-editor {
+  min-width: 0;
+}
+.document-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding: 0 0 12px;
+  margin-bottom: 20px;
+}
+.document-toolbar [role="group"] {
+  display: flex;
+  gap: 3px;
+}
+.document-toolbar button {
+  padding: 8px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.document-toolbar button[aria-pressed="true"] {
+  background: #06144d;
+  color: white;
+}
+.document-toolbar small,
+.document-hint {
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.document-hint {
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.document-editor .cm-editor {
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.document-apply {
+  margin-top: 16px;
+  padding: 10px 16px;
+  background: var(--primary);
+  color: white;
+  font-size: 12px;
+}
+.document-diff {
+  margin: 20px 0;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  font-size: 12px;
+}
+.document-diff summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.document-diff p {
+  margin: 12px 0;
+}
+.document-diff > div {
+  display: grid;
+  gap: 6px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.document-diff del {
+  background: #fae9e5;
+  color: #982d22;
+  padding: 6px;
+  text-decoration: none;
+}
+.document-diff ins {
+  background: #e5f2e9;
+  color: #17663c;
+  padding: 6px;
+  text-decoration: none;
+}
+@media (max-width: 760px) {
+  .document-toolbar small {
+    display: none;
+  }
+}
+
+.document-discard {
+  margin: 16px 0 0 12px;
+  padding: 10px;
+  font-size: 12px;
+}
+/* YAML workspace: restrained chrome with an ink editing surface. */
+.document-toolbar {
+  margin-bottom: 18px;
+  padding-bottom: 0;
+  align-items: stretch;
+}
+.document-toolbar [role="group"] {
+  gap: 20px;
+}
+.document-toolbar button {
+  padding: 12px 2px;
+  border-bottom: 2px solid transparent;
+  color: var(--muted-foreground);
+}
+.document-toolbar button[aria-pressed="true"] {
+  background: transparent;
+  color: var(--text-link, var(--primary));
+  border-bottom-color: var(--primary);
+}
+.document-toolbar small {
+  align-self: center;
+  font-size: 10px;
+}
+.yaml-filebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: #14233f;
+  color: #e4eaf6;
+  padding: 12px 16px;
+  border: 1px solid #263650;
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+}
+.yaml-filebar > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: 12px monospace;
+}
+.yaml-filebar small {
+  color: #a5b9db;
+  font-size: 10px;
+}
+.yaml-filebar > div > span {
+  color: #8bb8ff;
+}
+.yaml-filebar button {
+  font-size: 11px;
+  padding: 6px 10px;
+  border: 1px solid #597092;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #e4eaf6;
+}
+.yaml-filebar button:hover {
+  background: #263b5b;
+}
+.document-editor .cm-editor {
+  border: 1px solid #263650;
+  border-top: 0;
+  border-bottom: 0;
+  font-size: 13px;
+  background: #101c31;
+  color: #e4eaf6;
+}
+.document-editor .cm-scroller {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  line-height: 1.85;
+}
+.document-editor .cm-content {
+  padding: 18px 0;
+}
+.document-editor .cm-line {
+  padding-left: 18px;
+}
+.document-editor .cm-gutters {
+  background: #101c31;
+  border: 0;
+  color: #8393b0;
+  padding: 18px 8px 18px 4px;
+}
+.document-editor .cm-activeLine,
+.document-editor .cm-activeLineGutter {
+  background: #1a2b46;
+}
+.document-editor .cm-focused {
+  outline: 2px solid #0879ff;
+  outline-offset: -2px;
+}
+.yaml-status {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  background: #14233f;
+  color: #b7c6df;
+  padding: 9px 16px;
+  font: 10px monospace;
+  border: 1px solid #263650;
+  border-radius: 0 0 4px 4px;
+}
+.document-apply {
+  padding: 8px 14px;
+  font-size: 12px;
+  border-radius: 3px;
+}
+.document-discard {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.document-editor .field-error {
+  padding: 12px 14px;
+  margin-top: 12px;
+  border-left: 3px solid #b42318;
+  background: #faece8;
+  white-space: pre-wrap;
+  font: 12px/1.6 monospace;
+}
+@media (max-width: 760px) {
+  .yaml-filebar {
+    padding: 10px;
+  }
+  .yaml-filebar small,
+  .yaml-status > span:last-child {
+    display: none;
+  }
+  .yaml-filebar button {
+    min-height: 36px;
+  }
+  .document-editor .cm-editor {
+    font-size: 12px;
+  }
+}
+.document-editor .cm-gutters {padding:0 8px 0 4px}

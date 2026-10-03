@@ -1,0 +1,169 @@
+html.dark {
+  color-scheme: dark;
+  --surface-base: #11181e;
+  --surface-panel: #192229;
+  --surface-muted: #222e35;
+  --surface-blue: #20334e;
+  --line-subtle: #37454f;
+  --line-strong: #778993;
+  --text-main: #e7ecef;
+  --text-muted: #abb9c2;
+  --surface-success: #193a2d;
+  --surface-danger: #42282a;
+  --surface-warning: #3a3222;
+  --text-success: #91d9b4;
+  --text-danger: #ffa7a0;
+  --text-warning: #ecc585;
+  --background: #11181e;
+  --foreground: #e7ecef;
+  --card: #192229;
+  --card-foreground: #e7ecef;
+  --popover: #192229;
+  --popover-foreground: #e7ecef;
+  --muted: #222e35;
+  --muted-foreground: #abb9c2;
+  --border: #37454f;
+  --input: #778993;
+  --secondary: #222e35;
+  --secondary-foreground: #e7ecef;
+  --accent: #293b4a;
+  --accent-foreground: #e7ecef;
+  --primary: #395bee;
+  --primary-foreground: #fff;
+  --ring: #8faaff;
+  --destructive: #ffa7a0;
+  --sidebar: #192229;
+  --sidebar-foreground: #e7ecef;
+}
+html:not(.dark) {
+  color-scheme: light;
+}
+.appearance-control {
+  position: fixed;
+  bottom: 12px;
+  right: 16px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--popover);
+  color: var(--foreground);
+  box-shadow: 0 2px 12px #0001;
+}
+.appearance-control select {
+  font-size: 12px;
+  min-height: 32px;
+  background: transparent;
+  color: inherit;
+}
+html.dark img[src="/brand/oyzu-full-logo-color.svg"] {
+  content: url("/brand/oyzu-full-logo-reverse.svg");
+}
+html.dark img[src="/brand/oyzu-mark-color.svg"] {
+  content: url("/brand/oyzu-mark-reverse.svg");
+}
+html.dark .authorization-story,
+html.dark .device-code code,
+html.dark .code-slot {
+  color: #e7ecef;
+}
+html.dark .eyebrow,
+html.dark .permission-chevron,
+html.dark .context-trigger,
+html.dark .authorization-requester > svg {
+  color: #9bb6ff;
+}
+html.dark .code-slot.filled {
+  background: #263753;
+}
+html.dark .code-boxes:focus-within .code-slot.active {
+  background: #263753;
+  border-color: #9bb6ff;
+}
+html.dark .authorization-orbit > div {
+  border-color: #11181e;
+}
+html.dark .session-page::before {
+  color: #e7ecef;
+}
+html.dark .nav-item.active {
+  background: #2948c8;
+  color: white;
+}
+html.dark img[src^="/brands/"] {
+  background: #fff;
+  border-radius: 3px;
+  padding: 2px;
+}
+html.dark {
+  --text-link: #9bb6ff;
+}
+html.dark img[src^="/brands/"] {
+  align-self: center;
+  height: 36px;
+  object-fit: contain;
+}
+html.dark .status-pending,
+html.dark .feedback-info {
+  color: #b5c9ff;
+}
+html.dark [data-outcome="Failed"] {
+  color: #ffa7a0;
+}
+
+/* Elevated dark surfaces distinguish dialogs from the underlying workspace. */
+html.dark [data-slot="dialog-content"],
+html.dark [data-slot="alert-dialog-content"] {
+  --background: #28343e;
+  --popover: #28343e;
+  --card: #303e49;
+  --surface-base: #28343e;
+  --surface-panel: #303e49;
+  --surface-muted: #35444f;
+  --muted: #35444f;
+  --secondary: #35444f;
+  --accent: #405362;
+  --border: #52616d;
+  --line-subtle: #52616d;
+  --line-strong: #8497a5;
+  --input: #8497a5;
+  --text-muted: #c0ccd4;
+  --muted-foreground: #c0ccd4;
+  background-color: var(--background);
+  border-color: #52616d;
+  box-shadow: 0 24px 80px #0005, 0 0 0 1px #ffffff0c;
+}
+html.dark .connector-wizard-modal .setup-footer { background: #303e49; }
+html.dark .connection-diagnostics[data-result="success"] header { background: #264839; color: #a5e2bf; }
+html.dark .connection-diagnostics[data-result="failure"] header { background: #543435; color: #ffc0ba; }
+
+/* Wizard: a quiet, continuous surface with a subtly lifted navigation rail. */
+html.dark .connector-wizard-modal[data-slot="dialog-content"] {
+ --background: #292b30; --surface-base: #292b30; --surface-panel: #23252a;
+ --surface-muted: #33363c; --border: #44474f; --line-subtle: #44474f;
+ --input: #676d77; --line-strong: #676d77; --text-muted: #bfc3cc;
+ border: 1px solid #50535c; border-radius: 10px;
+ box-shadow: 0 32px 100px #0007;
+}
+html.dark .connector-wizard-modal .full-page-heading {
+ background: #222938; padding-top: 22px; padding-bottom: 20px;
+ border-bottom: 1px solid #44474f;
+}
+html.dark .connector-wizard-modal .full-page-heading h1 { font-size: 27px; margin-top: 8px; margin-bottom: 8px; }
+html.dark .connector-wizard-modal .full-page-heading::after { opacity: .25; }
+html.dark .connector-wizard-modal .full-page-heading .eyebrow { color: #b7c1d5; letter-spacing: .13em; }
+html.dark .connector-wizard-modal .setup-footer { background: #292b30; border-color: #44474f; }
+html.dark .connector-wizard-modal .setup-progress li { color: #c1c5ce; }
+html.dark .connector-wizard-modal .setup-progress li > span { background: transparent; border-color: #707581; color: #bfc3cc; }
+html.dark .connector-wizard-modal .setup-progress li[aria-current] { color: #e8edff; }
+html.dark .connector-wizard-modal .setup-progress li[aria-current] > span { background: #4566ee; border-color: #6d87ff; color: white; box-shadow: none; }
+html.dark .connector-wizard-modal .connector-selected img { background: #f4f5f7; padding: 5px; border-radius: 7px; height: 34px; width: 34px; }
+html.dark .connector-wizard-modal .setup-step h2 { font-size: 21px; font-weight: 550; }
+html.dark .connector-wizard-modal input:focus { outline-color: #7892ff; }
+@media (min-width: 761px) {
+ html.dark .connector-wizard-modal .full-page { background: linear-gradient(to right, #33363c 0, #33363c 240px, #292b30 240px); }
+ html.dark .connector-wizard-modal .full-page-body { background: transparent; }
+}

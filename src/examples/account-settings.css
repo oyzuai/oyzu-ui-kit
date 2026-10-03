@@ -19,8 +19,8 @@
   place-items: center;
   width: 48px;
   height: 48px;
-  background: #e4ebff;
-  color: #0a1dbb;
+  background: var(--surface-blue, #e4ebff);
+  color: var(--text-link, #0a1dbb);
   border-radius: 50%;
   font-size: 16px;
   font-weight: 600;
@@ -41,7 +41,7 @@
   font-size: 11px;
 }
 .account-content {
-  background: white;
+  background: var(--surface-panel, white);
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
@@ -56,8 +56,8 @@
 .account-section-icon {
   display: grid;
   place-items: center;
-  color: #0a1dbb;
-  background: #eef2ff;
+  color: var(--text-link, #0a1dbb);
+  background: var(--surface-blue, #eef2ff);
   width: 38px;
   height: 38px;
   border-radius: 10px;

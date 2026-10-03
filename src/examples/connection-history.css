@@ -1,0 +1,361 @@
+.history-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.history-identity code {
+  display: block;
+  font-size: 10px;
+  margin-top: 4px;
+  color: var(--muted-foreground);
+}
+.history-identity > span {
+  margin-left: auto;
+  font-size: 12px;
+}
+.history-identity > .history-healthy {
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #24643e;
+  font-size: 11px;
+}
+.history-tabs {
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+  overflow: auto;
+}
+.history-tabs button {
+  padding: 12px 0;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.history-tabs [aria-current] {
+  border-color: var(--primary);
+  color: var(--text-link, var(--primary));
+}
+.history-notice,
+.history-error {
+  padding: 14px 18px;
+  margin: 0 0 24px;
+  font-size: 12px;
+  background: #e8f0e8;
+  border-left: 3px solid #286642;
+}
+.history-error {
+  background: var(--surface-danger, #fae9e5);
+  border-color: #a32b21;
+}
+.history-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(230px, 1fr);
+  gap: 48px;
+}
+.history-overview aside {
+  border-left: 1px solid var(--border);
+  padding-left: 28px;
+}
+.history-overview h2,
+.history-configuration h2,
+.history-git h2,
+.history-compare h2 {
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  margin-bottom: 14px;
+}
+.history-overview p,
+.history-configuration header p,
+.history-git p {
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 18px;
+  color: var(--muted-foreground);
+}
+.history-overview aside h2 {
+  margin-top: 18px;
+}
+.history-overview dl > div,
+.history-git dl > div {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  font-size: 12px;
+}
+.history-overview dt,
+.history-git dt {
+  color: var(--muted-foreground);
+}
+.history-overview dd,
+.history-git dd {
+  overflow-wrap: anywhere;
+}
+.history-overview dl {
+  margin-bottom: 24px;
+}
+.history-overview small {
+  display: block;
+  margin-bottom: 14px;
+}
+.history-configuration {
+  max-width: 900px;
+}
+.history-configuration fieldset {
+  display: grid;
+  gap: 22px;
+}
+.history-configuration label,
+.history-simulation label {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+}
+.history-configuration select,
+.history-simulation select,
+.history-compare select {
+  background: var(--background);
+  border: 1px solid var(--border);
+  padding: 10px;
+  min-height: 40px;
+}
+.history-checkbox {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 1px solid var(--border);
+  padding: 18px 0;
+  margin-top: 24px;
+}
+.history-actions > span {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.history-heading {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.history-heading h2 {
+  font-size: 22px;
+}
+.history-heading > span {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.history-revisions article {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+}
+.history-revisions article > strong {
+  min-width: 90px;
+  font: 12px monospace;
+  color: var(--text-link, var(--primary));
+}
+.history-revisions article > div {
+  flex: 1;
+}
+.history-revisions h3 {
+  font-size: 14px;
+}
+.history-revisions p {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 6px;
+}
+.history-compare {
+  margin-top: 36px;
+}
+.history-compare-selects {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 20px 0;
+}
+.history-compare-selects label {
+  display: grid;
+  gap: 6px;
+  font-size: 11px;
+}
+.history-compare-selects > span {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.history-yaml-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.history-yaml-pair h3 {
+  font-size: 12px;
+  margin: 0 0 10px;
+}
+.history-yaml-pair pre,
+.history-git pre {
+  background: var(--text-main, #101c31);
+  color: #d9e5fa;
+  padding: 20px;
+  font: 12px/1.9 monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.history-field-diff {
+  display: grid;
+  grid-template-columns: 160px 1fr 1fr;
+  gap: 12px;
+  padding: 14px 0;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.history-field-diff del {
+  background: var(--surface-danger, #fae9e5);
+  color: #8c2c22;
+  padding: 8px;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.history-field-diff ins {
+  background: #e7f1e7;
+  color: #245b34;
+  padding: 8px;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.history-git {
+  max-width: 900px;
+}
+.history-git header {
+  display: flex;
+  gap: 16px;
+  align-items: start;
+}
+.history-sync {
+  margin-left: auto;
+  background: var(--surface-muted, #e9ece5);
+  padding: 6px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.history-git details {
+  margin: 22px 0;
+  font-size: 12px;
+}
+.history-git summary {
+  cursor: pointer;
+  padding: 12px 0;
+}
+.history-git-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+.history-conflict,
+.history-proposal {
+  border-left: 3px solid #0a1dbb;
+  padding: 20px;
+  background: var(--surface-muted, #eeefe8);
+  margin: 20px 0;
+}
+.history-conflict h3,
+.history-proposal h3 {
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+.history-conflict button,
+.history-proposal button {
+  margin: 12px 8px 0 0;
+}
+.history-footnote,
+.history-simulation {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-top: 32px;
+}
+.history-simulation {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+.history-simulation summary {
+  cursor: pointer;
+}
+.history-simulation label {
+  max-width: 260px;
+  margin: 16px 0;
+}
+.history-git-note {
+  padding: 12px;
+  background: #e9edf6;
+}
+.history-git dd small {
+  display: block;
+  color: var(--muted-foreground);
+  margin-top: 4px;
+}
+@media (max-width: 760px) {
+  .history-identity > .history-healthy {
+    display: none;
+  }
+  .history-overview {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .history-overview aside {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .history-revisions article {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .history-revisions article > div {
+    flex-basis: 65%;
+  }
+  .history-yaml-pair {
+    grid-template-columns: 1fr;
+  }
+  .history-field-diff {
+    grid-template-columns: 1fr;
+  }
+  .history-compare-selects {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .history-tabs {
+    gap: 24px;
+  }
+  .history-heading > span {
+    display: none;
+  }
+  .history-actions {
+    flex-wrap: wrap;
+  }
+  .history-overview dl > div,
+  .history-git dl > div {
+    grid-template-columns: 110px 1fr;
+  }
+  .history-sync {
+    white-space: normal;
+  }
+  .history-conflict {
+    padding: 14px;
+  }
+}

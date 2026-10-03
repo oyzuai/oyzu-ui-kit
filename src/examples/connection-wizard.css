@@ -17,7 +17,7 @@
   font: 11px monospace;
 }
 .setup-progress [aria-current] {
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
   font-weight: 600;
 }
 .setup-step h2 {

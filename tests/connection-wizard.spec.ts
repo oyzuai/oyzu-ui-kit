@@ -29,7 +29,7 @@ test("wizard tests auth, invalidates changes, and retains failed saves", async (
     name: "Create connection",
     exact: true,
   });
-  await expect(create).toBeDisabled();
+  await expect(create).toHaveCount(0);
   await page
     .getByLabel("Connection test result", { exact: true })
     .selectOption("credentials");
@@ -38,10 +38,10 @@ test("wizard tests auth, invalidates changes, and retains failed saves", async (
     .click();
   await expect(
     page.getByText(
-      "Authentication failed. Review the username or secret reference.",
+      "Credentials were rejected. Review your selected secret or sign-in method.",
     ),
   ).toBeVisible();
-  await expect(create).toBeDisabled();
+  await expect(create).toHaveCount(0);
   await page
     .getByLabel("Connection test result", { exact: true })
     .selectOption("success");
@@ -52,7 +52,7 @@ test("wizard tests auth, invalidates changes, and retains failed saves", async (
   await page.getByRole("button", { name: "Back", exact: true }).click();
   await page.getByRole("switch", { name: "Review changes" }).click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await expect(create).toBeDisabled();
+  await expect(create).toHaveCount(0);
   await page
     .getByRole("button", { name: "Test connection", exact: true })
     .click();
@@ -83,9 +83,10 @@ test("authentication methods require their own inputs", async ({ page }) => {
   await expect(
     page.getByText("Complete the simulated OAuth authorization."),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Authorize OAuth (simulation)" })
-    .click();
+  await page.getByRole("button", { name: "Generate device code", exact: true }).click();
+  await page.getByRole("button", { name: "Open authorization page" }).click();
+  await page.getByRole("button", { name: "Authorize connector", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Account connected" })).toBeVisible();
   await page.getByLabel("Authentication type").selectOption("anonymous");
   await expect(page.getByLabel("Username", { exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Continue", exact: true }).click();

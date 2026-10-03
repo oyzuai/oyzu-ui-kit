@@ -18,7 +18,7 @@
 .editor-section h2 span {
   font: 11px monospace;
   margin-right: 14px;
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
 }
 .editor-section > p {
   font-size: 13px;
@@ -39,7 +39,7 @@
 }
 .editor-advanced {
   text-align: left;
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
   font-size: 13px;
   padding: 10px 0;
 }

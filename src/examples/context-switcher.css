@@ -1,0 +1,163 @@
+.context-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 58px;
+  padding: 12px 10px;
+  text-align: left;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin: 16px 0;
+  cursor: pointer;
+}
+.context-trigger:hover {
+  background: #e6e8df;
+}
+.context-trigger > span {
+  flex: 1;
+  min-width: 0;
+}
+.context-trigger small,
+.context-trigger strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.context-trigger small {
+  font-size: 10px;
+  color: var(--muted-foreground);
+  margin-bottom: 4px;
+}
+.context-trigger strong {
+  font-size: 12px;
+  font-weight: 550;
+}
+.context-trigger.compact {
+  justify-content: center;
+  padding: 12px 0;
+}
+.context-dialog[data-slot="dialog-content"] {
+  width: min(650px, calc(100vw - 32px));
+  max-width: 650px;
+  padding: 28px;
+  border-radius: 5px;
+}
+.context-current {
+  font-size: 11px;
+  padding: 12px 0;
+  color: var(--text-link, var(--primary));
+  border-bottom: 1px solid var(--border);
+}
+.context-columns {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 22px;
+}
+.context-columns nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-right: 1px solid var(--border);
+  padding-right: 16px;
+}
+.context-columns button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  padding: 12px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  min-height: 44px;
+}
+.context-columns button:hover {
+  background: #e9ebe3;
+}
+.context-columns nav [aria-pressed="true"] {
+  color: white;
+  background: #06144d;
+}
+.context-org-option {
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.context-org-option span {
+  flex: 1;
+}
+.context-org-option small {
+  display: block;
+  font-size: 10px;
+  margin-top: 4px;
+  color: var(--muted-foreground);
+}
+.context-search {
+  display: grid;
+  gap: 8px;
+  font-size: 11px;
+}
+.context-search input {
+  padding: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  width: 100%;
+  min-width: 0;
+}
+.context-projects {
+  margin-top: 12px;
+  max-height: 260px;
+  overflow: auto;
+}
+.context-projects button {
+  width: 100%;
+}
+.context-projects button span {
+  flex: 1;
+}
+.context-projects p,
+.context-demo {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}
+.context-demo {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.topbar .active-context-label {
+  max-width: 380px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--foreground);
+}
+@media (max-width: 760px) {
+  .context-dialog[data-slot="dialog-content"] {
+    padding: 24px 18px;
+  }
+  .context-columns {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .context-columns nav {
+    flex-direction: row;
+    overflow: auto;
+    border: 0;
+    padding: 0;
+  }
+  .context-columns nav button {
+    white-space: nowrap;
+  }
+  .topbar .active-context-label {
+    max-width: calc(100vw - 40px);
+  }
+  .topbar > div > svg,
+  .topbar > div > span:last-child {
+    display: none;
+  }
+}
+/* Keep the active organization/project visible as the page scrolls. */
+.main-shell > .topbar {position:sticky;top:0;z-index:20}

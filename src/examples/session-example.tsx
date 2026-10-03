@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { WorkspaceArrival } from "./workspace-arrival";
+import { rememberedContext } from "./workspace-data";
+import type { NavigationContext } from "@/components/patterns/active-context";
+import { SignInFlow } from "./sign-in-flow";
 import { Button } from "@/components/ui/button";
 export function SessionExample({
   signedIn,
@@ -8,23 +12,11 @@ export function SessionExample({
 }: {
   signedIn: boolean;
   onLogout: () => void;
-  onLogin: () => void;
+  onLogin: (context: NavigationContext) => void;
   name: string;
 }) {
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState("");
-  const [fail, setFail] = useState(false);
-  async function login() {
-    setPending(true);
-    setError("");
-    await new Promise((resolve) => setTimeout(resolve, 700));
-    setPending(false);
-    if (fail) {
-      setError("We could not sign you in. Try again.");
-      return;
-    }
-    onLogin();
-  }
+  const [arrival, setArrival] = useState(false);
+  const [scenario, setScenario] = useState("returning");
   return (
     <main className="session-page">
       <a
@@ -34,14 +26,24 @@ export function SessionExample({
         <img src="/brand/oyzu-full-logo-color.svg" width="160" alt="Oyzu" />
       </a>
       <section className="session-content">
-        <span className="eyebrow">YOUR OYZU WORKSPACE</span>
-        <h1>{signedIn ? "Ready to log out?" : "Welcome back."}</h1>
-        <p>
-          {signedIn
-            ? `You are signed in as ${name}. You can come back whenever you are ready.`
-            : "One place for your projects, connections, and team."}
-        </p>
-        {signedIn ? (
+        {!arrival && (
+          <>
+            <span className="eyebrow">YOUR OYZU WORKSPACE</span>
+            <h1>{signedIn ? "Ready to log out?" : "Welcome back."}</h1>
+            <p>
+              {signedIn
+                ? `You are signed in as ${name}. You can come back whenever you are ready.`
+                : "One place for your projects, connections, and team."}
+            </p>
+          </>
+        )}
+        {arrival ? (
+          <WorkspaceArrival
+            invitation={scenario === "invitation"}
+            onEnter={onLogin}
+            onBack={() => setArrival(false)}
+          />
+        ) : signedIn ? (
           <>
             <p className="session-caption">
               Logging out ends this preview session. Unsaved profile edits will
@@ -56,27 +58,26 @@ export function SessionExample({
           </>
         ) : (
           <>
-            <div className="session-demo">
-              <strong>Explore with a demo account</strong>
-              <p>No password or real account needed. Continue as {name}.</p>
-              <Button disabled={pending} onClick={login}>
-                {pending ? "Signing in…" : "Continue with demo account"}
-              </Button>
-              {error && (
-                <p role="alert" className="field-error">
-                  {error}
-                </p>
-              )}
+            <SignInFlow
+              onLogin={() => {
+                const last = rememberedContext();
+                if (scenario === "returning" && last) onLogin(last);
+                else setArrival(true);
+              }}
+              name={name}
+            />
+            <div className="signin-preview">
+              <label htmlFor="arrival-scenario">After sign-in</label>
+              <select
+                id="arrival-scenario"
+                value={scenario}
+                onChange={(e) => setScenario(e.target.value)}
+              >
+                <option value="returning">Return to last workspace</option>
+                <option value="picker">Choose a workspace</option>
+                <option value="invitation">Review an invitation</option>
+              </select>
             </div>
-            <label className="session-caption">
-              <input
-                type="checkbox"
-                checked={fail}
-                disabled={pending}
-                onChange={(event) => setFail(event.target.checked)}
-              />{" "}
-              Simulate a sign-in failure
-            </label>
           </>
         )}
         <p className="session-caption">

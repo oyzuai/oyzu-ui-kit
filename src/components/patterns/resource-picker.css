@@ -115,7 +115,7 @@
 }
 .picker-option > svg {
   flex-shrink: 0;
-  color: var(--primary);
+  color: var(--text-link, var(--primary));
 }
 .picker-footer {
   display: flex;
