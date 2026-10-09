@@ -1,0 +1,117 @@
+/* Study chrome around the three directions, plus shared chips. The chrome is
+   navy so it reads as "outside" the product being prototyped. */
+.rb-study {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+}
+.rb-study-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 16px 8px;
+  background: #06144d;
+  color: #fff;
+}
+.rb-study-title { display: flex; align-items: center; gap: 8px; }
+.rb-study-title strong { font-weight: 600; }
+.rb-study-title span { color: #a9c8ff; font-size: 12px; }
+.rb-study-switch {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 8px;
+  background: #ffffff14;
+}
+.rb-study-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  color: #d0dbf6;
+  font-size: 13px;
+}
+.rb-study-switch button[aria-pressed="true"] { background: #fff; color: #06144d; font-weight: 550; }
+.rb-study-switch button:focus-visible { outline: 2px solid #0879ff; }
+.rb-study-tools { display: flex; align-items: center; gap: 10px; margin-left: auto; font-size: 12px; }
+.rb-study-tools label { display: flex; align-items: center; gap: 6px; color: #a9c8ff; }
+.rb-study-tools select {
+  color-scheme: dark;
+  background: #ffffff14;
+  color: #fff;
+  border: 1px solid #ffffff30;
+  border-radius: 5px;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+.rb-study-tools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #d0dbf6;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+.rb-study-tools button:hover { background: #ffffff14; }
+.rb-study-pitch {
+  margin: 0;
+  padding: 7px 16px;
+  font-size: 12.5px;
+  color: var(--muted-foreground);
+  background: var(--surface-muted, #eeefe8);
+  border-bottom: 1px solid var(--border);
+}
+.rb-study-stage { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+@media (max-width: 760px) {
+  .rb-study-tools button span { display: none; }
+  .rb-study-switch { order: 3; width: 100%; }
+  .rb-study-switch button { flex: 1; justify-content: center; padding: 6px 4px; }
+}
+
+.rb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 3px;
+  font-weight: 550;
+  white-space: nowrap;
+  color: #536177;
+  background: #f0f3f8;
+}
+.rb-chip-md { padding: 3px 8px; font-size: 12px; }
+.rb-chip-sm { padding: 1px 6px; font-size: 11px; }
+.rb-chip:is([data-state="succeeded"], [data-state="success"], [data-state="healthy"]) { color: #196442; background: #e8f5ec; }
+.rb-chip:is([data-state="failed"], [data-state="failure"], [data-state="timed_out"]) { color: #a02f30; background: #fdeceb; }
+.rb-chip:is([data-state="running"], [data-state="in_progress"], [data-state="queued"]) { color: #2a46b0; background: #ebefff; }
+.rb-chip:is([data-state="warning"], [data-state="action_required"]) { color: #885309; background: #fff3d6; }
+html.dark .rb-chip { color: #b8c4d6; background: #2a3640; }
+html.dark .rb-chip:is([data-state="succeeded"], [data-state="success"], [data-state="healthy"]) { color: #91d9b4; background: #193a2d; }
+html.dark .rb-chip:is([data-state="failed"], [data-state="failure"], [data-state="timed_out"]) { color: #ffa7a0; background: #42282a; }
+html.dark .rb-chip:is([data-state="running"], [data-state="in_progress"], [data-state="queued"]) { color: #a9bfff; background: #20334e; }
+html.dark .rb-chip:is([data-state="warning"], [data-state="action_required"]) { color: #ecc585; background: #3a3222; }
+.rb-mono {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+}
+
+/* Keep the kit's appearance control clear of the directions' phone tab bars and buttons. */
+@media (max-width: 760px) {
+  .appearance-control {
+    left: 12px;
+    right: auto;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Summary-first look: monospace only where text really is a log, a command
+   block or a diff; everything else reads as product UI. */
+.rb-study[data-look="summary"] .rb-study-stage *:not(.lv-scroll, .lv-scroll *, .as-command, .as-command *, .as-diff, .as-diff *, pre, pre *, [class*="command"], [class*="command"] *, [class*="cmd"], [class*="cmd"] *, svg, svg *) {
+  font-family: var(--font-sans, "Geist Variable", system-ui, sans-serif) !important;
+}
+.rb-study[data-look="summary"] .rb-study-stage .log-viewer { border-radius: 12px; }
