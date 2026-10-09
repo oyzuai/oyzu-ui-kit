@@ -48,7 +48,7 @@ import {
   runById,
   runs,
   stateLabel,
-  type Check,
+  type Check as CheckRecord,
   type CheckConclusion,
   type RunState,
   type StageStatus,
@@ -1392,9 +1392,9 @@ function DeliveryRecord({
 }
 
 function ChecksRecord({ commit, go, live }: { commit: string; go: Go; live: LiveState }) {
-  const list: Check[] =
+  const list: CheckRecord[] =
     commit === "9c41e2a"
-      ? checks.map((check): Check =>
+      ? checks.map((check): CheckRecord =>
           check.runId === liveRun.id
             ? {
                 ...check,
