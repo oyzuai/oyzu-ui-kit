@@ -19,8 +19,9 @@ import {
 // Shared prototype plumbing every design direction uses: the viewer's role, the
 // state chip, and the confirmation text an assistant action produces.
 
-export type PrototypeContextValue = { role: Role };
-export const PrototypeContext = createContext<PrototypeContextValue>({ role: "member" });
+export type Look = "terminal" | "summary";
+export type PrototypeContextValue = { role: Role; look: Look };
+export const PrototypeContext = createContext<PrototypeContextValue>({ role: "member", look: "summary" });
 export const usePrototype = () => useContext(PrototypeContext);
 
 const icons = {

@@ -31,6 +31,8 @@ import {
   TooltipTrigger,
 } from "../../components/ui/tooltip";
 import { duration, type GroupState, type LogEntry, type LogGroup, type Role, type Run, stripAnsiText } from "./model";
+import { RunDigest } from "./run-digest";
+import { usePrototype } from "./shared";
 import "./log-viewer.css";
 
 // Prototype of the portal LogViewer from the "Run logs" design: groups by
@@ -143,6 +145,12 @@ export function LogViewer({
   const [following, setFollowing] = useState(live);
   const [copied, setCopied] = useState<string>();
   const attemptInfo = run.attempts.find((item) => item.n === attempt);
+  const { look } = usePrototype();
+  const summary = look === "summary";
+  const [logOpen, setLogOpen] = useState(Boolean(focusSeq));
+  useEffect(() => {
+    if (focusSeq) setLogOpen(true);
+  }, [focusSeq]);
 
   const byScope = useMemo(() => {
     const map = new Map<string, LogEntry[]>();
@@ -210,10 +218,30 @@ export function LogViewer({
   }
 
   const totalLines = entries.length;
+  const digest = summary && (
+    <RunDigest
+      run={run}
+      groups={groups}
+      entries={entries}
+      live={live}
+      attempt={attemptInfo}
+      role={role}
+      onAsk={onAsk}
+      onDiagnostics={onDiagnostics}
+      logOpen={logOpen}
+      onOpenLog={(seq) => {
+        if (seq === -1) return setLogOpen(false);
+        setLogOpen(true);
+        if (seq) window.setTimeout(() => reveal(seq), 60);
+      }}
+    />
+  );
+  if (summary && !logOpen) return <TooltipProvider delayDuration={150}>{digest}</TooltipProvider>;
   return (
     <TooltipProvider delayDuration={150}>
-      <div className={"log-viewer" + (compact ? " is-compact" : "")} style={{ "--lv-height": height } as CSSProperties}>
-        {!compact && (
+      {digest}
+      <div className={"log-viewer" + (compact || summary ? " is-compact" : "")} style={{ "--lv-height": height } as CSSProperties}>
+        {!compact && !summary && (
           <nav className="lv-rail" aria-label="Targets and tasks">
             <strong>Targets and tasks</strong>
             {groups.map((group) => {

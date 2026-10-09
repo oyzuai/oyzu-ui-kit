@@ -108,3 +108,10 @@ html.dark .rb-chip:is([data-state="warning"], [data-state="action_required"]) { 
     bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* Summary-first look: monospace only where text really is a log, a command
+   block or a diff; everything else reads as product UI. */
+.rb-study[data-look="summary"] .rb-study-stage *:not(.lv-scroll, .lv-scroll *, .as-command, .as-command *, .as-diff, .as-diff *, pre, pre *, [class*="command"], [class*="command"] *, [class*="cmd"], [class*="cmd"] *, svg, svg *) {
+  font-family: var(--font-sans, "Geist Variable", system-ui, sans-serif) !important;
+}
+.rb-study[data-look="summary"] .rb-study-stage .log-viewer { border-radius: 12px; }

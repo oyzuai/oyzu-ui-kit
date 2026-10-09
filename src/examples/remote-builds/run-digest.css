@@ -1,0 +1,104 @@
+/* Summary-first run digest: a calm card that says what happened in words,
+   with the steps as tappable pills and the raw log behind one button. */
+.rd {
+  --rd-tone: var(--muted-foreground);
+  --rd-tone-bg: var(--surface-muted, #eeefe8);
+  display: grid;
+  gap: 18px;
+  padding: 22px 24px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-panel, #fffefa);
+  box-shadow: 0 1px 2px #06144d0a, 0 8px 24px #06144d0d;
+  min-width: 0;
+}
+.rd[data-tone="failed"] { --rd-tone: #b3261e; --rd-tone-bg: #fdeceb; }
+.rd[data-tone="succeeded"] { --rd-tone: #1f7a4d; --rd-tone-bg: #e8f5ec; }
+.rd[data-tone="running"] { --rd-tone: #0a1dbb; --rd-tone-bg: #ebefff; }
+.rd[data-tone="warning"] { --rd-tone: #8a5a00; --rd-tone-bg: #fff3d6; }
+html.dark .rd { box-shadow: none; }
+html.dark .rd[data-tone="failed"] { --rd-tone: #ffa7a0; --rd-tone-bg: #42282a; }
+html.dark .rd[data-tone="succeeded"] { --rd-tone: #91d9b4; --rd-tone-bg: #193a2d; }
+html.dark .rd[data-tone="running"] { --rd-tone: #a9bfff; --rd-tone-bg: #20334e; }
+html.dark .rd[data-tone="warning"] { --rd-tone: #ecc585; --rd-tone-bg: #3a3222; }
+
+.rd-head { display: flex; gap: 14px; align-items: flex-start; }
+.rd-badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--rd-tone);
+  background: var(--rd-tone-bg);
+}
+.rd-badge svg { color: inherit; }
+.rd-head h3 {
+  margin: 1px 0 4px;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.rd-head p { margin: 0; color: var(--muted-foreground); font-size: 14px; line-height: 1.5; max-width: 62ch; }
+
+.rd-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rd-steps button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 14px 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--background);
+  text-align: left;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.rd-steps button:hover:not(:disabled) { border-color: var(--text-link, #0a1dbb); }
+.rd-steps button[data-state="failed"] { border-color: color-mix(in oklch, #b3261e, transparent 60%); background: #fdeceb; }
+html.dark .rd-steps button[data-state="failed"] { background: #42282a; border-color: #7a3a3a; }
+.rd-steps button span { display: grid; line-height: 1.2; }
+.rd-steps strong { font-size: 13px; font-weight: 550; }
+.rd-steps small { font-size: 11.5px; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+
+.rd-error { display: grid; gap: 6px; }
+.rd-label {
+  margin: 0 0 2px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.rd-error-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--rd-tone-bg);
+  color: var(--foreground);
+  text-align: left;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.rd-error-line span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.rd-error-line svg { flex: none; color: var(--muted-foreground); }
+.rd-error-line:hover svg { color: var(--foreground); }
+
+.rd-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 760px) {
+  .rd { padding: 16px; border-radius: 12px; }
+  .rd-head h3 { font-size: 18px; }
+}

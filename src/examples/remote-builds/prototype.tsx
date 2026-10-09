@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MessagesSquare, PanelsTopLeft, RotateCcw, Waypoints } from "lucide-react";
 import { restartLiveRun } from "./live";
 import type { Role } from "./model";
-import { PrototypeContext } from "./shared";
+import { PrototypeContext, type Look } from "./shared";
 import { Workbench } from "./directions/workbench";
 import { Conversation } from "./directions/conversation";
 import { Trace } from "./directions/trace";
@@ -41,10 +41,11 @@ function initialDirection(): DirectionId {
 export function RemoteBuildsPrototype() {
   const [direction, setDirection] = useState<DirectionId>(initialDirection);
   const [role, setRole] = useState<Role>("pool-admin");
+  const [look, setLook] = useState<Look>("summary");
   const current = directions.find((d) => d.id === direction)!;
   return (
-    <PrototypeContext.Provider value={{ role }}>
-      <div className="rb-study">
+    <PrototypeContext.Provider value={{ role, look }}>
+      <div className="rb-study" data-look={look}>
         <header className="rb-study-bar">
           <div className="rb-study-title">
             <img src="/brand/oyzu-mark-reverse.svg" alt="Oyzu" width={22} height={22} />
@@ -75,6 +76,13 @@ export function RemoteBuildsPrototype() {
             })}
           </nav>
           <div className="rb-study-tools">
+            <label>
+              <span>Look</span>
+              <select id="rb-look" value={look} onChange={(event) => setLook(event.target.value as Look)}>
+                <option value="summary">Summary-first</option>
+                <option value="terminal">Terminal</option>
+              </select>
+            </label>
             <label>
               <span>View as</span>
               <select id="rb-role" value={role} onChange={(event) => setRole(event.target.value as Role)}>
