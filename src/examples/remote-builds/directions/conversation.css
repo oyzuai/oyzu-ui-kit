@@ -196,13 +196,14 @@ html.dark .cv {
 .cv-thread[hidden] { display: none !important; }
 .cv-thread-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   padding: 12px 20px;
   border-bottom: 1px solid var(--border);
   background: var(--background);
 }
-.cv-thread-title { flex: 1; min-width: 0; display: grid; gap: 5px; }
+.cv-thread-title { flex: 1 1 260px; min-width: 0; display: grid; gap: 5px; }
 .cv-thread-title h2 {
   margin: 0;
   font-size: 17px;
@@ -854,7 +855,7 @@ html.dark .cv-cmd { background: #0b1220; }
 
 /* ------------------------------------------------------------ desktop widths */
 @media (min-width: 761px) {
-  .cv[data-canvas="open"] { grid-template-columns: 296px minmax(0, 1fr) minmax(400px, 42%); }
+  .cv[data-canvas="open"] { grid-template-columns: 280px minmax(0, 1fr) minmax(380px, 38%); }
   .cv[data-expanded="true"] { grid-template-columns: minmax(340px, 34%) minmax(0, 1fr); }
   .cv[data-expanded="true"] .cv-inbox { display: none; }
 }

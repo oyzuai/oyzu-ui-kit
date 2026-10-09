@@ -99,3 +99,12 @@ html.dark .rb-chip:is([data-state="warning"], [data-state="action_required"]) { 
   font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
   font-size: 0.9em;
 }
+
+/* Keep the kit's appearance control clear of the directions' phone tab bars and buttons. */
+@media (max-width: 760px) {
+  .appearance-control {
+    left: 12px;
+    right: auto;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+}

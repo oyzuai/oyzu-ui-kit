@@ -115,7 +115,7 @@ const threads: ThreadDef[] = [
     icon: "failed",
     title: "Build 9012 failed on #482",
     preview: "payments-core/test failed: 1 of 64 tests",
-    at: "2026-10-09T15:39:24Z",
+    at: "2026-10-09T15:39:24-04:00",
     chip: { state: "failed" },
     meta: { pr: 482, commit: "9c41e2a", ref: "feat/refund-retries" },
     context: { kind: "run", runId: run9012.id, attempt: 2 },
@@ -131,7 +131,7 @@ const threads: ThreadDef[] = [
     icon: "draft",
     title: "PR #483 started nothing",
     preview: "0 of 5 bindings matched: the pull request is a draft",
-    at: "2026-10-09T15:18:02Z",
+    at: "2026-10-09T15:18:02-04:00",
     chip: { state: "skipped", label: "No match" },
     meta: { pr: 483, commit: "c3a9e10", ref: "spike/fx-rounding" },
     context: { kind: "delivery", deliveryId: "dlv-7f12" },
@@ -146,7 +146,7 @@ const threads: ThreadDef[] = [
     icon: "shield",
     title: "12 webhooks rejected on github-acme-legacy",
     preview: "Signature check failed on every delivery since early afternoon",
-    at: "2026-10-09T15:36:10Z",
+    at: "2026-10-09T15:36:10-04:00",
     chip: { state: "failure", label: "Rejected" },
     meta: { extra: "github-acme-legacy · acme/web-console" },
     context: { kind: "delivery", deliveryId: "dlv-rej" },
@@ -162,7 +162,7 @@ const threads: ThreadDef[] = [
     icon: "pool",
     title: "mgr-onprem-02 is missing heartbeats",
     preview: "HTTP 407 from the corporate proxy; 1 job lost and retried",
-    at: "2026-10-09T15:41:55Z",
+    at: "2026-10-09T15:41:55-04:00",
     chip: { state: "warning" },
     meta: { extra: "Acme on-prem · Customer network" },
     context: { kind: "pool", poolId: "acme-onprem" },
@@ -178,7 +178,7 @@ const threads: ThreadDef[] = [
     icon: "running",
     title: "api-image 9014",
     preview: "Compiling api-image",
-    at: "2026-10-09T15:39:40Z",
+    at: "2026-10-09T15:39:40-04:00",
     chip: { state: "running" },
     meta: { pr: 482, commit: "9c41e2a", ref: "feat/refund-retries" },
     context: { kind: "run", runId: run9014.id },
@@ -193,7 +193,7 @@ const threads: ThreadDef[] = [
     icon: "ok",
     title: "Policy check 9013 passed on #482",
     preview: "12 policies passed in 39s",
-    at: "2026-10-09T15:31:41Z",
+    at: "2026-10-09T15:31:41-04:00",
     chip: { state: "succeeded" },
     meta: { pr: 482, commit: "9c41e2a", ref: "feat/refund-retries" },
     context: { kind: "run", runId: run9013.id },
@@ -209,7 +209,7 @@ const threads: ThreadDef[] = [
     icon: "ok",
     title: "main build 9009 succeeded",
     preview: "Merge of #477 built in 6m 53s",
-    at: "2026-10-09T15:04:54Z",
+    at: "2026-10-09T15:04:54-04:00",
     chip: { state: "succeeded" },
     meta: { commit: "3f2a9c1", ref: "main" },
     context: { kind: "run", runId: run9009.id },
@@ -225,7 +225,7 @@ const threads: ThreadDef[] = [
     icon: "skipped",
     title: "Run 9004 skipped on #480",
     preview: "TASK_NOT_DEFINED: policy-check isn't defined at b81e04c",
-    at: "2026-10-09T13:12:44Z",
+    at: "2026-10-09T13:12:44-04:00",
     chip: { state: "skipped" },
     meta: { pr: 480, commit: "b81e04c", ref: "fix/ledger-timeouts" },
     context: { kind: "run", runId: run9004.id },
@@ -240,7 +240,7 @@ const threads: ThreadDef[] = [
     icon: "cancelled",
     title: "Run 9001 superseded on #482",
     preview: "A newer push replaced it; run 9012 took over",
-    at: "2026-10-09T15:24:06Z",
+    at: "2026-10-09T15:24:06-04:00",
     chip: { state: "cancelled" },
     meta: { pr: 482, commit: "e5c9a1b", ref: "feat/refund-retries" },
     context: { kind: "run", runId: run9001.id },
@@ -255,7 +255,7 @@ const threads: ThreadDef[] = [
     icon: "ok",
     title: "Manual run 8998: oyzu build cli",
     preview: "You ran it with --remote on Micah's desktop",
-    at: "2026-10-09T12:06:18Z",
+    at: "2026-10-09T12:06:18-04:00",
     chip: { state: "succeeded" },
     meta: { commit: "a2d4f6b", ref: "main" },
     context: { kind: "run", runId: run8998.id },
@@ -270,7 +270,7 @@ const threads: ThreadDef[] = [
     icon: "unregistered",
     title: "acme/ledger-tools isn't registered",
     preview: "Webhook verified, then stopped: no project owns this repository",
-    at: "2026-10-09T14:41:37Z",
+    at: "2026-10-09T14:41:37-04:00",
     chip: { state: "skipped", label: "Not registered" },
     meta: { pr: 12, commit: "f00d1e2", ref: "feat/export", extra: "acme/ledger-tools" },
     context: { kind: "delivery", deliveryId: "dlv-7e40" },
@@ -802,7 +802,7 @@ function FailureEvent({ open, onExplain }: { open: (tab: Tab) => void; onExplain
 
 function ChecksEvent({ open, live }: { open: (tab: Tab) => void; live: Live }) {
   return (
-    <SysEvent icon={<GitPullRequest size={12} />} tone="bad" title="Reported oyzu / build: failure to GitHub" at={clock("2026-10-09T15:39:26Z")}>
+    <SysEvent icon={<GitPullRequest size={12} />} tone="bad" title="Reported oyzu / build: failure to GitHub" at={clock("2026-10-09T15:39:26-04:00")}>
       <p className="cv-line cv-quiet">Every action reports as its own check on 9c41e2a. Required targets this change didn't touch report skipped.</p>
       <ul className="cv-checks">
         {checks.map((check) => {
@@ -924,7 +924,7 @@ function ThreadEvents({
   explain: () => void;
 }) {
   const push482 = (
-    <Said who="dana.okafor" at={clock("2026-10-09T15:30:47Z")}>
+    <Said who="dana.okafor" at={clock("2026-10-09T15:30:47-04:00")}>
       Pushed <code>9c41e2a</code> “Retry refunds with the original idempotency key” to feat/refund-retries on #482
     </Said>
   );
@@ -1061,7 +1061,7 @@ function ThreadEvents({
       const manager = pool.managers[1];
       return (
         <>
-          <SysEvent icon={<HeartPulse size={13} />} tone="warn" title={`${manager.id} is missing heartbeats`} at={clock("2026-10-09T15:32:31Z")}>
+          <SysEvent icon={<HeartPulse size={13} />} tone="warn" title={`${manager.id} is missing heartbeats`} at={clock("2026-10-09T15:32:31-04:00")}>
             <dl className="cv-kv">
               <div>
                 <dt>Host</dt>
@@ -1081,7 +1081,7 @@ function ThreadEvents({
               </div>
             </dl>
           </SysEvent>
-          <SysEvent icon={<Stethoscope size={13} />} tone="warn" title="Heartbeat failures from the pool log" at={clock("2026-10-09T15:41:55Z")}>
+          <SysEvent icon={<Stethoscope size={13} />} tone="warn" title="Heartbeat failures from the pool log" at={clock("2026-10-09T15:41:55-04:00")}>
             <PoolHeartbeatRows />
             <div className="cv-card-actions">
               <Button size="xs" variant="outline" onClick={() => open({ kind: "poollogs", filter: manager.id })}>
@@ -1089,7 +1089,7 @@ function ThreadEvents({
               </Button>
             </div>
           </SysEvent>
-          <SysEvent icon={<RotateCcw size={12} />} tone="muted" title="1 job lost and retried" at={clock("2026-10-09T15:34:02Z")}>
+          <SysEvent icon={<RotateCcw size={12} />} tone="muted" title="1 job lost and retried" at={clock("2026-10-09T15:34:02-04:00")}>
             <p className="cv-line">
               job-5521 (run 9012, attempt 1) lost its lease and was retried on mgr-onprem-01, which ran it to completion.{" "}
               <button type="button" className="cv-link" onClick={() => goThread("t-9012")}>
@@ -1147,7 +1147,7 @@ function ThreadEvents({
         <>
           {push482}
           <RunStartedEvent run={run9013} open={open} />
-          <SysEvent icon={<CircleCheck size={13} />} tone="ok" title={`Run 9013 succeeded in ${duration(run9013.durationMs)}`} at={clock("2026-10-09T15:31:41Z")}>
+          <SysEvent icon={<CircleCheck size={13} />} tone="ok" title={`Run 9013 succeeded in ${duration(run9013.durationMs)}`} at={clock("2026-10-09T15:31:41-04:00")}>
             <p className="cv-line">
               12 policies passed. Reported <strong>oyzu / policy: success</strong> to GitHub.
             </p>
@@ -1181,7 +1181,7 @@ function ThreadEvents({
     case "t-9004":
       return (
         <>
-          <Said who="sam.ito" at={clock("2026-10-09T13:12:40Z")}>
+          <Said who="sam.ito" at={clock("2026-10-09T13:12:40-04:00")}>
             Pushed <code>b81e04c</code> to fix/ledger-timeouts on #480
           </Said>
           <SysEvent icon={<CircleMinus size={13} />} tone="muted" title="Run 9004 skipped: task not defined" at={clock(run9004.createdAt)}>
@@ -1201,7 +1201,7 @@ function ThreadEvents({
     case "t-9001":
       return (
         <>
-          <Said who="dana.okafor" at={clock("2026-10-09T15:22:15Z")}>
+          <Said who="dana.okafor" at={clock("2026-10-09T15:22:15-04:00")}>
             Pushed <code>e5c9a1b</code> “Add refund retry worker” to feat/refund-retries on #482
           </Said>
           <RunStartedEvent run={run9001} open={open} />
@@ -1218,7 +1218,7 @@ function ThreadEvents({
     case "t-8998":
       return (
         <>
-          <Said who="you" at={clock("2026-10-09T12:04:00Z")}>
+          <Said who="you" at={clock("2026-10-09T12:04:00-04:00")}>
             Ran <code>oyzu build cli --remote</code> from a terminal
           </Said>
           <RunStartedEvent run={run8998} open={open} />

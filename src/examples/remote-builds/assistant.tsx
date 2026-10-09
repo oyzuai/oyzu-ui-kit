@@ -112,7 +112,7 @@ function Typed({ text, animate }: { text: string; animate: boolean }) {
     return () => window.clearInterval(timer);
   }, [text, animate]);
   // Reveal whole words only so markdown markers never split mid-token.
-  const cut = length >= text.length ? text : text.slice(0, text.lastIndexOf(" ", length) + 1);
+  const cut = !animate || length >= text.length ? text : text.slice(0, text.lastIndexOf(" ", length) + 1);
   const balanced = (cut.match(/\*\*/g)?.length ?? 0) % 2 ? cut + "**" : cut;
   return <Rich text={(balanced.match(/`/g)?.length ?? 0) % 2 ? balanced + "`" : balanced} />;
 }
