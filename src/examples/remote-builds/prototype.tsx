@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { MessagesSquare, PanelsTopLeft, RotateCcw, Waypoints } from "lucide-react";
+import { MessagesSquare, PanelsTopLeft, RotateCcw, Waypoints, Workflow } from "lucide-react";
 import { restartLiveRun } from "./live";
 import type { Role } from "./model";
 import { PrototypeContext, type Look } from "./shared";
 import { Workbench } from "./directions/workbench";
 import { Conversation } from "./directions/conversation";
 import { Trace } from "./directions/trace";
+import { Pipeline } from "./directions/pipeline";
 import "./prototype.css";
 
-// Design study: three directions for how remote builds are shown and
+// Design study: four directions for how remote builds are shown and
 // troubleshot, sharing one fictional data set, LogViewer and assistant.
 
 const directions = [
+  {
+    id: "pipeline",
+    label: "Pipeline",
+    icon: Workflow,
+    pitch: "A pipeline-execution layout: stage graph across the top, steps and logs beneath, assistant in a drawer.",
+  },
   {
     id: "workbench",
     label: "Workbench",
@@ -35,7 +42,9 @@ type DirectionId = (typeof directions)[number]["id"];
 
 function initialDirection(): DirectionId {
   const hash = window.location.hash.replace("#", "");
-  return directions.some((d) => d.id === hash) ? (hash as DirectionId) : "workbench";
+  // Directions keep sub-pages in the hash (#workbench-runs, #pipeline-run-9012).
+  const match = directions.find((d) => hash === d.id || hash.startsWith(`${d.id}-`));
+  return match ? match.id : "pipeline";
 }
 
 export function RemoteBuildsPrototype() {
@@ -99,7 +108,15 @@ export function RemoteBuildsPrototype() {
           <strong>{current.label}.</strong> {current.pitch} All data is fictional.
         </p>
         <div className="rb-study-stage" data-direction={direction}>
-          {direction === "workbench" ? <Workbench /> : direction === "conversation" ? <Conversation /> : <Trace />}
+          {direction === "pipeline" ? (
+            <Pipeline />
+          ) : direction === "workbench" ? (
+            <Workbench />
+          ) : direction === "conversation" ? (
+            <Conversation />
+          ) : (
+            <Trace />
+          )}
         </div>
       </div>
     </PrototypeContext.Provider>
