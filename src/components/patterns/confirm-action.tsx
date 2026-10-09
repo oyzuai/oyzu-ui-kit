@@ -1,6 +1,6 @@
 import { useState, type ReactNode, type RefObject } from "react";
 import { LoaderCircle, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -10,7 +10,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogCancel,
-} from "@/components/ui/alert-dialog";
+} from "../ui/alert-dialog";
 import { TextField } from "./text-field";
 export function ConfirmAction({
   trigger,

@@ -4,8 +4,8 @@ import {
   AlertDialogContent,
   AlertDialogTitle,
   AlertDialogDescription,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "../components/ui/alert-dialog";
+import { Button } from "../components/ui/button";
 import { SignInFlow } from "./sign-in-flow";
 import "./session-recovery.css";
 

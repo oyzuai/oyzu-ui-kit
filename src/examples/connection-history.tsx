@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { GitBranch, History, CheckCircle2, ArrowRight } from "lucide-react";
 import { stringify } from "yaml";
-import { PageLayout } from "@/components/patterns/page-layout";
-import { DocumentEditor } from "@/components/patterns/document-editor";
-import { TextField } from "@/components/patterns/text-field";
-import { Button } from "@/components/ui/button";
+import { PageLayout } from "../components/patterns/page-layout";
+import { DocumentEditor } from "../components/patterns/document-editor";
+import { TextField } from "../components/patterns/text-field";
+import { Button } from "../components/ui/button";
 import {
   initialRevisions,
   validateConfig,

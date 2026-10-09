@@ -1,7 +1,7 @@
-import { WizardModal } from "@/components/patterns/wizard-modal";
+import { WizardModal } from "../components/patterns/wizard-modal";
 import { useState, useRef, useCallback } from "react";
 import { ArrowUpRight, Search } from "lucide-react";
-import { PageLayout } from "@/components/patterns/page-layout";
+import { PageLayout } from "../components/patterns/page-layout";
 import { ConnectionWizard } from "./connection-wizard";
 import { connectors } from "./connector-data";
 import "./connector-catalog.css";

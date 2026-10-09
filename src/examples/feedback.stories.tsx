@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { FeedbackBanner } from "@/components/patterns/feedback-banner";
+import { FeedbackBanner } from "../components/patterns/feedback-banner";
 import "./component-gallery.css";
 const meta = {
   title: "Patterns/Feedback banner",

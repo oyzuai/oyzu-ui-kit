@@ -11,7 +11,7 @@ import {
   UserRound,
   Layers3,
 } from "lucide-react";
-import type { SidebarGroup } from "@/components/patterns/navigation-sidebar";
+import type { SidebarGroup } from "../components/patterns/navigation-sidebar";
 export const navigationGroups: SidebarGroup[] = [
   {
     id: "workspace",

@@ -10,14 +10,14 @@ import {
   GitBranch,
   Clock,
 } from "lucide-react";
-import { PageLayout } from "@/components/patterns/page-layout";
-import { IdentityFields } from "@/components/patterns/identity-fields";
+import { PageLayout } from "../components/patterns/page-layout";
+import { IdentityFields } from "../components/patterns/identity-fields";
 import {
   identifierError,
   type IdentityDraft,
-} from "@/components/patterns/identity";
-import { useActiveContext } from "@/components/patterns/active-context";
-import { Button } from "@/components/ui/button";
+} from "../components/patterns/identity";
+import { useActiveContext } from "../components/patterns/active-context";
+import { Button } from "../components/ui/button";
 
 import { DirectAccessEditor, DirectSummary } from "./automation-direct-access";
 import {

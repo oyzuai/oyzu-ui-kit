@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { StatusBadge } from "@/components/patterns/status-badge";
+import { StatusBadge } from "../components/patterns/status-badge";
 import "./component-gallery.css";
 const meta = {
   title: "Patterns/Status badge",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ConfirmAction } from "@/components/patterns/confirm-action";
-import { Button } from "@/components/ui/button";
+import { ConfirmAction } from "../components/patterns/confirm-action";
+import { Button } from "../components/ui/button";
 import "./component-gallery.css";
 const meta = {
   title: "Patterns/Confirm action",

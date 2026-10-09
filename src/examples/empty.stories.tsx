@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { EmptyState } from "@/components/patterns/empty-state";
+import { EmptyState } from "../components/patterns/empty-state";
 import "./component-gallery.css";
 const meta = {
   title: "Patterns/Empty state",

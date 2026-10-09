@@ -16,6 +16,19 @@ npm run storybook
 
 Vite serves the playground; Storybook serves the component and experience catalog on port 6006.
 
+## Use from another app
+
+Experiments stay in `src/examples` and `src/App.tsx` with fake data. Only what `src/index.ts` exports is a contract for other apps. Pin the kit by git commit and import it once at the app root:
+
+```tsx
+import "oyzu-ui-kit/styles.css";
+import { Button, ResourceTable } from "oyzu-ui-kit";
+```
+
+The package exports TypeScript source, so the consuming app needs Vite with React and `@tailwindcss/vite`; `styles.css` adds an `@source` for the kit so Tailwind finds its classes under `node_modules`. Source files use relative imports, with no `@/` path alias, so no consumer configuration is required. Brand images are referenced as `/brand/...`; the consuming app serves `public/brand` at that path. Shadcn's CLI writes `@/` imports; rewrite them to relative paths after adding a primitive.
+
+`oyzu build` builds the playground through `build.yaml`.
+
 ## Try the interactions
 
 - **Edit details:** enter invalid values, save changes, or press Escape after editing to inspect discard protection.
@@ -33,7 +46,8 @@ These are experiments for review, not accepted production contracts or a publish
 - `src/components/patterns/wizard-dialog.tsx`: step navigation and progress. Callers supply step content, optional validation and a final async operation. Navigation does not own domain values.
 - `src/components/patterns/text-field.tsx`: label, input, help and accessible error association.
 - `src/App.tsx`: example composition, fake workspace values and injected save scenarios. Product policy, credentials and real network operations do not belong in the UI patterns.
-- `src/index.css` and `src/App.css`: initial theme and visual experiments; patterns currently require both stylesheets.
+- `src/index.ts`: the public entry point, exporting `components/ui` and `components/patterns` only. Examples and `App.tsx` are never exported.
+- `src/styles.css`: the single stylesheet (theme tokens, brand colors, visual language and pattern styles) that the playground, Storybook and consumers all load.
 - `src/examples/`: Storybook catalog.
 - `tests/`: browser tests through supported user interactions.
 
@@ -193,7 +207,6 @@ The bottom-right Appearance control offers Light, Dark and System across the por
 
 `tests/appearance.spec.ts` checks persistence, system changes and automated contrast/accessibility across authorization, connector catalog, settings, component gallery, profile, audit and connection wizard pages. This does not replace human review of every interaction state.
 
-
 ## Access assignment reference
 
 `/#pages/access` demonstrates an assignments list, searchable principals/states, assignment details and a Who / What / Where / When / Review wizard. Example values live in `src/examples/access-assignments.tsx`; shared dialog and page primitives own presentation. Published role/resource-group revisions are displayed separately. The prototype uses fictional memberships, groups and automation identities and describes future descendant coverage explicitly. Current scope is inherited from navigation; the account is the fixed Acme demo fixture.
@@ -206,11 +219,9 @@ Verified with build/lint and `tests/access-assignments.spec.ts`: revision/covera
 
 PageLayout exposes workspace, discovery, entity and ledger variants. The provisional composition layer in src/visual-language.css owns their visual hierarchy plus personal settings and assignment dialog families. Shared controls and business rules remain with their existing owners. Discovery emphasizes selection; workspaces emphasize scanning; entities emphasize identity; ledgers emphasize chronology. Wizard and review layouts intentionally differ. Responsive layouts and both appearances are checked through existing browser interactions and accessibility checks.
 
-
 ## Dense access library
 
 The People & access example (#pages/access-library) contains fictional account members, illustrative role bundles and resource-group drafts. It exercises search, pagination, category and individual permission selection, exact resources, explicit descendants, selector unions, account-owned definitions, and draft review. It is not an authoritative permission catalog or backend evaluator. Drafts live only in the mounted example; published revisions and live assignments are not changed. Owner-only mutations, query predicates and exclusions are intentionally absent. Validate with tests/access-library.spec.ts.
-
 
 ## Connected RBAC example
 

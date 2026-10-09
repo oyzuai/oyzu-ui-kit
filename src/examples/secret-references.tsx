@@ -2,8 +2,8 @@ import { useState } from "react";
 import {
   SecretSelector,
   type SecretScope,
-} from "@/components/patterns/secret-selector";
-import { PageLayout } from "@/components/patterns/page-layout";
+} from "../components/patterns/secret-selector";
+import { PageLayout } from "../components/patterns/page-layout";
 import { scopes, referencesFor } from "./secret-samples";
 export function SecretReferenceExample() {
   const [scope, setScope] = useState<SecretScope>("project");

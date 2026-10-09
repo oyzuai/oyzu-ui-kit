@@ -21,7 +21,7 @@ test("generation is deterministic and normalizes ordinary names without changing
 });
 
 test("manual identifiers require exact valid spelling rather than silently rewriting it", () => {
-  for (const id of ["api", "a", "2026", "prod_api-v2"])
+  for (const id of ["api", "a", "2026", "prod-api-v2"])
     assert.equal(identifierError(id), undefined);
   for (const id of [
     "",
@@ -31,6 +31,8 @@ test("manual identifiers require exact valid spelling rather than silently rewri
     "a.b",
     "-api",
     "api_",
+    "prod_api",
+    "api-",
     "a".repeat(64),
     "東京",
   ])

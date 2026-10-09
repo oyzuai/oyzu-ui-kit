@@ -14,7 +14,7 @@ Harness documents case-sensitive identifiers and entity-specific character restr
 ## Provisional Oyzu rules
 
 - Display name: human-readable and editable after creation; the demo requires 2–80 characters.
-- Identifier: 1–63 ASCII lowercase letters, digits, hyphens or underscores, beginning and ending with a letter or digit.
+- Identifier: 1–63 ASCII lowercase letters, digits or hyphens, beginning and ending with a letter or digit.
 - Generation: normalize decomposable accents, lowercase, remove apostrophes, replace other runs of punctuation/whitespace with a hyphen, trim edge separators, cap at 63 characters.
 - Examples: Production API becomes production-api; Café Déjà Vu becomes cafe-deja-vu; Team’s API / EU_West becomes teams-api-eu-west.
 - Generation never changes the display name. Names with no usable ASCII characters require a manually entered identifier; no empty, random or misleading fallback is silently saved.

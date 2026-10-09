@@ -13,13 +13,13 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from "@/components/ui/tooltip";
+} from "../ui/tooltip";
 export type SidebarGroup = {
   id: string;
   label: string;

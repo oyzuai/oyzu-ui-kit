@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { ResourcePicker } from "@/components/patterns/resource-picker";
+import { ResourcePicker } from "../components/patterns/resource-picker";
 function Example() {
   const [value, setValue] = useState<string | null>(null);
   const [recent, setRecent] = useState<string[]>([]);

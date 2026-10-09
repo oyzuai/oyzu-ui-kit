@@ -1,23 +1,23 @@
 import { DeviceAuthorization } from "./oauth-device";
 import { ExpireSessionButton } from "./session-recovery";
-import { useActiveContext } from "@/components/patterns/active-context";
-import { DocumentEditor } from "@/components/patterns/document-editor";
-import { ConnectionDiagnostics } from "@/components/patterns/connection-diagnostics";
+import { useActiveContext } from "../components/patterns/active-context";
+import { DocumentEditor } from "../components/patterns/document-editor";
+import { ConnectionDiagnostics } from "../components/patterns/connection-diagnostics";
 import type { Connector } from "./connector-data";
 import { useEffect, useRef, useState } from "react";
-import { PageLayout } from "@/components/patterns/page-layout";
-import { IdentityFields } from "@/components/patterns/identity-fields";
+import { PageLayout } from "../components/patterns/page-layout";
+import { IdentityFields } from "../components/patterns/identity-fields";
 import {
   identifierError,
   type IdentityDraft,
-} from "@/components/patterns/identity";
-import { TextField } from "@/components/patterns/text-field";
+} from "../components/patterns/identity";
+import { TextField } from "../components/patterns/text-field";
 import {
   SecretSelector,
   type SecretScope,
-} from "@/components/patterns/secret-selector";
-import { SettingRow } from "@/components/patterns/setting-row";
-import { Button } from "@/components/ui/button";
+} from "../components/patterns/secret-selector";
+import { SettingRow } from "../components/patterns/setting-row";
+import { Button } from "../components/ui/button";
 import { referencesFor, scopes } from "./secret-samples";
 import "./connection-wizard.css";
 const labels = ["Basics", "Authentication", "Behavior", "Review & test"];

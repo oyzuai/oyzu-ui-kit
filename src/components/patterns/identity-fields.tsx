@@ -62,7 +62,7 @@ export function IdentityFields(props: IdentityFieldsProps) {
     props.mode === "create" && props.value.identifierSource === "automatic";
   const help = saved
     ? "Identifier is permanent. Renaming does not change it."
-    : "Lowercase letters, numbers, hyphens or underscores; up to 63 characters. Permanent after creation.";
+    : "Lowercase letters, numbers, or hyphens; up to 63 characters. Permanent after creation.";
   const accessory = (
     <div className="identifier-inline">
       {!saved && !editing ? (

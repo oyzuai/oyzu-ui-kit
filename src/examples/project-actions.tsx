@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Ellipsis, ArrowUpRight, Pencil, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogTrigger,
@@ -8,17 +8,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { FlowDialog } from "@/components/patterns/flow-dialog";
-import { ConfirmAction } from "@/components/patterns/confirm-action";
-import { TextField } from "@/components/patterns/text-field";
+} from "../components/ui/dropdown-menu";
+import { FlowDialog } from "../components/patterns/flow-dialog";
+import { ConfirmAction } from "../components/patterns/confirm-action";
+import { TextField } from "../components/patterns/text-field";
 export type ActionProject = {
   id: string;
   name: string;

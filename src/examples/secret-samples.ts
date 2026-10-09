@@ -1,7 +1,7 @@
 import type {
   SecretReference,
   SecretScope,
-} from "@/components/patterns/secret-selector";
+} from "../components/patterns/secret-selector";
 export const scopes: SecretScope[] = [
   "account",
   "organization",

@@ -1,4 +1,4 @@
-import type { NavigationContext } from "@/components/patterns/active-context";
+import type { NavigationContext } from "../components/patterns/active-context";
 export const organizations = [
   {
     name: "Engineering",

@@ -1,34 +1,34 @@
 import { useRef, useState } from "react";
 import { Ellipsis, UserPlus, Eye, Pencil, Send, Trash2 } from "lucide-react";
-import { PageLayout } from "@/components/patterns/page-layout";
+import { PageLayout } from "../components/patterns/page-layout";
 import {
   ResourceTable,
   type ResourceColumn,
-} from "@/components/patterns/resource-table";
-import { SearchField } from "@/components/patterns/search-field";
-import { FlowDialog } from "@/components/patterns/flow-dialog";
-import { ConfirmAction } from "@/components/patterns/confirm-action";
-import { FeedbackBanner } from "@/components/patterns/feedback-banner";
+} from "../components/patterns/resource-table";
+import { SearchField } from "../components/patterns/search-field";
+import { FlowDialog } from "../components/patterns/flow-dialog";
+import { ConfirmAction } from "../components/patterns/confirm-action";
+import { FeedbackBanner } from "../components/patterns/feedback-banner";
 import {
   identifierFromName,
   suggestIdentifier,
-} from "@/components/patterns/identity";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+} from "../components/patterns/identity";
+import { Button } from "../components/ui/button";
+import { Textarea } from "../components/ui/textarea";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+} from "../components/ui/dropdown-menu";
 import {
   initialMembers,
   roles,

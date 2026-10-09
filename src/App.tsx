@@ -41,25 +41,22 @@ import {
   Sparkles,
   Workflow,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { FlowDialog } from "@/components/patterns/flow-dialog";
-import { WizardDialog } from "@/components/patterns/wizard-dialog";
-import { TextField } from "@/components/patterns/text-field";
-import { IdentityFields } from "@/components/patterns/identity-fields";
+import { Button } from "./components/ui/button";
+import { Switch } from "./components/ui/switch";
+import { Badge } from "./components/ui/badge";
+import { FlowDialog } from "./components/patterns/flow-dialog";
+import { WizardDialog } from "./components/patterns/wizard-dialog";
+import { TextField } from "./components/patterns/text-field";
+import { IdentityFields } from "./components/patterns/identity-fields";
 import {
   identifierError,
   suggestIdentifier,
   type IdentityDraft,
-} from "@/components/patterns/identity";
+} from "./components/patterns/identity";
 import {
   ConnectionCard,
   type DemoConnection,
-} from "@/examples/connection-card";
-import "./App.css";
-import "./design.css";
-import "./components/patterns/navigation-sidebar.css";
+} from "./examples/connection-card";
 
 type Workspace = { name: string; email: string; identifier: string };
 type Setup = IdentityDraft & { access: "review" | "automatic" };

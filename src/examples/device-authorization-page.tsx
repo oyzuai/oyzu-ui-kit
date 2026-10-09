@@ -1,9 +1,9 @@
-import { AuthorizationPermissions } from "@/components/patterns/authorization-permissions";
-import { AuthorizationAccount } from "@/components/patterns/authorization-account";
-import { DeviceCodeInput } from "@/components/patterns/device-code-input";
+import { AuthorizationPermissions } from "../components/patterns/authorization-permissions";
+import { AuthorizationAccount } from "../components/patterns/authorization-account";
+import { DeviceCodeInput } from "../components/patterns/device-code-input";
 import { useEffect, useState } from "react";
 import { Terminal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { SignInFlow } from "./sign-in-flow";
 import "./session-example.css";
 import "./oauth-device.css";
