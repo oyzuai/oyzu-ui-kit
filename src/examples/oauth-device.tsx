@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Copy } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 import "./oauth-device.css";
 
 export function DeviceAuthorization({

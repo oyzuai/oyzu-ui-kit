@@ -27,3 +27,8 @@ dist-ssr
 storybook-static
 /test-results/
 /playwright-report/
+
+# oyzu build state
+/.oyzu/
+/.oyzu-tool-lock-edit.lock
+/oyzu.lock

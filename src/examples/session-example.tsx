@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { WorkspaceArrival } from "./workspace-arrival";
 import { rememberedContext } from "./workspace-data";
-import type { NavigationContext } from "@/components/patterns/active-context";
+import type { NavigationContext } from "../components/patterns/active-context";
 import { SignInFlow } from "./sign-in-flow";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 export function SessionExample({
   signedIn,
   onLogout,

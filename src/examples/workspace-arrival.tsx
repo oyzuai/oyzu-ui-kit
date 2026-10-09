@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowRight, Building2, FolderOpen, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import type { NavigationContext } from "@/components/patterns/active-context";
+import { Button } from "../components/ui/button";
+import type { NavigationContext } from "../components/patterns/active-context";
 import { organizations } from "./workspace-data";
 
 export function WorkspaceArrival({

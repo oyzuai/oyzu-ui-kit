@@ -6,8 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 import {
   Table,
   TableHeader,
@@ -15,7 +15,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from "@/components/ui/table";
+} from "../ui/table";
 export type ResourceColumn<T> = {
   key: string;
   label: string;

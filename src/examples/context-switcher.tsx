@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -15,8 +15,8 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog";
-import type { NavigationContext } from "@/components/patterns/active-context";
+} from "../components/ui/alert-dialog";
+import type { NavigationContext } from "../components/patterns/active-context";
 import "./context-switcher.css";
 import { organizations } from "./workspace-data";
 export function ContextSwitcher({

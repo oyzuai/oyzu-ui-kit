@@ -26,15 +26,15 @@ test("generated identifier follows the name until customized and can resume gene
     "production-api",
   );
   await page.getByRole("button", { name: "Edit identifier" }).click();
-  await page.getByLabel("Identifier", { exact: true }).fill("prod_api");
+  await page.getByLabel("Identifier", { exact: true }).fill("prod-api");
   await page.getByLabel("Connection name", { exact: true }).fill("Renamed API");
   await expect(page.getByLabel("Identifier", { exact: true })).toHaveValue(
-    "prod_api",
+    "prod-api",
   );
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await page.getByRole("button", { name: "Back", exact: true }).click();
   await expect(page.getByLabel("Identifier", { exact: true })).toHaveValue(
-    "prod_api",
+    "prod-api",
   );
   await page.getByRole("button", { name: "Generate from name" }).click();
   await expect(page.getByLabel("Generated identifier")).toHaveText(
@@ -49,7 +49,7 @@ test("custom identifier is locked after creation while friendly name can change"
 }) => {
   await create(page, "Production API");
   await page.getByRole("button", { name: "Edit identifier" }).click();
-  await page.getByLabel("Identifier", { exact: true }).fill("prod_api");
+  await page.getByLabel("Identifier", { exact: true }).fill("prod-api");
   await finish(page);
   await page.getByRole("button", { name: "Edit Production API" }).click();
   await expect(page.getByLabel("Identifier", { exact: true })).toHaveAttribute(
@@ -60,12 +60,12 @@ test("custom identifier is locked after creation while friendly name can change"
     .getByLabel("Connection name", { exact: true })
     .fill("Customer API");
   await expect(page.getByLabel("Identifier", { exact: true })).toHaveValue(
-    "prod_api",
+    "prod-api",
   );
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByRole("dialog")).toBeHidden();
   await expect(page.locator(".connected h3")).toHaveText("Customer API");
-  await expect(page.locator(".connected code")).toHaveText("prod_api");
+  await expect(page.locator(".connected code")).toHaveText("prod-api");
 });
 
 test("duplicate ID is blocked, with an explicit alternative; duplicate names are allowed", async ({

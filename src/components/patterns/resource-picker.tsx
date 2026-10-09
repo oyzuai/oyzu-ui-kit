@@ -1,7 +1,7 @@
 import { useId, useRef, useState, type ReactNode } from "react";
 import { Check, ChevronsUpDown, Search, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
 import "./resource-picker.css";
 export type PickerResource = {
   id: string;

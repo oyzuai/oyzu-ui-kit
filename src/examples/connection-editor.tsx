@@ -1,15 +1,15 @@
-import { DocumentEditor } from "@/components/patterns/document-editor";
+import { DocumentEditor } from "../components/patterns/document-editor";
 import { useEffect, useRef, useState } from "react";
-import { PageLayout } from "@/components/patterns/page-layout";
-import { IdentityFields } from "@/components/patterns/identity-fields";
+import { PageLayout } from "../components/patterns/page-layout";
+import { IdentityFields } from "../components/patterns/identity-fields";
 import {
   identifierError,
   type IdentityDraft,
-} from "@/components/patterns/identity";
-import { TextField } from "@/components/patterns/text-field";
-import { SettingRow } from "@/components/patterns/setting-row";
-import { Button } from "@/components/ui/button";
-import { FeedbackBanner } from "@/components/patterns/feedback-banner";
+} from "../components/patterns/identity";
+import { TextField } from "../components/patterns/text-field";
+import { SettingRow } from "../components/patterns/setting-row";
+import { Button } from "../components/ui/button";
+import { FeedbackBanner } from "../components/patterns/feedback-banner";
 import "./connection-editor.css";
 type Draft = IdentityDraft & {
   endpoint: string;

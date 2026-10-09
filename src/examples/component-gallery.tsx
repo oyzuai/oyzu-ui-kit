@@ -10,55 +10,55 @@ import {
   Trash2,
   SlidersHorizontal,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Checkbox } from "../components/ui/checkbox";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
+} from "../components/ui/select";
+import { Textarea } from "../components/ui/textarea";
+import { Label } from "../components/ui/label";
+import { Skeleton } from "../components/ui/skeleton";
+import { Progress } from "../components/ui/progress";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
-} from "@/components/ui/tooltip";
+} from "../components/ui/tooltip";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "../components/ui/accordion";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../components/ui/dropdown-menu";
 import {
   StatusBadge,
   PendingIndicator,
   type ResourceStatus,
-} from "@/components/patterns/status-badge";
-import { EmptyState } from "@/components/patterns/empty-state";
-import { FeedbackBanner } from "@/components/patterns/feedback-banner";
-import { SearchField } from "@/components/patterns/search-field";
-import { SettingRow } from "@/components/patterns/setting-row";
-import { ConfirmAction } from "@/components/patterns/confirm-action";
+} from "../components/patterns/status-badge";
+import { EmptyState } from "../components/patterns/empty-state";
+import { FeedbackBanner } from "../components/patterns/feedback-banner";
+import { SearchField } from "../components/patterns/search-field";
+import { SettingRow } from "../components/patterns/setting-row";
+import { ConfirmAction } from "../components/patterns/confirm-action";
 import {
   ResourceTable,
   type ResourceColumn,
-} from "@/components/patterns/resource-table";
-import { TextField } from "@/components/patterns/text-field";
-import { FlowDialog } from "@/components/patterns/flow-dialog";
+} from "../components/patterns/resource-table";
+import { TextField } from "../components/patterns/text-field";
+import { FlowDialog } from "../components/patterns/flow-dialog";
 import "./component-gallery.css";
 
 type Resource = {

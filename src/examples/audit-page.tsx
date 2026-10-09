@@ -2,14 +2,14 @@ import { FileDiff } from "lucide-react";
 import { stringify } from "yaml";
 import { useRef, useState } from "react";
 import { ArrowUpRight, Search, Download, History } from "lucide-react";
-import { PageLayout } from "@/components/patterns/page-layout";
+import { PageLayout } from "../components/patterns/page-layout";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from "../components/ui/dialog";
+import { Button } from "../components/ui/button";
 import { useRbac } from "./rbac-model";
 import { auditSamples, type AuditEvent } from "./audit-model";
 import "./audit-page.css";

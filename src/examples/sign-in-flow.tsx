@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Building2, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 
 type Outcome = "success" | "unavailable" | "denied" | "expired";
 export function SignInFlow({

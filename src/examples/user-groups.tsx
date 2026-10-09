@@ -10,14 +10,14 @@ import {
   UserPlus,
   UserMinus,
 } from "lucide-react";
-import { PageLayout } from "@/components/patterns/page-layout";
-import { Button } from "@/components/ui/button";
+import { PageLayout } from "../components/patterns/page-layout";
+import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from "../components/ui/dialog";
 import {
   useRbac,
   people,

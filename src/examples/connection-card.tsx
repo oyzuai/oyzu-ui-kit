@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Check, Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FlowDialog } from "@/components/patterns/flow-dialog";
-import { IdentityFields } from "@/components/patterns/identity-fields";
-import type { EntityIdentity } from "@/components/patterns/identity";
+import { Button } from "../components/ui/button";
+import { FlowDialog } from "../components/patterns/flow-dialog";
+import { IdentityFields } from "../components/patterns/identity-fields";
+import type { EntityIdentity } from "../components/patterns/identity";
 
 export type DemoConnection = EntityIdentity & {
   access: "review" | "automatic";

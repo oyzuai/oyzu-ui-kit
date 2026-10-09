@@ -12,15 +12,15 @@ import {
   CircleX,
   GitBranch,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { PageLayout } from "@/components/patterns/page-layout";
-import { useActiveContext } from "@/components/patterns/active-context";
+} from "../components/ui/dialog";
+import { PageLayout } from "../components/patterns/page-layout";
+import { useActiveContext } from "../components/patterns/active-context";
 import "./access-assignments.css";
 
 import {

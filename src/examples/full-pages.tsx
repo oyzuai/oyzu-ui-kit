@@ -8,16 +8,15 @@ import {
   Check,
   Clock3,
 } from "lucide-react";
-import { ResourcePicker } from "@/components/patterns/resource-picker";
-import { PageLayout } from "@/components/patterns/page-layout";
+import { ResourcePicker } from "../components/patterns/resource-picker";
+import { PageLayout } from "../components/patterns/page-layout";
 import {
   ResourceTable,
   type ResourceColumn,
-} from "@/components/patterns/resource-table";
-import { SearchField } from "@/components/patterns/search-field";
-import { StatusBadge } from "@/components/patterns/status-badge";
-import { Button } from "@/components/ui/button";
-import "@/components/patterns/catalog.css";
+} from "../components/patterns/resource-table";
+import { SearchField } from "../components/patterns/search-field";
+import { StatusBadge } from "../components/patterns/status-badge";
+import { Button } from "../components/ui/button";
 import "./full-pages.css";
 type Project = { name: string; id: string; owner: string; updated: string };
 const samples: Project[] = [

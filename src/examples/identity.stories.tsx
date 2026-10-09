@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { IdentityFields } from "@/components/patterns/identity-fields";
+import { IdentityFields } from "../components/patterns/identity-fields";
 import {
   identifierError,
   type IdentityDraft,
-} from "@/components/patterns/identity";
+} from "../components/patterns/identity";
 
 function IdentityExample({
   saved = false,

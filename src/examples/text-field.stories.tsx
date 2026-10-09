@@ -1,6 +1,6 @@
 import { useArgs } from "storybook/preview-api";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { TextField } from "@/components/patterns/text-field";
+import { TextField } from "../components/patterns/text-field";
 const meta = {
   title: "Patterns/Text field",
   component: TextField,

@@ -7,7 +7,7 @@ import {
   Building2,
   Check,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { roots, matchingResources } from "./rbac-model";
 import {
   directActions,

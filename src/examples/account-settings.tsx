@@ -10,15 +10,14 @@ import {
 import {
   SectionNavigation,
   type SectionLink,
-} from "@/components/patterns/section-navigation";
-import { TextField } from "@/components/patterns/text-field";
-import { SettingRow } from "@/components/patterns/setting-row";
-import { ConfirmAction } from "@/components/patterns/confirm-action";
-import { FeedbackBanner } from "@/components/patterns/feedback-banner";
-import { EmptyState } from "@/components/patterns/empty-state";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import "@/components/patterns/catalog.css";
+} from "../components/patterns/section-navigation";
+import { TextField } from "../components/patterns/text-field";
+import { SettingRow } from "../components/patterns/setting-row";
+import { ConfirmAction } from "../components/patterns/confirm-action";
+import { FeedbackBanner } from "../components/patterns/feedback-banner";
+import { EmptyState } from "../components/patterns/empty-state";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
 import "./account-settings.css";
 const sections: SectionLink[] = [
   {

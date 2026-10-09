@@ -1,0 +1,5 @@
+# Built with oyzu: `oyzu build` runs the native Vite build and stages dist/ as the application artifact.
+# Consumers import source through package exports ("oyzu-ui-kit" and "oyzu-ui-kit/styles.css"), pinned by git commit.
+builds:
+  ui-kit:
+    uses: node/app

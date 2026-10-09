@@ -8,7 +8,7 @@ import {
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+} from "../ui/alert-dialog";
 /** Defers app navigation while the caller has an unsaved draft. */
 export function useGuardedHash(dirty: boolean, busy: boolean) {
   const [hash, setHash] = useState(() => window.location.hash);

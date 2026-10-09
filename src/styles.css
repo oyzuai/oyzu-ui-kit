@@ -1,0 +1,18 @@
+/* Single stylesheet for consumers: theme tokens, brand colors and pattern styles.
+   Import once at the app root: import "oyzu-ui-kit/styles.css".
+   Order matters: pattern styles load before the shared visual language overrides them. */
+@import "./dark-theme.css";
+@import "./index.css";
+@import "./components/patterns/page-layout.css";
+@import "./components/patterns/connection-diagnostics.css";
+@import "./components/patterns/section-navigation.css";
+@import "./components/patterns/resource-picker.css";
+@import "./components/patterns/document-editor.css";
+@import "./components/patterns/catalog.css";
+@import "./App.css";
+@import "./design.css";
+@import "./components/patterns/navigation-sidebar.css";
+@import "./visual-language.css";
+
+/* Tailwind skips node_modules by default; scan the kit's components wherever it is installed. */
+@source "./components";

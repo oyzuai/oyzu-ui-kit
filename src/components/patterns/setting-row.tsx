@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from "react";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "../ui/switch";
 export function SettingRow({
   title,
   description,
