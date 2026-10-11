@@ -68,7 +68,9 @@ test("Suggest a fix shows the diff; opening it asks for confirmation", async ({ 
   await composer.press("Enter");
 
   await page.getByRole("article").getByRole("button", { name: "Suggest a fix", exact: true }).click();
-  await expect(page.getByText(/Keep the key from the first attempt and pass it through\./)).toBeVisible();
+  await expect(page.getByRole("article").getByText(/Keep the key from the first attempt and pass it through\./)).toBeVisible();
+  // The finished reply is announced once through the polite live region.
+  await expect(page.locator('.as-messages [aria-live="polite"]')).toContainText("Keep the key from the first attempt");
   await expect(page.getByText("crates/payments-core/src/refund.rs", { exact: true })).toBeVisible();
   await expect(page.getByText(/Posted|Opened the proposed change/)).toHaveCount(0);
 

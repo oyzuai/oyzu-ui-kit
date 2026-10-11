@@ -276,6 +276,15 @@ function Sources({ sources }: { sources: string[] }) {
   );
 }
 
+/** Text for the polite live region: finished replies and action outcomes only, never the streaming reveal. */
+function announcement(message: ChatMessage | undefined) {
+  if (!message || message.author === "user") return "";
+  if (message.author === "system") return message.text ?? "";
+  const reply = message.reply;
+  if (!reply || message.thinking || (message.shown ?? reply.blocks.length) < reply.blocks.length) return "";
+  return reply.blocks.flatMap((block) => (block.type === "text" ? [block.text.replace(/\*\*|`/g, "")] : [])).join(" ");
+}
+
 export function AssistantMessages({
   messages,
   onCite,
@@ -294,7 +303,10 @@ export function AssistantMessages({
   }, [messages.length, last?.shown]);
   if (!messages.length) return <>{empty}</>;
   return (
-    <div className="as-messages" aria-live="polite" aria-relevant="additions text">
+    <div className="as-messages">
+      <p className="sr-only" aria-live="polite">
+        {announcement(last)}
+      </p>
       {messages.map((message) => {
         if (message.author === "user")
           return (
