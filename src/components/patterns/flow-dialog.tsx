@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { useAbortableSubmit } from "./use-abortable-submit";
 
 type FlowDialogProps = {
   title: string;
@@ -20,7 +21,8 @@ type FlowDialogProps = {
   onOpenChange: (open: boolean) => void;
   dirty: boolean;
   submitLabel: string;
-  onSubmit: () => Promise<void>;
+  /** Receives a signal that is aborted when the user gives up on a stalled submit. */
+  onSubmit: (signal: AbortSignal) => Promise<void>;
   onBack?: () => void;
   submitDisabled?: boolean;
   returnFocusRef?: RefObject<HTMLElement | null>;
@@ -41,9 +43,15 @@ export function FlowDialog({
   submitDisabled = false,
   returnFocusRef,
 }: FlowDialogProps) {
-  const [pending, setPending] = useState(false);
+  const { pending, slow, run, cancel } = useAbortableSubmit();
   const [error, setError] = useState("");
   const [discarding, setDiscarding] = useState(false);
+  function stopWaiting() {
+    cancel();
+    setError(
+      "This is taking too long, so we stopped waiting. Check the result before trying again.",
+    );
+  }
   function changeOpen(next: boolean) {
     if (pending) return;
     if (!next && dirty) {
@@ -58,17 +66,15 @@ export function FlowDialog({
     event.preventDefault();
     if (pending || submitDisabled) return;
     setError("");
-    setPending(true);
     try {
-      await onSubmit();
+      // A stalled submit the user gave up on resolves false; ignore its late result.
+      await run(onSubmit);
     } catch (cause) {
       setError(
         cause instanceof Error
           ? cause.message
           : "Something went wrong. Please try again.",
       );
-    } finally {
-      setPending(false);
     }
   }
   return (
@@ -135,10 +141,10 @@ export function FlowDialog({
               <Button
                 type="button"
                 variant="ghost"
-                disabled={pending}
-                onClick={() => changeOpen(false)}
+                disabled={pending && !slow}
+                onClick={() => (pending ? stopWaiting() : changeOpen(false))}
               >
-                Cancel
+                {pending ? "Stop waiting" : "Cancel"}
               </Button>
               <div className="footer-actions">
                 {onBack && (
@@ -156,7 +162,11 @@ export function FlowDialog({
                 )}
                 <Button type="submit" disabled={pending || submitDisabled}>
                   {pending && <LoaderCircle className="animate-spin" />}
-                  {pending ? "Saving…" : submitLabel}
+                  {pending
+                    ? slow
+                      ? "Still working…"
+                      : "Saving…"
+                    : submitLabel}
                 </Button>
               </div>
             </DialogFooter>

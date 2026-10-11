@@ -9,6 +9,8 @@
 @import "./components/patterns/resource-picker.css";
 @import "./components/patterns/document-editor.css";
 @import "./components/patterns/catalog.css";
+@import "./components/patterns/account-menu.css";
+@import "./components/patterns/device-authorization.css";
 @import "./App.css";
 @import "./design.css";
 @import "./components/patterns/navigation-sidebar.css";

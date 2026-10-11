@@ -18,11 +18,8 @@ export function useGuardedHash(dirty: boolean, busy: boolean) {
     function changed() {
       const next = window.location.hash;
       if ((dirty || busy) && !bypass.current) {
-        history.replaceState(
-          null,
-          "",
-          location.pathname + location.search + hash,
-        );
+        // Push, not replace: replacing would overwrite the entry the user went Back to.
+        history.pushState(null, "", location.pathname + location.search + hash);
         if (!busy)
           setPending(() => () => {
             window.location.hash = next;

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import { yaml } from "@codemirror/lang-yaml";
 import { parseDocument, stringify } from "yaml";
 import "./document-editor.css";
@@ -12,6 +12,7 @@ export function DocumentEditor({
   onApply,
   onPendingChange,
   disabled,
+  nonce,
   children,
 }: {
   value: DocumentValue;
@@ -20,6 +21,8 @@ export function DocumentEditor({
   onApply: (value: DocumentValue) => void;
   onPendingChange: (pending: boolean) => void;
   disabled?: boolean;
+  /** CSP nonce for the editor's injected styles; required under a nonce-based style-src. */
+  nonce?: string;
   children: ReactNode;
 }) {
   const [mode, setMode] = useState("visual");
@@ -51,9 +54,9 @@ export function DocumentEditor({
       throw Error("Expected a connection object.");
     const result = parsed as DocumentValue;
     for (const key of Object.keys(result))
-      if (!(key in value)) throw Error(`Unsupported field: ${key}`);
+      if (!Object.hasOwn(value, key)) throw Error(`Unsupported field: ${key}`);
     for (const [key, original] of Object.entries(value)) {
-      if (!(key in result)) throw Error(`Missing field: ${key}`);
+      if (!Object.hasOwn(result, key)) throw Error(`Missing field: ${key}`);
       if (original === null || key === "secretReference") {
         if (result[key] !== null && typeof result[key] !== "string")
           throw Error(`${key} must be a reference string or null.`);
@@ -112,7 +115,9 @@ export function DocumentEditor({
             value={text}
             height="360px"
             theme="dark"
-            extensions={[yaml()]}
+            extensions={
+              nonce ? [yaml(), EditorView.cspNonce.of(nonce)] : [yaml()]
+            }
             editable={!disabled}
             basicSetup={{ lineNumbers: true, foldGutter: true }}
             onChange={(next) => {

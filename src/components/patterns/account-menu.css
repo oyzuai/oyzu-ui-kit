@@ -1,0 +1,71 @@
+.sidebar-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 4px;
+  text-align: left;
+  min-height: 56px;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+}
+.sidebar-account:hover {
+  background: rgba(6, 20, 77, 0.05);
+}
+.user-monogram {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  background: #06144d;
+  color: white;
+  font-size: 12px;
+  border-radius: 50%;
+}
+.sidebar-account-copy {
+  flex: 1;
+  min-width: 0;
+}
+.sidebar-account-copy strong,
+.sidebar-account-copy small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar-account-copy strong {
+  font-size: 12px;
+}
+.sidebar-account-copy small {
+  font-size: 10px;
+  color: var(--muted-foreground);
+}
+.account-popover {
+  width: 240px;
+  max-width: calc(100vw - 40px);
+  border-radius: 4px;
+  padding: 6px;
+}
+.account-popover strong,
+.account-popover small {
+  display: block;
+}
+.account-popover small {
+  font-weight: 400;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+.account-popover [role="menuitem"] {
+  min-height: 42px;
+}
+.session-caption {
+  font-size: 12px;
+  color: var(--text-muted, #52605f);
+}
+.sidebar-account.compact {
+  justify-content: center;
+}
+.signin-flow > .session-caption {
+  margin-top: 12px;
+}
