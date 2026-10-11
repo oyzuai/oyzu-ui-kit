@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 import { Switch } from "../../../components/ui/switch";
+import { Dialog, DialogContent, DialogTitle } from "../../../components/ui/dialog";
 import { AssistantPanel, useAssistant } from "../assistant";
 import type { ActionId, AssistantContext } from "../assistant-engine";
 import { useLiveRun } from "../live";
@@ -54,6 +55,7 @@ import {
   type RunState,
 } from "../model";
 import { actionResult, StateChip, usePrototype } from "../shared";
+import { parsePipelineHash } from "../pipeline-hash";
 import { ExecutionPage, StageStrip, TriggerIcon, triggerText } from "./pipeline-views";
 import "./pipeline.css";
 
@@ -78,22 +80,15 @@ const modules = [
 ] as const;
 
 function hashFor(page: Page) {
-  if (page.name === "run") return `#pipeline-run-${runs.find((r) => r.id === page.runId)?.number ?? ""}`;
+  if (page.name === "run") return `#pipeline-run-${runs.find((r) => r.id === page.runId)?.number ?? ""}${page.attempt ? `-attempt-${page.attempt}` : ""}${page.focusSeq ? `-L${page.focusSeq}` : ""}`;
   if (page.name === "executions") return "#pipeline";
   return `#pipeline-${page.name}`;
 }
 
 let nonce = 0;
 function parseHash(hash: string): Page {
-  const value = hash.replace("#", "");
-  const run = value.match(/^pipeline-run-(\d+)$/);
-  if (run) {
-    const found = runs.find((r) => r.number === Number(run[1]));
-    if (found) return { name: "run", runId: found.id, nonce: ++nonce };
-  }
-  const name = value.replace(/^pipeline-?/, "");
-  if (name === "triggers" || name === "pools" || name === "checks" || name === "settings") return { name };
-  return { name: "executions" };
+  const page = parsePipelineHash(hash, runs);
+  return page.name === "run" ? { ...page, nonce: ++nonce } : page;
 }
 
 function useMedia(query: string) {
@@ -134,6 +129,8 @@ export function Pipeline() {
   const [focus, setFocus] = useState<{ attempt: number; label: string }>();
   const isPhone = useMedia("(max-width: 760px)");
   const mainRef = useRef<HTMLElement>(null);
+  // The phone dialog opens from plain buttons, not a DialogTrigger, so remember the opener to return focus to it.
+  const assistantOpener = useRef<HTMLElement | null>(null);
 
   // ---- live run 9014 (with an optional cancel)
   const live = useLiveRun();
@@ -300,6 +297,9 @@ export function Pipeline() {
       case "open-pool":
         navigate({ name: "pools" });
         break;
+      case "suggest-fix":
+        assistant.ask("Suggest a fix");
+        return;
       default: {
         const text = actionResult(id, target);
         if (text) assistant.note(text);
@@ -374,7 +374,31 @@ export function Pipeline() {
         </div>
         <div className="pl-page">{content}</div>
       </main>
-      <aside className="pl-drawer" data-open={drawer} inert={!drawer} aria-hidden={!drawer}>
+      {isPhone ? (
+        <Dialog open={drawer} onOpenChange={setDrawer}>
+          <DialogContent
+            className="pl-phone-assistant"
+            aria-describedby={undefined}
+            showCloseButton={false}
+            onOpenAutoFocus={() => {
+              assistantOpener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+            }}
+            onCloseAutoFocus={(event) => {
+              event.preventDefault();
+              assistantOpener.current?.focus();
+            }}
+          >
+            <DialogTitle className="sr-only">Assistant</DialogTitle>
+            <AssistantPanel
+              contextLabel={contextLabel}
+              assistant={assistant}
+              onCite={onCite}
+              onAction={onAction}
+              onClose={() => setDrawer(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      ) : <aside className="pl-drawer" data-open={drawer} inert={!drawer} aria-hidden={!drawer}>
         <AssistantPanel
           contextLabel={contextLabel}
           assistant={assistant}
@@ -382,8 +406,7 @@ export function Pipeline() {
           onAction={onAction}
           onClose={() => setDrawer(false)}
         />
-      </aside>
-      {drawer && isPhone && <button type="button" className="pl-scrim" aria-label="Close assistant" onClick={() => setDrawer(false)} />}
+      </aside>}
       {toast && (
         <p className="pl-toast" role="status">
           <Check size={14} aria-hidden="true" /> {toast}

@@ -473,6 +473,10 @@ export function Workbench() {
       case "register-repo":
         navigate({ name: "delivery", deliveryId: "dlv-7e40" });
         break;
+      case "suggest-fix":
+        assistant.ask("Suggest a fix");
+        navigated = false;
+        break;
       case "drain-manager":
         drain(target ?? "mgr-onprem-02");
         assistant.note(actionResult(id, target) ?? "Draining.");

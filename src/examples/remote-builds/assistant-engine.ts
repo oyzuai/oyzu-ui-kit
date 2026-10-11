@@ -26,6 +26,7 @@ export type AssistantContext =
   | { kind: "pool"; poolId: string };
 
 export type ActionId =
+  | "suggest-fix"
   | "rerun"
   | "rerun-failed"
   | "open-logs"
@@ -156,7 +157,7 @@ function whyFailed(): Reply {
       {
         type: "actions",
         actions: [
-          { id: "apply-fix", label: "Suggest a fix", primary: true },
+          { id: "suggest-fix", label: "Suggest a fix", primary: true },
           { id: "rerun-failed", label: "Rerun payments-core/test" },
           { id: "open-logs", label: "Open first error" },
         ],
@@ -189,7 +190,7 @@ function suggestFix(): Reply {
       {
         type: "actions",
         actions: [
-          { id: "apply-fix", label: "Open as a suggested change on #482", primary: true },
+          { id: "apply-fix", label: "Open as suggested change on #482", primary: true },
           { id: "rerun-failed", label: "Rerun after pushing" },
         ],
       },
@@ -213,7 +214,7 @@ function flaky(): Reply {
           ["Same failure elsewhere", "None"],
         ],
       },
-      { type: "actions", actions: [{ id: "apply-fix", label: "Suggest a fix", primary: true }] },
+      { type: "actions", actions: [{ id: "suggest-fix", label: "Suggest a fix", primary: true }] },
     ],
     sources: ["Test results from JUnit reports, last 30 runs of oyzu / build"],
   };
@@ -457,7 +458,7 @@ function explainLine(line: LogEntry): Reply {
       blocks: [
         { type: "text", text: "This is where the failing test stopped. Line 88 of the test asserts that a retried refund posts one charge; the next lines show it posted two." },
         cite(lineBySubstring("assertion `left == right` failed"), "Assertion"),
-        { type: "actions", actions: [{ id: "apply-fix", label: "Suggest a fix", primary: true }] },
+        { type: "actions", actions: [{ id: "suggest-fix", label: "Suggest a fix", primary: true }] },
       ],
       sources: ["Run 9012 log, attempt 2"],
     };

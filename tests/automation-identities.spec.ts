@@ -62,3 +62,64 @@ test('category permissions preserve separate resource sets and disclose all-reso
  await page.getByRole('button',{name:'Requested access',exact:true}).click();await two.getByRole('radio',{name:'All components in Checkout service'}).check();await expect(two.getByText(/Includes future matching descendants/)).toBeVisible();
  await two.getByRole('radio',{name:'Only selected components'}).check();await two.getByText('1 selected',{exact:true}).click();await expect(two.getByRole('checkbox',{name:/Inventory API/})).toBeChecked();
 });
+
+test('sidebar navigation asks before leaving a dirty automation request and keeps it on Keep editing', async ({ page }) => {
+  await page.goto('/#pages/automation');
+  await page.getByRole('button',{name:'Request identity',exact:true}).click();
+  await page.getByLabel('Identity name',{exact:true}).fill('Sidebar draft');
+  await page.getByRole('navigation',{name:'Primary navigation'}).getByRole('link',{name:'Projects',exact:true}).click();
+  await expect(page.getByRole('alertdialog')).toBeVisible();
+  await page.getByRole('button',{name:'Keep editing'}).click();
+  await expect(page.getByLabel('Identity name',{exact:true})).toHaveValue('Sidebar draft');
+});
+
+test('browser history back asks before leaving a dirty automation request', async ({ page }) => {
+  await page.goto('/#pages/resources');
+  const nav=page.getByRole('navigation',{name:'Primary navigation'});
+  await nav.getByRole('link',{name:'Automation identities',exact:true}).click();
+  await expect(page).toHaveURL(/#pages\/automation$/);
+  await nav.getByRole('link',{name:'Projects',exact:true}).click();
+  await expect(page).toHaveURL(/#pages\/resources$/);
+  await page.goBack();
+  await expect(page).toHaveURL(/#pages\/automation$/);
+  await page.getByRole('button',{name:'Request identity',exact:true}).click();
+  await page.getByLabel('Identity name',{exact:true}).fill('History draft');
+  await page.goBack();
+  await expect(page.getByRole('alertdialog')).toBeVisible();
+  await page.getByRole('button',{name:'Keep editing'}).click();
+  await expect(page.getByLabel('Identity name',{exact:true})).toHaveValue('History draft');
+});
+
+test('context switching asks before leaving a dirty automation request', async ({ page }) => {
+  await page.goto('/#pages/automation');
+  await page.getByRole('button',{name:'Request identity',exact:true}).click();
+  await page.getByLabel('Identity name',{exact:true}).fill('Context draft');
+  await page.getByRole('button',{name:/Switch context:/}).click();
+  const switchDialog=page.getByRole('dialog',{name:'Switch context'});
+  await switchDialog.getByRole('button',{name:'Operations'}).click();
+  await switchDialog.getByRole('button',{name:/Production infrastructure/}).click();
+  const confirm=page.getByRole('alertdialog',{name:'Switch context and discard changes?'});
+  await expect(confirm).toBeVisible();
+  await confirm.getByRole('button',{name:'Keep editing'}).click();
+  await expect(page.getByLabel('Identity name',{exact:true})).toHaveValue('Context draft');
+});
+
+test('Cancel on an edited Changes requested revision prompts and Keep editing retains the purpose', async ({ page }) => {
+  await page.goto('/#pages/automation');
+  await page.getByRole('checkbox',{name:/Preview as administrator/}).check();
+  await page.getByRole('button',{name:/Release automation/}).click();
+  await page.getByRole('button',{name:'Review request',exact:true}).click();
+  await page.getByLabel(/Changes needed/).fill('Please narrow this request.');
+  await page.getByRole('button',{name:'Request changes',exact:true}).click();
+  await page.getByRole('button',{name:'Revise request',exact:true}).click();
+  const sections=page.getByRole('navigation',{name:'Automation editor sections'});
+  await expect(sections).toBeVisible();
+  await sections.getByRole('button',{name:'Identity',exact:true}).click();
+  const purpose=page.locator('.ai-page-editor .ai-page-form textarea').first();
+  await expect(purpose).toBeVisible();
+  await purpose.fill('Read only the checkout release manifest.');
+  await page.getByRole('button',{name:'Cancel',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Discard unsaved changes?'})).toBeVisible();
+  await page.getByRole('button',{name:'Keep editing'}).click();
+  await expect(purpose).toHaveValue('Read only the checkout release manifest.');
+});

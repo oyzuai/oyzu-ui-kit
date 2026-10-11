@@ -78,7 +78,7 @@ export const shortcutLabel =
   typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent) ? "⌘K" : "Ctrl K";
 
 /** Routes assistant actions: open-* actions navigate, the rest confirm with a note. */
-export function actionHandler(go: Go, note: (text: string) => void, drain?: (id: string) => void) {
+export function actionHandler(go: Go, note: (text: string) => void, drain?: (id: string) => void, ask?: (question: string) => void) {
   return (id: ActionId, target?: string) => {
     switch (id) {
       case "open-logs":
@@ -97,6 +97,9 @@ export function actionHandler(go: Go, note: (text: string) => void, drain?: (id:
         return go({ to: "pool", id: target ?? "acme-onprem" });
       case "register-repo":
         note("Asked the payments project admins to register acme/ledger-tools. Replay the delivery once it's registered.");
+        return;
+      case "suggest-fix":
+        ask?.("Suggest a fix");
         return;
       default: {
         if (id === "drain-manager") drain?.(target ?? "mgr-onprem-02");
@@ -235,7 +238,7 @@ export function ExplainCard({
 }) {
   const assistant = useAssistant(explain.context, role);
   const onCite = (runId: string, attempt: number, seq: number) => go({ to: "run", runId, attempt, seq });
-  const onAction = actionHandler(go, assistant.note, drain);
+  const onAction = actionHandler(go, assistant.note, drain, assistant.ask);
   useEffect(() => {
     if (explain.local) return;
     // Deferred so a development double-mount doesn't ask twice.
@@ -963,7 +966,7 @@ export function CapacityView({
 
 export function AskView({ assistant, go, drain }: { assistant: HomeAssistant; go: Go; drain: (id: string) => void }) {
   const onCite = (runId: string, attempt: number, seq: number) => go({ to: "run", runId, attempt, seq });
-  const onAction = actionHandler(go, assistant.note, drain);
+  const onAction = actionHandler(go, assistant.note, drain, assistant.ask);
   return (
     <div className="tr-view tr-ask">
       <header className="tr-head">
@@ -1122,7 +1125,7 @@ export function CommandPalette({
     setQuery("");
   };
   const onCite = (runId: string, attempt: number, seq: number) => go({ to: "run", runId, attempt, seq });
-  const onAction = actionHandler(go, assistant.note, drain);
+  const onAction = actionHandler(go, assistant.note, drain, assistant.ask);
 
   let lastGroup = "";
   return (

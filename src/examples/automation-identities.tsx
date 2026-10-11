@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bot,
   ArrowLeft,
@@ -108,7 +108,7 @@ let saved = seed;
 function savePreview(items: Identity[]) {
   saved = items;
 }
-export function AutomationIdentities() {
+export function AutomationIdentities({ onStateChange = () => undefined }: { onStateChange?: (dirty: boolean, busy: boolean) => void }) {
   const context = useActiveContext();
   const entryRoot =
     context.project ??
@@ -137,6 +137,11 @@ export function AutomationIdentities() {
     [discard, setDiscard] = useState(false),
     [panel, setPanel] = useState("Identity");
   const item = items.find((i) => i.identifier === selected);
+  const dirty = Boolean((modal === "request" || modal === "review") && (draft.name || purpose || entries.some((e) => e.actions.length || e.selector.ids.length || !e.selector.exact))) || Boolean(modal === "auth" && repository);
+  useEffect(() => {
+    onStateChange(dirty, checking);
+    return () => onStateChange(false, false);
+  }, [dirty, checking, onStateChange]);
   const mutate = (next: Identity) => {
     const updated = items.map((i) =>
       i.identifier === next.identifier ? next : i,
@@ -147,14 +152,7 @@ export function AutomationIdentities() {
   const close = () => {
     if (checking) return;
     if (
-      (modal === "request" &&
-        (draft.name ||
-          purpose ||
-          entries.some(
-            (e) =>
-              e.actions.length || e.selector.ids.length || !e.selector.exact,
-          ))) ||
-      (modal === "auth" && repository)
+      dirty
     )
       setDiscard(true);
     else {

@@ -33,10 +33,13 @@ test("page studies use the available width and handle sparse content", async ({
   ).toBeVisible();
 });
 test("full pages are accessible and responsive", async ({ page }) => {
+  await page.goto("/#pages/resources");
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 950 });
-    for (const section of ["resources", "detail", "activity"]) {
-      await page.goto("/#pages/" + section);
+    for (const [section, label] of [["resources", "Resource list"], ["detail", "Detail page"], ["activity", "Activity"]]) {
+      if (section !== "resources" || width !== 1440) {
+        await page.getByRole("navigation", { name: "Page examples" }).getByRole("link", { name: label, exact: true }).click();
+      }
       await expect(page.locator(".full-page")).toBeVisible();
       await expect
         .poll(() =>
@@ -65,4 +68,12 @@ test("full pages are accessible and responsive", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "No matching activity" }),
   ).toBeVisible();
+});
+
+test('explicit unknown project IDs show not-found; omitting an ID uses the default project', async ({ page }) => {
+  await page.goto('/#pages/detail/deleted-project-id');
+  await expect(page.getByRole('heading',{name:'Project not found'})).toBeVisible();
+  await expect(page.getByRole('status')).toContainText('This project could not be found.');
+  await page.goto('/#pages/detail');
+  await expect(page.getByRole('heading',{name:'Developer tools',exact:true})).toBeVisible();
 });

@@ -1,73 +1,13 @@
 import { ChevronRight, Copy, ScrollText, Sparkles, Stethoscope, TriangleAlert } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { GroupIcon } from "./log-viewer";
-import {
-  duration,
-  stripAnsiText,
-  type Attempt,
-  type GroupState,
-  type LogEntry,
-  type LogGroup,
-  type Role,
-  type Run,
-} from "./model";
+import { duration, stripAnsiText, type Attempt, type GroupState, type LogEntry, type LogGroup, type Role, type Run } from "./model";
+import { headline, stepName } from "./run-digest-logic";
 import "./run-digest.css";
 
 // "Summary-first" look: a run opens on a plain-language digest of what
 // happened, with the raw log one click away instead of being the page.
 
-const taskNames: Record<string, string> = {
-  compile: "Compile",
-  test: "Tests",
-  lint: "Lint",
-  image: "Container image",
-  "policy-check": "Policy check",
-};
-
-export function stepName(group: LogGroup) {
-  if (group.target === "runner") return group.task === "setup" ? "Check out and start" : "Upload results";
-  if (group.target === "task") return taskNames[group.task] ?? group.task;
-  return `${taskNames[group.task] ?? group.task}`;
-}
-
-function headline(run: Run, groups: readonly LogGroup[], entries: readonly LogEntry[], live: boolean, attempt?: Attempt) {
-  if (attempt?.logState === "incomplete")
-    return { tone: "warning", title: "This attempt lost its runner", detail: attempt.reason ?? "" };
-  const work = groups.filter((group) => group.target !== "runner");
-  const failed = work.filter((group) => group.state === "failed");
-  if (failed.length) {
-    const group = failed[0];
-    const counts = entries
-      .filter((entry) => entry.scope === group.scope)
-      .map((entry) => stripAnsiText(entry.text).match(/(\d+) passed; (\d+) failed/))
-      .find(Boolean);
-    const title = counts
-      ? `${counts[2]} ${counts[2] === "1" ? "test" : "tests"} failed in ${group.target}`
-      : `${stepName(group)} failed in ${group.target}`;
-    const passed = work.length - failed.length;
-    return {
-      tone: "failed",
-      title,
-      detail: `${passed} of ${work.length} steps passed${counts ? `, and ${counts[1]} other tests in ${group.target} passed` : ""}. Nothing else needs your attention.`,
-    };
-  }
-  if (live) {
-    const current = work.find((group) => group.state === "running");
-    const done = work.filter((group) => group.state === "succeeded").length;
-    return {
-      tone: "running",
-      title: current ? `${stepName(current)} for ${current.target} is running` : "Starting",
-      detail: `Step ${Math.min(done + 1, work.length)} of ${work.length}. Usually takes about a minute.`,
-    };
-  }
-  if (!groups.length)
-    return { tone: run.state === "failed" ? "failed" : "neutral", title: run.reason?.message ?? "No log for this run", detail: "" };
-  return {
-    tone: "succeeded",
-    title: `All ${work.length} ${work.length === 1 ? "step" : "steps"} passed`,
-    detail: `Finished in ${duration(run.durationMs)} on ${run.attempts.at(-1)?.pool ?? "the pool"}.`,
-  };
-}
 
 export function RunDigest({
   run,
