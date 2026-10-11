@@ -14,7 +14,7 @@ type WizardDialogProps = Omit<
   "title" | "description" | "children" | "onBack" | "onSubmit"
 > & {
   steps: readonly [WizardStep, ...WizardStep[]];
-  onComplete: () => Promise<void>;
+  onComplete: (signal: AbortSignal) => Promise<void>;
 };
 
 /** Navigation belongs here; callers supply steps, validation and the final operation. */
@@ -26,7 +26,8 @@ export function WizardDialog({
   ...props
 }: WizardDialogProps) {
   const [index, setIndex] = useState(0);
-  const step = steps[index];
+  const current = Math.min(index, steps.length - 1);
+  const step = steps[current];
   return (
     <FlowDialog
       {...props}
@@ -36,27 +37,29 @@ export function WizardDialog({
         if (open) setIndex(0);
         onOpenChange(open);
       }}
-      submitLabel={index === steps.length - 1 ? submitLabel : "Continue"}
-      onBack={index > 0 ? () => setIndex(index - 1) : undefined}
-      onSubmit={async () => {
+      submitLabel={current === steps.length - 1 ? submitLabel : "Continue"}
+      onBack={current > 0 ? () => setIndex(current - 1) : undefined}
+      onSubmit={async (signal) => {
         if (step.validate && !step.validate()) return;
-        if (index < steps.length - 1) setIndex(index + 1);
-        else await onComplete();
+        if (current < steps.length - 1) setIndex(current + 1);
+        else await onComplete(signal);
       }}
     >
       <ol className="stepper" aria-label="Setup progress">
         {steps.map((item, position) => (
           <li
             key={item.label}
-            aria-current={index === position ? "step" : undefined}
-            className={position <= index ? "current" : ""}
+            aria-current={current === position ? "step" : undefined}
+            className={position <= current ? "current" : ""}
           >
-            <span>{position < index ? <Check size={12} /> : position + 1}</span>
+            <span>
+              {position < current ? <Check size={12} /> : position + 1}
+            </span>
             {item.label}
           </li>
         ))}
       </ol>
-      <div className="wizard-step" key={index}>
+      <div className="wizard-step" key={current}>
         {step.content}
       </div>
     </FlowDialog>

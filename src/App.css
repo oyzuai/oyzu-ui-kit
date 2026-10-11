@@ -502,7 +502,7 @@ h3 {
   color: var(--muted-foreground);
 }
 .field-error {
-  color: #b3332b;
+  color: var(--destructive);
 }
 .flow-dialog [data-slot="dialog-footer"] {
   margin: 0 -28px -28px;

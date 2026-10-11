@@ -12,6 +12,7 @@ import {
   AlertDialogCancel,
 } from "../ui/alert-dialog";
 import { TextField } from "./text-field";
+import { useAbortableSubmit } from "./use-abortable-submit";
 export function ConfirmAction({
   trigger,
   title,
@@ -31,7 +32,8 @@ export function ConfirmAction({
   description: string;
   actionLabel: string;
   confirmText?: string;
-  onConfirm: () => Promise<void>;
+  /** Receives a signal that is aborted when the user gives up on a stalled action. */
+  onConfirm: (signal: AbortSignal) => Promise<void>;
 }) {
   const [localOpen, setLocalOpen] = useState(false);
   const open = controlledOpen ?? localOpen;
@@ -40,7 +42,7 @@ export function ConfirmAction({
     onOpenChange?.(next);
   }
   const [text, setText] = useState("");
-  const [busy, setBusy] = useState(false);
+  const { pending: busy, slow, run, cancel } = useAbortableSubmit();
   const [error, setError] = useState("");
   return (
     <AlertDialog
@@ -88,16 +90,27 @@ export function ConfirmAction({
           </p>
         )}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel
+            disabled={busy && !slow}
+            onClick={(event) => {
+              if (!busy) return;
+              event.preventDefault();
+              cancel();
+              setError(
+                "This is taking too long, so we stopped waiting. Check the result before trying again.",
+              );
+            }}
+          >
+            {busy ? "Stop waiting" : "Cancel"}
+          </AlertDialogCancel>
           <Button
             variant="destructive"
             disabled={busy || (!!confirmText && text !== confirmText)}
             onClick={async () => {
               if (busy) return;
-              setBusy(true);
               setError("");
               try {
-                await onConfirm();
+                if (!(await run(onConfirm))) return;
                 setOpen(false);
                 setText("");
               } catch (cause) {
@@ -106,13 +119,11 @@ export function ConfirmAction({
                     ? cause.message
                     : "Could not complete the action. Please try again.",
                 );
-              } finally {
-                setBusy(false);
               }
             }}
           >
             {busy && <LoaderCircle size={14} className="animate-spin" />}
-            {busy ? "Working…" : actionLabel}
+            {busy ? (slow ? "Still working…" : "Working…") : actionLabel}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

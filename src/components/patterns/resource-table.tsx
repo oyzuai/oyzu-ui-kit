@@ -47,7 +47,9 @@ export function ResourceTable<T>({
 }) {
   const [sorting, setSorting] = useState<{ key: string; ascending: boolean }>();
   const [requestedPage, setPage] = useState(0);
-  const size = Math.max(1, pageSize);
+  const size = Number.isFinite(pageSize)
+    ? Math.max(1, Math.floor(pageSize))
+    : 4;
   const pages = Math.max(1, Math.ceil(rows.length / size));
   const page = Math.min(requestedPage, pages - 1);
   const column = columns.find((item) => item.key === sorting?.key);

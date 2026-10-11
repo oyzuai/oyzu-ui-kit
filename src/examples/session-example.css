@@ -1,64 +1,4 @@
-.sidebar-account {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 12px 4px;
-  text-align: left;
-  min-height: 56px;
-  border-top: 1px solid var(--border);
-  cursor: pointer;
-}
-.sidebar-account:hover {
-  background: rgba(6, 20, 77, 0.05);
-}
-.user-monogram {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  background: #06144d;
-  color: white;
-  font-size: 12px;
-  border-radius: 50%;
-}
-.sidebar-account-copy {
-  flex: 1;
-  min-width: 0;
-}
-.sidebar-account-copy strong,
-.sidebar-account-copy small {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.sidebar-account-copy strong {
-  font-size: 12px;
-}
-.sidebar-account-copy small {
-  font-size: 10px;
-  color: var(--muted-foreground);
-}
-.account-popover {
-  width: 240px;
-  max-width: calc(100vw - 40px);
-  border-radius: 4px;
-  padding: 6px;
-}
-.account-popover strong,
-.account-popover small {
-  display: block;
-}
-.account-popover small {
-  font-weight: 400;
-  color: var(--muted-foreground);
-  overflow-wrap: anywhere;
-}
-.account-popover [role="menuitem"] {
-  min-height: 42px;
-}
+
 .session-page {
   min-height: 100dvh;
   background: var(--surface-base, #f5f4ef);
@@ -94,10 +34,6 @@
   width: 100%;
   min-height: 44px;
 }
-.session-caption {
-  font-size: 12px;
-  color: var(--text-muted, #52605f);
-}
 .session-actions {
   display: flex;
   flex-wrap: wrap;
@@ -107,9 +43,6 @@
   margin-top: auto;
   font-size: 10px;
   letter-spacing: 0.18em;
-}
-.sidebar-account.compact {
-  justify-content: center;
 }
 
 .signin-flow {
@@ -150,9 +83,6 @@
 }
 .signin-sso svg:last-child {
   margin-left: auto;
-}
-.signin-flow > .session-caption {
-  margin-top: 12px;
 }
 .signin-step {
   border-top: 2px solid #0a1dbb;

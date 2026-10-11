@@ -285,3 +285,9 @@
     text-overflow: ellipsis;
   }
 }
+
+/* The sidebar is dark in both themes; the deep-blue ring fails contrast there. */
+.navigation-desktop :is(button, a, select, input):focus-visible,
+.navigation-mobile-drawer :is(button, a, select, input):focus-visible {
+  outline-color: var(--sidebar-ring, #8faaff);
+}
