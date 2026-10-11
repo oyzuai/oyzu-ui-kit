@@ -49,7 +49,7 @@ html.dark .wb-root {
   flex-direction: column;
 }
 .wb-workspace > span {
-  border-radius: 4px;
+  border-radius: var(--radius);
   font-weight: 600;
   letter-spacing: 0.04em;
 }
@@ -128,7 +128,7 @@ html.dark .wb-root {
 }
 .wb-crumbs button {
   color: inherit;
-  border-radius: 3px;
+  border-radius: var(--radius);
 }
 .wb-crumbs button:hover {
   color: var(--wb-link);
@@ -163,7 +163,7 @@ html.dark .wb-root {
   padding-left: 30px;
   padding-right: 30px;
   font-size: 12.5px;
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--wb-quiet);
   border-color: transparent;
 }
@@ -196,7 +196,7 @@ html.dark .wb-root {
   list-style: none;
   background: var(--popover, var(--wb-panel));
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius);
   box-shadow: var(--wb-shadow);
 }
 .wb-gsearch-list button {
@@ -205,7 +205,7 @@ html.dark .wb-root {
   gap: 10px;
   width: 100%;
   padding: 7px 8px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   text-align: left;
 }
 .wb-gsearch-list button:hover,
@@ -248,7 +248,7 @@ html.dark .wb-root {
 .wb-kbd {
   font: 500 10px/1 var(--wb-mono);
   padding: 3px 5px;
-  border-radius: 3px;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   color: var(--muted-foreground);
   background: var(--background);
@@ -395,7 +395,7 @@ html.dark .wb-root {
   gap: 5px;
   font-size: 12px;
   color: var(--wb-link);
-  border-radius: 3px;
+  border-radius: var(--radius);
 }
 .wb-back:hover {
   text-decoration: underline;
@@ -416,7 +416,7 @@ html.dark .wb-root {
 .wb-link {
   color: var(--wb-link);
   text-align: left;
-  border-radius: 2px;
+  border-radius: var(--radius);
   overflow-wrap: anywhere;
 }
 .wb-link:hover {
@@ -472,7 +472,7 @@ html.dark .wb-root {
   min-width: 0;
   background: var(--wb-panel);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
 }
 .wb-panel h3 {
   margin: 0;
@@ -546,7 +546,7 @@ html.dark .wb-root {
 }
 .wb-tab-count {
   padding: 1px 6px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 10.5px;
   font-weight: 500;
   background: var(--wb-quiet);
@@ -570,7 +570,7 @@ html.dark .wb-root {
   background: var(--wb-blue);
   border: 1px solid var(--border);
   border-left: 2px solid var(--primary);
-  border-radius: 2px;
+  border-radius: var(--radius);
   animation: wb-fade 0.15s ease-out;
 }
 .wb-confirm[data-danger] {
@@ -640,7 +640,7 @@ html.dark .wb-root {
   gap: 4px;
   padding: 2px 7px;
   font-size: 11px;
-  border-radius: 2px;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   color: var(--muted-foreground);
   white-space: nowrap;
@@ -651,7 +651,7 @@ html.dark .wb-root {
   border-color: transparent;
 }
 .wb-root .wb-badge {
-  border-radius: 2px;
+  border-radius: var(--radius);
   font-size: 10px;
   font-weight: 550;
   height: 18px;
@@ -665,7 +665,7 @@ html.dark .wb-root {
 .wb-filter {
   padding: 2px 7px;
   font-size: 11.5px;
-  border-radius: 2px;
+  border-radius: var(--radius);
   background: var(--wb-quiet);
 }
 
@@ -717,7 +717,7 @@ html.dark .wb-root {
   text-align: left;
   font-weight: 550;
   color: var(--wb-ink);
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 .wb-row:hover .wb-row-link {
   color: var(--wb-link);
@@ -764,7 +764,7 @@ html.dark .wb-root {
 }
 .wb-skeleton {
   height: 12px;
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 .wb-skeleton-row td {
   padding-block: 14px;
@@ -801,7 +801,7 @@ html.dark .wb-root {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
   overflow: hidden;
 }
@@ -855,7 +855,7 @@ html.dark .wb-root {
   align-items: start;
   padding: 14px 16px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
 }
 .wb-runinfo .wb-facts {
@@ -872,7 +872,7 @@ html.dark .wb-root {
   gap: 8px;
   min-width: 0;
   padding: 6px 6px 6px 10px;
-  border-radius: 3px;
+  border-radius: var(--radius);
   background: var(--wb-quiet);
 }
 .wb-command-row > .rb-mono {
@@ -914,7 +914,7 @@ html.dark .wb-root {
   padding: 9px 12px;
   text-align: left;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
 }
 .wb-attempts button:hover {
@@ -972,7 +972,7 @@ html.dark .wb-root {
   padding: 12px 16px;
   border: 1px solid var(--border);
   border-left: 3px solid var(--wb-good);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
 }
 .wb-merge[data-blocked] {
@@ -1002,7 +1002,7 @@ html.dark .wb-root {
   padding: 0;
   list-style: none;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
 }
 .wb-checks li {
@@ -1058,7 +1058,7 @@ html.dark .wb-root {
   font-size: 12px;
   color: var(--muted-foreground);
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
 }
 .wb-connector strong {
@@ -1173,7 +1173,7 @@ html.dark .wb-root {
   margin-left: 6px;
   padding: 1px 5px;
   font-size: 10px;
-  border-radius: 2px;
+  border-radius: var(--radius);
   color: var(--wb-warn);
   background: var(--wb-warn-bg);
 }
@@ -1185,7 +1185,7 @@ html.dark .wb-root {
   padding: 14px 16px;
   border: 1px solid var(--border);
   border-left: 2px solid var(--primary);
-  border-radius: 2px;
+  border-radius: var(--radius);
   background: var(--wb-blue);
   animation: wb-fade 0.18s ease-out;
 }
@@ -1258,7 +1258,7 @@ html.dark .wb-root {
   gap: 12px;
   padding: 14px 16px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
   scroll-margin-top: 16px;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -1346,7 +1346,7 @@ html.dark .wb-root {
   font-size: 12.5px;
   font-weight: 550;
   text-align: left;
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 .wb-binding-recent > button > svg {
   transform: rotate(-90deg);
@@ -1402,7 +1402,7 @@ html.dark .wb-root {
   gap: 14px;
   padding: 16px;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -1437,14 +1437,14 @@ html.dark .wb-root {
   flex: none;
   width: 30px;
   height: 30px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   color: var(--wb-link);
   background: var(--wb-blue);
 }
 .wb-card-link {
   color: var(--wb-ink);
   text-align: left;
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 .wb-card-link::after {
   content: "";
@@ -1479,7 +1479,7 @@ html.dark .wb-root {
 }
 .wb-root .wb-progress {
   height: 6px;
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 .wb-pool-member {
   display: flex;
@@ -1534,7 +1534,7 @@ html.dark .wb-root {
   list-style: none;
   font: 12px/1.5 var(--wb-mono);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--wb-panel);
 }
 .wb-poollog li {
@@ -1590,7 +1590,7 @@ html.dark .wb-root {
   justify-self: end;
   color: var(--wb-link);
   font: inherit;
-  border-radius: 2px;
+  border-radius: var(--radius);
 }
 button.wb-poollog-job:hover {
   text-decoration: underline;
@@ -1614,7 +1614,7 @@ button.wb-poollog-job:hover {
   flex-direction: column;
   gap: 0;
   padding: 0 0 env(safe-area-inset-bottom, 0px);
-  border-radius: 14px 14px 0 0;
+  border-radius: var(--radius) 0 0;
   overflow: hidden;
   background: var(--surface-panel, #fffefa);
   animation: wb-sheet-up 0.22s ease-out;
@@ -1626,7 +1626,7 @@ button.wb-poollog-job:hover {
   width: 36px;
   height: 4px;
   margin: 7px 0 1px;
-  border-radius: 2px;
+  border-radius: var(--radius);
   background: var(--border);
 }
 .wb-sheet .assistant-panel {

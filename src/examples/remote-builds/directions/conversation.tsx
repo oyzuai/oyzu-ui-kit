@@ -1574,7 +1574,7 @@ function ThreadView({
         open(hasLog(target_.id) ? { kind: "log", runId: target_.id, attempt: target_.attempt || 1 } : { kind: "run", runId: target_.id });
         return;
       }
-      case "apply-fix":
+      case "suggest-fix":
         open({ kind: "diff" });
         if (!fixAsked) {
           setFixAsked(true);

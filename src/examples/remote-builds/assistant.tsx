@@ -12,6 +12,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
+import { confirmFirst } from "./assistant-policy";
 import {
   respond,
   suggestionsFor,
@@ -31,13 +32,6 @@ export type ChatMessage = {
   /** Number of reply blocks shown so far, for the streaming reveal. */
   shown?: number;
   thinking?: boolean;
-};
-
-const confirmFirst: Partial<Record<ActionId, string>> = {
-  "rerun-failed": "Rerun payments-core/test for 9c41e2a on Acme on-prem? It creates a new attempt of the same check; the commit and command don't change.",
-  rerun: "Rerun the whole check for this commit?",
-  "drain-manager": "Drain mgr-onprem-02? It stops claiming new jobs; jobs already running finish.",
-  "rotate-secret": "Generate a new webhook secret for github-acme-legacy? The current one keeps working for 24 hours.",
 };
 
 let nextId = 1;
@@ -118,22 +112,27 @@ function Typed({ text, animate }: { text: string; animate: boolean }) {
 }
 
 function CopyCommand({ command, note }: { command: string; note?: string }) {
-  const [done, setDone] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   return (
     <div className="as-command">
       <code>{command}</code>
       <button
         type="button"
         aria-label="Copy command"
-        onClick={() => {
-          navigator.clipboard?.writeText(command).catch(() => undefined);
-          setDone(true);
-          window.setTimeout(() => setDone(false), 1500);
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(command);
+            setCopyState("copied");
+            window.setTimeout(() => setCopyState("idle"), 1500);
+          } catch {
+            setCopyState("failed");
+          }
         }}
       >
-        {done ? <Check size={13} /> : <Copy size={13} />}
+        {copyState === "copied" ? <Check size={13} /> : <Copy size={13} />}
       </button>
       {note && <small>{note}</small>}
+      {copyState === "failed" && <span role="status">Couldn’t copy. Select the command and copy it manually: <code tabIndex={0}>{command}</code></span>}
     </div>
   );
 }
@@ -295,7 +294,7 @@ export function AssistantMessages({
   }, [messages.length, last?.shown]);
   if (!messages.length) return <>{empty}</>;
   return (
-    <div className="as-messages">
+    <div className="as-messages" aria-live="polite" aria-relevant="additions text">
       {messages.map((message) => {
         if (message.author === "user")
           return (

@@ -8,7 +8,7 @@
   padding: 22px 24px;
   margin-bottom: 14px;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius);
   background: var(--surface-panel, #fffefa);
   box-shadow: 0 1px 2px #06144d0a, 0 8px 24px #06144d0d;
   min-width: 0;
@@ -30,7 +30,7 @@ html.dark .rd[data-tone="warning"] { --rd-tone: #ecc585; --rd-tone-bg: #3a3222; 
   flex: none;
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   color: var(--rd-tone);
   background: var(--rd-tone-bg);
 }
@@ -59,7 +59,7 @@ html.dark .rd[data-tone="warning"] { --rd-tone: #ecc585; --rd-tone-bg: #3a3222; 
   gap: 9px;
   padding: 8px 14px 8px 10px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: var(--background);
   text-align: left;
   transition: border-color 120ms ease, background 120ms ease;
@@ -85,7 +85,7 @@ html.dark .rd-steps button[data-state="failed"] { background: #42282a; border-co
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--rd-tone-bg);
   color: var(--foreground);
   text-align: left;
@@ -99,6 +99,6 @@ html.dark .rd-steps button[data-state="failed"] { background: #42282a; border-co
 .rd-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
 @media (max-width: 760px) {
-  .rd { padding: 16px; border-radius: 12px; }
+  .rd { padding: 16px; border-radius: var(--radius); }
   .rd-head h3 { font-size: 18px; }
 }

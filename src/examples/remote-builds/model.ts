@@ -1034,3 +1034,7 @@ export function tone(state: RunState | GroupState | CheckConclusion | ManagerSta
       return "paused" as const;
   }
 }
+
+export function statusWord(state: RunState | GroupState | CheckConclusion | ManagerStatus) {
+  return ({ healthy: "Healthy", pending: "Pending", paused: "Paused", warning: "Needs attention", failed: "Failed" } as const)[tone(state)];
+}

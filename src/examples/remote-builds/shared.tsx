@@ -7,13 +7,13 @@ import {
   TriangleAlert,
   XCircle,
 } from "lucide-react";
-import type { ActionId } from "./assistant-engine";
 import {
   stateLabel,
   type CheckConclusion,
   type ManagerStatus,
   type Role,
   type RunState,
+  statusWord,
 } from "./model";
 
 // Shared prototype plumbing every design direction uses: the viewer's role, the
@@ -64,15 +64,12 @@ export function StateChip({
   const Icon = icons[state as keyof typeof icons] ?? CircleDashed;
   const text =
     label ??
-    (state in stateLabel
-      ? stateLabel[state as RunState]
-      : state in checkLabels
-        ? checkLabels[state as CheckConclusion]
-        : state[0].toUpperCase() + state.slice(1));
+    statusWord(state as RunState);
   return (
     <span className={`rb-chip rb-chip-${size}`} data-state={state}>
       <Icon size={size === "sm" ? 11 : 13} aria-hidden="true" className={state === "running" || state === "in_progress" ? "animate-spin" : undefined} />
       {text}
+      {label === undefined && <span className="sr-only"> ({state in stateLabel ? stateLabel[state as RunState] : state in checkLabels ? checkLabels[state as CheckConclusion] : state})</span>}
     </span>
   );
 }
@@ -82,23 +79,4 @@ export function Mono({ children }: { children: ReactNode }) {
 }
 
 /** What the platform would say after the person confirms an assistant action. */
-export function actionResult(id: ActionId, target?: string): string | undefined {
-  switch (id) {
-    case "rerun-failed":
-      return "Queued attempt 3 of run 9012 on Acme on-prem. The check on #482 shows queued again.";
-    case "rerun":
-      return "Queued a new attempt of the same check and commit.";
-    case "apply-fix":
-      return "Posted a suggested change on pull request #482 for dana.okafor to review.";
-    case "drain-manager":
-      return `${target ?? "mgr-onprem-02"} is draining. It finishes running jobs and claims nothing new.`;
-    case "rotate-secret":
-      return "New webhook secret generated and shown once to pool admins. The old one works for 24 hours.";
-    case "explain":
-      return "Explained against today's bindings: still no match, because PR #483 is still a draft.";
-    case "replay":
-      return "Replayed as a new delivery linked to the original.";
-    default:
-      return undefined;
-  }
-}
+export { actionResult } from "./assistant-policy";

@@ -144,6 +144,7 @@ export function LogViewer({
   const [selected, setSelected] = useState<number | undefined>(focusSeq);
   const [following, setFollowing] = useState(live);
   const [copied, setCopied] = useState<string>();
+  const [copyFailed, setCopyFailed] = useState(false);
   const attemptInfo = run.attempts.find((item) => item.n === attempt);
   const { look } = usePrototype();
   const summary = look === "summary";
@@ -209,12 +210,19 @@ export function LogViewer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hit, query]);
 
-  function copyLink(seq: number) {
-    const link = `#attempt-${attempt}-L${seq}`;
+  async function copyLink(seq: number) {
+    const runNumber = run.number;
+    const link = `${window.location.origin}${window.location.pathname}#pipeline-run-${runNumber}-attempt-${attempt}-L${seq}`;
     setSelected(seq);
-    navigator.clipboard?.writeText(link).catch(() => undefined);
-    setCopied(link);
-    window.setTimeout(() => setCopied(undefined), 1800);
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopyFailed(false);
+      setCopied(link);
+      window.setTimeout(() => setCopied(undefined), 1800);
+    } catch {
+      setCopyFailed(true);
+      setCopied(link);
+    }
   }
 
   const totalLines = entries.length;
@@ -440,7 +448,7 @@ export function LogViewer({
           )}
           {copied && (
             <p className="lv-toast" role="status">
-              <Link2 size={13} aria-hidden="true" /> {copied.startsWith("#") ? `Copied link ${copied}` : copied}
+              {copyFailed ? <>Couldn’t copy. Select this link and copy it manually: <input aria-label="Log line link" readOnly value={copied} onFocus={(event) => event.currentTarget.select()} /></> : <><Link2 size={13} aria-hidden="true" /> Copied link</>}
             </p>
           )}
         </div>

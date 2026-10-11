@@ -88,7 +88,7 @@ export function FullPages({
 }) {
   const [projects, setProjects] = useState(samples);
   const [notice, setNotice] = useState("");
-  const project = projects.find((row) => row.id === projectId) ?? samples[0];
+  const project = projectId ? projects.find((row) => row.id === projectId) : samples[0];
   const page = ["resources", "detail", "activity"].includes(section)
     ? section
     : "resources";
@@ -99,6 +99,7 @@ export function FullPages({
   const [selected, setSelected] = useState<string[]>([]);
   const [event, setEvent] = useState(0);
   const [activityFilter, setActivityFilter] = useState("");
+  if (projectId && !project) return <PageLayout eyebrow="PROJECT" title="Project not found" description="The project link may be outdated or the project may have been removed."><p role="status">This project could not be found.</p></PageLayout>;
   const rows =
     density === "empty"
       ? []
@@ -308,7 +309,7 @@ export function FullPages({
           </div>
         </PageLayout>
       )}
-      {page === "detail" && (
+      {page === "detail" && project && (
         <PageLayout
           eyebrow={"PROJECT / " + project.id.toUpperCase()}
           title={project.name}

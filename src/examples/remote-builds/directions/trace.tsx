@@ -910,7 +910,7 @@ function AskSection({
       <AssistantMessages
         messages={assistant.messages}
         onCite={onCite ?? ((runId, attempt, seq) => go({ to: "run", runId, attempt, seq }))}
-        onAction={actionHandler(go, assistant.note)}
+        onAction={actionHandler(go, assistant.note, undefined, assistant.ask)}
         empty={<p className="tr-muted">Answers cite the lines and records they read. Pick a question or select Ask on any log line.</p>}
       />
       <AssistantComposer onSend={(text) => assistant.ask(text)} suggestions={assistant.suggestions} placeholder="Ask about this…" />

@@ -75,7 +75,7 @@ html.dark .as-messages {
 .as-user p {
   margin: 0;
   padding: 8px 12px;
-  border-radius: 12px 12px 2px 12px;
+  border-radius: var(--radius);
   background: var(--secondary);
   font-size: 13.5px;
 }
@@ -106,7 +106,7 @@ html.dark .as-messages {
   font-family: ui-monospace, Menlo, Consolas, monospace;
   font-size: 0.88em;
   padding: 1px 4px;
-  border-radius: 3px;
+  border-radius: var(--radius);
   background: var(--surface-muted, #ecece6);
 }
 .as-thinking {
@@ -136,7 +136,7 @@ html.dark .as-messages {
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-left: 3px solid var(--as-accent);
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--background);
   min-width: 0;
 }
@@ -161,7 +161,7 @@ html.dark .as-messages {
   gap: 4px 8px;
   align-items: center;
   padding: 8px 10px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   background: var(--composition-ink, #06144d);
   color: #e8edff;
 }
@@ -179,7 +179,7 @@ html.dark .as-command { background: #0b1220; }
   gap: 1px;
   margin: 0;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   overflow: hidden;
   background: var(--border);
 }
@@ -213,7 +213,7 @@ html.dark .as-command { background: #0b1220; }
 .as-diff {
   margin: 0;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   overflow: hidden;
 }
 .as-diff figcaption {
@@ -240,7 +240,7 @@ html.dark .as-diff [data-kind="+"] { background: #193a2d; color: #91d9b4; }
   display: grid;
   gap: 8px;
   padding: 10px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   border: 1px solid var(--as-accent);
   background: var(--as-accent-soft);
   font-size: 12.5px;
@@ -278,7 +278,7 @@ html.dark .as-diff [data-kind="+"] { background: #193a2d; color: #91d9b4; }
   flex: none;
   padding: 4px 10px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius);
   background: var(--background);
   font-size: 12px;
   white-space: nowrap;
@@ -290,7 +290,7 @@ html.dark .as-diff [data-kind="+"] { background: #193a2d; color: #91d9b4; }
   gap: 6px;
   padding: 6px 6px 6px 12px;
   border: 1px solid var(--input, var(--border));
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--background);
 }
 .as-composer form:focus-within { border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring), transparent 75%); }

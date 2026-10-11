@@ -25,7 +25,7 @@
   display: flex;
   gap: 2px;
   padding: 3px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: #ffffff14;
 }
 .rb-study-switch button {
@@ -33,7 +33,7 @@
   align-items: center;
   gap: 6px;
   padding: 5px 12px;
-  border-radius: 6px;
+  border-radius: var(--radius);
   color: #d0dbf6;
   font-size: 13px;
 }
@@ -46,7 +46,7 @@
   background: #ffffff14;
   color: #fff;
   border: 1px solid #ffffff30;
-  border-radius: 5px;
+  border-radius: var(--radius);
   padding: 3px 6px;
   font-size: 12px;
 }
@@ -56,7 +56,7 @@
   gap: 5px;
   color: #d0dbf6;
   padding: 4px 8px;
-  border-radius: 5px;
+  border-radius: var(--radius);
 }
 .rb-study-tools button:hover { background: #ffffff14; }
 .rb-study-pitch {
@@ -78,7 +78,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border-radius: 3px;
+  border-radius: var(--radius);
   font-weight: 550;
   white-space: nowrap;
   color: #536177;
@@ -114,4 +114,4 @@ html.dark .rb-chip:is([data-state="warning"], [data-state="action_required"]) { 
 .rb-study[data-look="summary"] .rb-study-stage *:not(.lv-scroll, .lv-scroll *, .as-command, .as-command *, .as-diff, .as-diff *, pre, pre *, [class*="command"], [class*="command"] *, [class*="cmd"], [class*="cmd"] *, svg, svg *) {
   font-family: var(--font-sans, "Geist Variable", system-ui, sans-serif) !important;
 }
-.rb-study[data-look="summary"] .rb-study-stage .log-viewer { border-radius: 12px; }
+.rb-study[data-look="summary"] .rb-study-stage .log-viewer { border-radius: var(--radius); }
