@@ -42,7 +42,12 @@ import {
   changeGroupMembership,
 } from "./rbac-model";
 export function AccessLibrary() {
-  const [tab, setTab] = useState(() => { const tab = new URLSearchParams(location.hash.split("?")[1]).get("tab"); return tab && ["Users", "Roles", "Resource groups"].includes(tab) ? tab : "Users"; }),
+  const [tab, setTab] = useState(() => {
+      const tab = new URLSearchParams(location.hash.split("?")[1]).get("tab");
+      return tab && ["Users", "Roles", "Resource groups"].includes(tab)
+        ? tab
+        : "Users";
+    }),
     [query, setQuery] = useState(""),
     [filter, setFilter] = useState("All"),
     [page, setPage] = useState(0);
@@ -72,7 +77,14 @@ export function AccessLibrary() {
       );
       return model.groups.find((g) => definitionKey(g) === key) ?? null;
     }),
-    [person, setPerson] = useState<(typeof people)[number] | null>(() => people.find(p => principalId(p) === new URLSearchParams(location.hash.split("?")[1]).get("member")) ?? null),
+    [person, setPerson] = useState<(typeof people)[number] | null>(
+      () =>
+        people.find(
+          (p) =>
+            principalId(p) ===
+            new URLSearchParams(location.hash.split("?")[1]).get("member"),
+        ) ?? null,
+    ),
     [notice, setNotice] = useState("");
   const data = tab === "Users" ? people : tab === "Roles" ? roles : groups;
   const rows = data.filter(
@@ -120,7 +132,10 @@ export function AccessLibrary() {
             </span>
           </button>
         ))}
-        <a href="#pages/user-groups"><Users size={18}/>User groups <span>{model.userGroups.length}</span></a>
+        <a href="#pages/user-groups">
+          <Users size={18} />
+          User groups <span>{model.userGroups.length}</span>
+        </a>
       </nav>
       <div className="al-heading">
         <div>

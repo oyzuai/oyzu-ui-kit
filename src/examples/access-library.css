@@ -5,7 +5,8 @@
   margin-bottom: 30px;
   overflow: auto;
 }
-.al-tabs button, .al-tabs > a {
+.al-tabs button,
+.al-tabs > a {
   display: flex;
   align-items: center;
   gap: 9px;
@@ -15,7 +16,8 @@
   cursor: pointer;
   font-size: 14px;
 }
-.al-tabs button[aria-current], .al-tabs > a[aria-current] {
+.al-tabs button[aria-current],
+.al-tabs > a[aria-current] {
   border-color: var(--primary);
   color: var(--text-link, var(--primary));
 }
@@ -489,7 +491,8 @@
   .al-tabs {
     gap: 16px;
   }
-  .al-tabs button, .al-tabs > a {
+  .al-tabs button,
+  .al-tabs > a {
     font-size: 12px;
   }
   .al-editor-header {
@@ -740,7 +743,20 @@
     gap: 6px;
   }
 }
-.rbac-type-choices > div { padding: 3px 0; }
-.rbac-type-choices button { padding:6px 8px; }
-.rbac-publication-delta { margin:18px 0; padding:18px; border-left:3px solid var(--primary); background:var(--muted); }
-.rbac-publication-delta p { margin-top:10px; font-size:13px; overflow-wrap:anywhere; }
+.rbac-type-choices > div {
+  padding: 3px 0;
+}
+.rbac-type-choices button {
+  padding: 6px 8px;
+}
+.rbac-publication-delta {
+  margin: 18px 0;
+  padding: 18px;
+  border-left: 3px solid var(--primary);
+  background: var(--muted);
+}
+.rbac-publication-delta p {
+  margin-top: 10px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}

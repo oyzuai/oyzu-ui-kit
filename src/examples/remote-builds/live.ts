@@ -21,7 +21,11 @@ type LiveSnapshot = {
 let snapshot: LiveSnapshot = {
   entries: liveInitialLog,
   state: "running",
-  groups: { runner: "succeeded", "api-image/compile": "running", "api-image/image": "queued" },
+  groups: {
+    runner: "succeeded",
+    "api-image/compile": "running",
+    "api-image/image": "queued",
+  },
   elapsedMs: 11_400,
 };
 const listeners = new Set<() => void>();
@@ -47,10 +51,15 @@ function tick() {
   }
   cursor += 1;
   const groups = { ...snapshot.groups };
-  if (line.text.startsWith("Task api-image/compile succeeded")) groups["api-image/compile"] = "succeeded";
-  if (line.text.startsWith("Task api-image/image started")) groups["api-image/image"] = "running";
+  if (line.text.startsWith("Task api-image/compile succeeded"))
+    groups["api-image/compile"] = "succeeded";
+  if (line.text.startsWith("Task api-image/image started"))
+    groups["api-image/image"] = "running";
   emit({
-    entries: [...snapshot.entries, { ...line, seq: snapshot.entries.length + 1 }],
+    entries: [
+      ...snapshot.entries,
+      { ...line, seq: snapshot.entries.length + 1 },
+    ],
     state: snapshot.state,
     groups,
     elapsedMs: line.t,
@@ -70,7 +79,11 @@ export function restartLiveRun() {
   emit({
     entries: liveInitialLog,
     state: "running",
-    groups: { runner: "succeeded", "api-image/compile": "running", "api-image/image": "queued" },
+    groups: {
+      runner: "succeeded",
+      "api-image/compile": "running",
+      "api-image/image": "queued",
+    },
     elapsedMs: 11_400,
   });
   start();

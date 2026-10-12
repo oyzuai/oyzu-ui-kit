@@ -170,11 +170,39 @@ test("access explanation fits mobile and has accessible controls", async ({
     ).violations,
   ).toEqual([]);
 });
-test('direct composer supports multiple recipients and ongoing assignments',async({page})=>{
- await page.goto('/#pages/access');await page.getByRole('button',{name:'Assign access',exact:true}).click();const d=page.getByRole('dialog');
- await d.getByLabel('Role',{exact:true}).selectOption('reader@1');await d.getByLabel('Resource coverage',{exact:true}).selectOption('current@1');
- await d.getByLabel('Search recipients').fill('Alex Morgan');await d.getByRole('button',{name:/Alex Morgan/}).click();await d.getByLabel('Search recipients').fill('Build automation');await d.getByRole('button',{name:/Build automation/}).click();
- await expect(d.getByText('2 selected',{exact:true})).toBeVisible();await expect(d.getByLabel('Assignment lifetime')).toHaveCount(0);await expect(d.getByLabel('Assignment progress')).toHaveCount(0);
- await d.getByRole('button',{name:'Review assignment',exact:true}).click();await expect(d.getByRole('heading',{name:'Scope Reader for 2 recipients'})).toBeVisible();await d.getByRole('button',{name:'Activate access',exact:true}).click();await page.keyboard.press('Escape');await expect(page.getByRole('status').filter({hasText:'2 assignments activated.'})).toBeVisible();
- const rows=page.locator('.access-table tbody tr');await expect(rows.nth(0)).toContainText('Indefinite');await expect(rows.nth(1)).toContainText('Indefinite');await expect(rows.nth(0)).toContainText('Alex Morgan');await expect(rows.nth(1)).toContainText('Build automation');
+test("direct composer supports multiple recipients and ongoing assignments", async ({
+  page,
+}) => {
+  await page.goto("/#pages/access");
+  await page
+    .getByRole("button", { name: "Assign access", exact: true })
+    .click();
+  const d = page.getByRole("dialog");
+  await d.getByLabel("Role", { exact: true }).selectOption("reader@1");
+  await d
+    .getByLabel("Resource coverage", { exact: true })
+    .selectOption("current@1");
+  await d.getByLabel("Search recipients").fill("Alex Morgan");
+  await d.getByRole("button", { name: /Alex Morgan/ }).click();
+  await d.getByLabel("Search recipients").fill("Build automation");
+  await d.getByRole("button", { name: /Build automation/ }).click();
+  await expect(d.getByText("2 selected", { exact: true })).toBeVisible();
+  await expect(d.getByLabel("Assignment lifetime")).toHaveCount(0);
+  await expect(d.getByLabel("Assignment progress")).toHaveCount(0);
+  await d
+    .getByRole("button", { name: "Review assignment", exact: true })
+    .click();
+  await expect(
+    d.getByRole("heading", { name: "Scope Reader for 2 recipients" }),
+  ).toBeVisible();
+  await d.getByRole("button", { name: "Activate access", exact: true }).click();
+  await page.keyboard.press("Escape");
+  await expect(
+    page.getByRole("status").filter({ hasText: "2 assignments activated." }),
+  ).toBeVisible();
+  const rows = page.locator(".access-table tbody tr");
+  await expect(rows.nth(0)).toContainText("Indefinite");
+  await expect(rows.nth(1)).toContainText("Indefinite");
+  await expect(rows.nth(0)).toContainText("Alex Morgan");
+  await expect(rows.nth(1)).toContainText("Build automation");
 });

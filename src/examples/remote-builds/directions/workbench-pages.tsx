@@ -1,4 +1,11 @@
-import { createContext, Fragment, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  Fragment,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -86,14 +93,27 @@ export type WbPage =
   | { name: "pool"; poolId: string };
 
 export type RunTab = "logs" | "summary" | "outputs" | "trigger";
-export type RunView = { tab?: RunTab; attempt?: number; focusSeq?: number; nonce: number };
-export type PoolView = { tab: "managers" | "logs"; job: string; manager: string; level: string };
+export type RunView = {
+  tab?: RunTab;
+  attempt?: number;
+  focusSeq?: number;
+  nonce: number;
+};
+export type PoolView = {
+  tab: "managers" | "logs";
+  job: string;
+  manager: string;
+  level: string;
+};
 
 export type WbApi = {
   role: Role;
   go: (page: WbPage) => void;
   openRun: (runId: string, view?: Partial<RunView>) => void;
-  openPoolLogs: (poolId: string, filter: { job?: string; manager?: string }) => void;
+  openPoolLogs: (
+    poolId: string,
+    filter: { job?: string; manager?: string },
+  ) => void;
   openAssistant: () => void;
   askAbout: (question: string) => void;
   /** The run with live state merged in, for the one running build. */
@@ -144,7 +164,13 @@ export function PageHead({
   );
 }
 
-export function BackLink({ label, onClick }: { label: string; onClick: () => void }) {
+export function BackLink({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick: () => void;
+}) {
   return (
     <button type="button" className="wb-back" onClick={onClick}>
       <ArrowLeft size={13} aria-hidden="true" /> {label}
@@ -175,16 +201,24 @@ export function Tabs<T extends string>({
           onClick={() => onChange(tab.id)}
           onKeyDown={(event) => {
             if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
-            const next = tabs[(index + (event.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+            const next =
+              tabs[
+                (index + (event.key === "ArrowRight" ? 1 : tabs.length - 1)) %
+                  tabs.length
+              ];
             onChange(next.id);
             const list = event.currentTarget.parentElement;
             window.requestAnimationFrame(() =>
-              list?.querySelector<HTMLButtonElement>('[aria-selected="true"]')?.focus(),
+              list
+                ?.querySelector<HTMLButtonElement>('[aria-selected="true"]')
+                ?.focus(),
             );
           }}
         >
           {tab.label}
-          {tab.count !== undefined && <span className="wb-tab-count">{tab.count}</span>}
+          {tab.count !== undefined && (
+            <span className="wb-tab-count">{tab.count}</span>
+          )}
         </button>
       ))}
     </div>
@@ -206,10 +240,20 @@ export function ConfirmStrip({
   danger?: boolean;
 }) {
   return (
-    <div className="wb-confirm" role="group" aria-label="Confirm action" data-danger={danger || undefined}>
+    <div
+      className="wb-confirm"
+      role="group"
+      aria-label="Confirm action"
+      data-danger={danger || undefined}
+    >
       <p>{children}</p>
       <div>
-        <Button size="sm" variant={danger ? "destructive" : "default"} onClick={onConfirm} autoFocus>
+        <Button
+          size="sm"
+          variant={danger ? "destructive" : "default"}
+          onClick={onConfirm}
+          autoFocus
+        >
           {confirmLabel}
         </Button>
         <Button size="sm" variant="ghost" onClick={onCancel}>
@@ -220,7 +264,13 @@ export function ConfirmStrip({
   );
 }
 
-export function Done({ text, onDismiss }: { text: string; onDismiss: () => void }) {
+export function Done({
+  text,
+  onDismiss,
+}: {
+  text: string;
+  onDismiss: () => void;
+}) {
   return (
     <div className="wb-done">
       <FeedbackBanner tone="success" title={text} onDismiss={onDismiss} />
@@ -229,7 +279,8 @@ export function Done({ text, onDismiss }: { text: string; onDismiss: () => void 
 }
 
 const prefersReduced = () =>
-  typeof window !== "undefined" && Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
+  typeof window !== "undefined" &&
+  Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
 
 /** A short skeleton beat when a list first loads, so the page reads as fetched. */
 export function useBriefLoading(key: string, ms = 420) {
@@ -253,7 +304,10 @@ export function SkeletonRows({ rows, cols }: { rows: number; cols: number }) {
         <TableRow key={row} className="wb-skeleton-row" aria-hidden="true">
           {Array.from({ length: cols }, (_, col) => (
             <TableCell key={col}>
-              <Skeleton className="wb-skeleton" style={{ width: `${45 + ((row * 3 + col * 7) % 5) * 11}%` }} />
+              <Skeleton
+                className="wb-skeleton"
+                style={{ width: `${45 + ((row * 3 + col * 7) % 5) * 11}%` }}
+              />
             </TableCell>
           ))}
         </TableRow>
@@ -275,7 +329,13 @@ export function Facts({ rows }: { rows: [ReactNode, ReactNode][] }) {
   );
 }
 
-export function LinkButton({ children, onClick }: { children: ReactNode; onClick: () => void }) {
+export function LinkButton({
+  children,
+  onClick,
+}: {
+  children: ReactNode;
+  onClick: () => void;
+}) {
   return (
     <button type="button" className="wb-link" onClick={onClick}>
       {children}
@@ -290,8 +350,20 @@ const outcomeState: Record<Delivery["outcome"], CheckConclusion> = {
   rejected: "failure",
   unregistered: "action_required",
 };
-export function OutcomeChip({ delivery, size = "sm" }: { delivery: Delivery; size?: "sm" | "md" }) {
-  return <StateChip state={outcomeState[delivery.outcome]} label={delivery.outcomeLabel} size={size} />;
+export function OutcomeChip({
+  delivery,
+  size = "sm",
+}: {
+  delivery: Delivery;
+  size?: "sm" | "md";
+}) {
+  return (
+    <StateChip
+      state={outcomeState[delivery.outcome]}
+      label={delivery.outcomeLabel}
+      size={size}
+    />
+  );
 }
 
 export function runNumber(id?: string) {
@@ -304,12 +376,23 @@ export function ChecksPage() {
   const { openRun, liveState, askAbout } = useWb();
   const list = checks.map((check) => {
     if (check.runId !== liveRun.id) return check;
-    if (liveState === "succeeded") return { ...check, conclusion: "success" as const, summary: "api-image built; image index sha256:3e5a…c2d0" };
-    if (liveState === "cancelled") return { ...check, conclusion: "cancelled" as const, summary: "Cancelled from the portal" };
+    if (liveState === "succeeded")
+      return {
+        ...check,
+        conclusion: "success" as const,
+        summary: "api-image built; image index sha256:3e5a…c2d0",
+      };
+    if (liveState === "cancelled")
+      return {
+        ...check,
+        conclusion: "cancelled" as const,
+        summary: "Cancelled from the portal",
+      };
     return check;
   });
   const failing = list.filter((check) => check.conclusion === "failure");
-  const count = (c: CheckConclusion) => list.filter((check) => check.conclusion === c).length;
+  const count = (c: CheckConclusion) =>
+    list.filter((check) => check.conclusion === c).length;
   return (
     <>
       <PageHead
@@ -325,12 +408,17 @@ export function ChecksPage() {
             <span className="wb-meta-item">
               <FolderGit2 size={13} aria-hidden="true" /> acme/payments-api
             </span>
-            <span className="wb-meta-item">#482 Retry refunds with the original idempotency key</span>
+            <span className="wb-meta-item">
+              #482 Retry refunds with the original idempotency key
+            </span>
             <span className="wb-meta-item">feat/refund-retries</span>
           </>
         }
       />
-      <section className="wb-merge" data-blocked={failing.length > 0 || undefined}>
+      <section
+        className="wb-merge"
+        data-blocked={failing.length > 0 || undefined}
+      >
         <span className="wb-merge-icon" aria-hidden="true">
           {failing.length ? <CircleX size={18} /> : <CircleCheck size={18} />}
         </span>
@@ -341,13 +429,17 @@ export function ChecksPage() {
               : "All required checks passed or were skipped"}
           </strong>
           <p>
-            {count("failure")} failing · {count("in_progress")} in progress · {count("success")} successful ·{" "}
-            {count("skipped")} skipped
+            {count("failure")} failing · {count("in_progress")} in progress ·{" "}
+            {count("success")} successful · {count("skipped")} skipped
             {count("cancelled") ? ` · ${count("cancelled")} cancelled` : ""}
           </p>
         </div>
         {failing.length > 0 && (
-          <Button size="sm" variant="outline" onClick={() => askAbout("Why did build 9012 fail?")}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => askAbout("Why did build 9012 fail?")}
+          >
             <Sparkles /> Ask why
           </Button>
         )}
@@ -370,12 +462,19 @@ export function ChecksPage() {
                 <p>
                   {check.summary}
                   {check.conclusion === "skipped" && check.required && (
-                    <span className="wb-muted"> · reported as skipped so it doesn't block merging</span>
+                    <span className="wb-muted">
+                      {" "}
+                      · reported as skipped so it doesn't block merging
+                    </span>
                   )}
                 </p>
               </div>
               {number ? (
-                <Button size="sm" variant="ghost" onClick={() => check.runId && openRun(check.runId)}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => check.runId && openRun(check.runId)}
+                >
                   Run {number} <ArrowRight />
                 </Button>
               ) : (
@@ -409,7 +508,14 @@ export function TriggersPage() {
     (d) =>
       (outcome === "all" || d.outcome === outcome) &&
       (!q ||
-        [d.id, d.event, d.repository, d.ref, d.actor, d.pr ? `#${d.pr.number} ${d.pr.title}` : ""]
+        [
+          d.id,
+          d.event,
+          d.repository,
+          d.ref,
+          d.actor,
+          d.pr ? `#${d.pr.number} ${d.pr.title}` : "",
+        ]
           .join(" ")
           .toLowerCase()
           .includes(q)),
@@ -426,25 +532,35 @@ export function TriggersPage() {
         title="github-acme-legacy rejected the last 12 deliveries"
         action={
           <div className="wb-banner-actions">
-            <Button size="sm" variant="outline" onClick={() => go({ name: "delivery", deliveryId: "dlv-rej" })}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => go({ name: "delivery", deliveryId: "dlv-rej" })}
+            >
               Open rejected deliveries
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => askAbout("Why are webhooks being rejected?")}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => askAbout("Why are webhooks being rejected?")}
+            >
               <Sparkles /> Ask Oyzu
             </Button>
           </div>
         }
       >
-        Each one failed the signature check, so the webhook secret on GitHub probably doesn't match this connector's.
-        Pushes to acme/web-console since 2:02 PM ET started nothing.
+        Each one failed the signature check, so the webhook secret on GitHub
+        probably doesn't match this connector's. Pushes to acme/web-console
+        since 2:02 PM ET started nothing.
       </FeedbackBanner>
       <div className="wb-connectors" aria-label="Connectors">
         <span className="wb-connector">
-          <Webhook size={13} aria-hidden="true" /> <strong>github-acme</strong> <span className="wb-ok-dot" /> Healthy ·
-          last delivery 3:30 PM ET
+          <Webhook size={13} aria-hidden="true" /> <strong>github-acme</strong>{" "}
+          <span className="wb-ok-dot" /> Healthy · last delivery 3:30 PM ET
         </span>
         <span className="wb-connector" data-bad>
-          <Webhook size={13} aria-hidden="true" /> <strong>github-acme-legacy</strong> <span className="wb-bad-dot" /> 12
+          <Webhook size={13} aria-hidden="true" />{" "}
+          <strong>github-acme-legacy</strong> <span className="wb-bad-dot" /> 12
           rejected since 2:02 PM ET
         </span>
       </div>
@@ -454,9 +570,18 @@ export function TriggersPage() {
           <span className="wb-muted">Today · {deliveries.length} records</span>
         </div>
         <div className="wb-toolbar">
-          <SearchField value={query} onChange={setQuery} label="Search deliveries" placeholder="Search by event, repository, PR or id…" />
+          <SearchField
+            value={query}
+            onChange={setQuery}
+            label="Search deliveries"
+            placeholder="Search by event, repository, PR or id…"
+          />
           <Select value={outcome} onValueChange={setOutcome}>
-            <SelectTrigger size="sm" aria-label="Filter by outcome" className="wb-select">
+            <SelectTrigger
+              size="sm"
+              aria-label="Filter by outcome"
+              className="wb-select"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -503,9 +628,15 @@ export function TriggersPage() {
                 <SkeletonRows rows={5} cols={6} />
               ) : (
                 rows.map((d) => (
-                  <TableRow key={d.id} className="wb-row" onClick={() => go({ name: "delivery", deliveryId: d.id })}>
+                  <TableRow
+                    key={d.id}
+                    className="wb-row"
+                    onClick={() => go({ name: "delivery", deliveryId: d.id })}
+                  >
                     <TableCell data-label="Received">
-                      <span className="wb-cell-main">{clock(d.receivedAt)}</span>
+                      <span className="wb-cell-main">
+                        {clock(d.receivedAt)}
+                      </span>
                       <small className="wb-muted">{ago(d.receivedAt)}</small>
                     </TableCell>
                     <TableCell data-label="Event" className="wb-cell-title">
@@ -520,7 +651,9 @@ export function TriggersPage() {
                         {d.event}
                       </button>
                       <small className="wb-muted">
-                        {d.pr ? `#${d.pr.number} ${d.pr.title}${d.pr.draft ? " (draft)" : ""}` : d.ref}
+                        {d.pr
+                          ? `#${d.pr.number} ${d.pr.title}${d.pr.draft ? " (draft)" : ""}`
+                          : d.ref}
                       </small>
                     </TableCell>
                     <TableCell data-label="Repository">
@@ -530,7 +663,9 @@ export function TriggersPage() {
                     <TableCell data-label="Outcome">
                       <OutcomeChip delivery={d} />
                     </TableCell>
-                    <TableCell data-label="Runs">{d.runIds.length || <span className="wb-muted">—</span>}</TableCell>
+                    <TableCell data-label="Runs">
+                      {d.runIds.length || <span className="wb-muted">—</span>}
+                    </TableCell>
                     <TableCell data-label="Delivery">
                       <Mono>{d.id}</Mono>
                     </TableCell>
@@ -551,22 +686,42 @@ const stageIcon: Record<StageStatus, ReactNode> = {
   ok: <CircleCheck size={16} aria-label="Passed" />,
   fail: <CircleX size={16} aria-label="Failed" />,
   skip: <CircleMinus size={16} aria-label="Skipped" />,
-  running: <LoaderCircle size={16} className="animate-spin" aria-label="In progress" />,
+  running: (
+    <LoaderCircle size={16} className="animate-spin" aria-label="In progress" />
+  ),
   pending: <CircleDashed size={16} aria-label="Not reached" />,
 };
 
 function headersFor(d: Delivery): [string, string][] {
   return [
     ["X-GitHub-Event", d.event.split(".")[0]],
-    ["X-GitHub-Delivery", d.outcome === "rejected" ? "3 samples kept, latest 7c1e09b2-5e4f…" : d.githubDelivery],
-    ["X-GitHub-Hook-ID", d.connector === "github-acme-legacy" ? "38817204" : "41827733"],
-    ["X-Hub-Signature-256", d.outcome === "rejected" ? "sha256=*** (did not match)" : "sha256=*** (valid)"],
+    [
+      "X-GitHub-Delivery",
+      d.outcome === "rejected"
+        ? "3 samples kept, latest 7c1e09b2-5e4f…"
+        : d.githubDelivery,
+    ],
+    [
+      "X-GitHub-Hook-ID",
+      d.connector === "github-acme-legacy" ? "38817204" : "41827733",
+    ],
+    [
+      "X-Hub-Signature-256",
+      d.outcome === "rejected"
+        ? "sha256=*** (did not match)"
+        : "sha256=*** (valid)",
+    ],
     ["User-Agent", "GitHub-Hookshot/7a1c2e9"],
     ["Content-Type", "application/json"],
   ];
 }
 
-type Verdict = { binding: Binding; matched: boolean; reason: string; changed: boolean };
+type Verdict = {
+  binding: Binding;
+  matched: boolean;
+  reason: string;
+  changed: boolean;
+};
 
 function explainNow(d: Delivery, enabled: Record<string, boolean>): Verdict[] {
   return bindings.map((binding) => {
@@ -575,13 +730,20 @@ function explainNow(d: Delivery, enabled: Record<string, boolean>): Verdict[] {
     let reason = original?.reason ?? "Not evaluated";
     if (!enabled[binding.id]) {
       matched = false;
-      reason = binding.scope.startsWith("Org") ? "Disabled for org acme" : "Disabled in project payments";
+      reason = binding.scope.startsWith("Org")
+        ? "Disabled for org acme"
+        : "Disabled in project payments";
     } else if (original?.reason.startsWith("Disabled")) {
       reason = binding.filters[0].startsWith("Schedule")
         ? "Runs on a schedule; webhooks don't start it"
         : `Listens for ${binding.filters[0]}, got ${d.event.split(".")[0]}`;
     }
-    return { binding, matched, reason, changed: Boolean(original) && matched !== original?.matched };
+    return {
+      binding,
+      matched,
+      reason,
+      changed: Boolean(original) && matched !== original?.matched,
+    };
   });
 }
 
@@ -604,7 +766,11 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
         title="Delivery not found"
         description="It may be older than the 30-day retention window."
         action={
-          <Button size="sm" variant="outline" onClick={() => go({ name: "triggers" })}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => go({ name: "triggers" })}
+          >
             Back to trigger history
           </Button>
         }
@@ -617,7 +783,10 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
         : {
             ...stage,
             status: "ok" as const,
-            detail: liveState === "cancelled" ? "1 failed, 1 succeeded, 1 cancelled" : "1 failed, 2 succeeded",
+            detail:
+              liveState === "cancelled"
+                ? "1 failed, 1 succeeded, 1 cancelled"
+                : "1 failed, 2 succeeded",
           }
       : stage,
   );
@@ -629,7 +798,9 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
       : d.pr
         ? `#${d.pr.number} ${d.pr.title}`
         : `${d.event} to ${d.ref}`;
-  const startedRuns = d.runIds.map((id) => runs.find((run) => run.id === id)).filter((run): run is Run => Boolean(run));
+  const startedRuns = d.runIds
+    .map((id) => runs.find((run) => run.id === id))
+    .filter((run): run is Run => Boolean(run));
   const explainHeadline = (rows: Verdict[]) => {
     const now = rows.filter((row) => row.matched).length;
     const changed = rows.filter((row) => row.changed).length;
@@ -640,7 +811,12 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
   return (
     <>
       <PageHead
-        back={<BackLink label="Trigger history" onClick={() => go({ name: "triggers" })} />}
+        back={
+          <BackLink
+            label="Trigger history"
+            onClick={() => go({ name: "triggers" })}
+          />
+        }
         eyebrow={
           <>
             Delivery {d.id} · {d.connector}
@@ -659,7 +835,9 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
                 {d.ref} · <Mono>{d.commit}</Mono>
               </span>
             )}
-            {d.actor !== "—" && <span className="wb-meta-item">by {d.actor}</span>}
+            {d.actor !== "—" && (
+              <span className="wb-meta-item">by {d.actor}</span>
+            )}
             <span className="wb-meta-item">
               {clock(d.receivedAt)} · {ago(d.receivedAt)}
             </span>
@@ -667,7 +845,19 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
         }
         actions={
           <>
-            <Button size="sm" variant="ghost" onClick={() => askAbout(d.outcome === "rejected" ? "Why are webhooks being rejected?" : d.outcome === "started" ? "Which bindings matched?" : "Why did this start nothing?")}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() =>
+                askAbout(
+                  d.outcome === "rejected"
+                    ? "Why are webhooks being rejected?"
+                    : d.outcome === "started"
+                      ? "Which bindings matched?"
+                      : "Why did this start nothing?",
+                )
+              }
+            >
               <Sparkles /> Ask Oyzu
             </Button>
             {d.outcome === "rejected" ? (
@@ -676,10 +866,18 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
               </Button>
             ) : (
               <>
-                <Button size="sm" variant="outline" onClick={() => setConfirm("explain")}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setConfirm("explain")}
+                >
                   <ScrollText /> Explain
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => setConfirm("replay")}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setConfirm("replay")}
+                >
                   <Repeat /> Replay
                 </Button>
               </>
@@ -695,11 +893,14 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
             setConfirm(undefined);
             setDone(
               `${actionResult("replay")} New delivery dlv-8a02 points back to ${d.id}.` +
-                (matchedCount ? " Matching bindings start runs again, and cancel-previous applies." : ""),
+                (matchedCount
+                  ? " Matching bindings start runs again, and cancel-previous applies."
+                  : ""),
             );
           }}
         >
-          Replay {d.id} as a new delivery linked to this one? It goes through every stage again against today's bindings
+          Replay {d.id} as a new delivery linked to this one? It goes through
+          every stage again against today's bindings
           {matchedCount ? ", so it can start runs and write checks" : ""}.
         </ConfirmStrip>
       )}
@@ -712,7 +913,8 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
             setExplained(explainNow(d, enabled));
           }}
         >
-          Evaluate this delivery against today's bindings as a dry run? Nothing starts and no checks are written.
+          Evaluate this delivery against today's bindings as a dry run? Nothing
+          starts and no checks are written.
         </ConfirmStrip>
       )}
       {confirm === "rotate" && (
@@ -724,8 +926,8 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
             setDone(actionResult("rotate-secret") ?? "Secret rotated.");
           }}
         >
-          Generate a new webhook secret for github-acme-legacy? The current one keeps working for 24 hours while you paste
-          the new value into GitHub.
+          Generate a new webhook secret for github-acme-legacy? The current one
+          keeps working for 24 hours while you paste the new value into GitHub.
         </ConfirmStrip>
       )}
       {done && <Done text={done} onDismiss={() => setDone(undefined)} />}
@@ -740,14 +942,22 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
           action={
             registered ? (
               <div className="wb-banner-actions">
-                <Button size="sm" variant="outline" onClick={() => setConfirm("replay")}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setConfirm("replay")}
+                >
                   <Repeat /> Replay this delivery
                 </Button>
               </div>
             ) : (
               <div className="wb-banner-actions">
                 <Select value={project} onValueChange={setProject}>
-                  <SelectTrigger size="sm" aria-label="Project" className="wb-select">
+                  <SelectTrigger
+                    size="sm"
+                    aria-label="Project"
+                    className="wb-select"
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -778,7 +988,9 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
             <ol className="wb-stepper">
               {stages.map((stage) => (
                 <li key={stage.key} data-status={stage.status}>
-                  <span className="wb-step-icon">{stageIcon[stage.status]}</span>
+                  <span className="wb-step-icon">
+                    {stageIcon[stage.status]}
+                  </span>
                   <div>
                     <strong>{stage.label}</strong>
                     <p>{stage.detail}</p>
@@ -791,12 +1003,18 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
             <section className="wb-section wb-explain" aria-live="polite">
               <div className="wb-section-head">
                 <h2>Dry run against today's bindings</h2>
-                <Button size="icon-sm" variant="ghost" aria-label="Close dry run" onClick={() => setExplained(undefined)}>
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  aria-label="Close dry run"
+                  onClick={() => setExplained(undefined)}
+                >
                   <X />
                 </Button>
               </div>
               <p className="wb-explain-lede">
-                <ScrollText size={14} aria-hidden="true" /> {explainHeadline(explained)} Run at 3:42 PM ET; nothing started.
+                <ScrollText size={14} aria-hidden="true" />{" "}
+                {explainHeadline(explained)} Run at 3:42 PM ET; nothing started.
               </p>
               <VerdictTable rows={explained} showChange />
             </section>
@@ -805,7 +1023,9 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
             <div className="wb-section-head">
               <h2>Binding verdicts</h2>
               <span className="wb-muted">
-                {evaluated ? `${matchedCount} of ${d.evaluations.length} matched` : "Not evaluated"}
+                {evaluated
+                  ? `${matchedCount} of ${d.evaluations.length} matched`
+                  : "Not evaluated"}
               </span>
             </div>
             {evaluated ? (
@@ -816,7 +1036,9 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
                   reason: e.reason,
                   changed: false,
                 }))}
-                runsFor={(binding) => startedRuns.filter((run) => run.bindingId === binding.id)}
+                runsFor={(binding) =>
+                  startedRuns.filter((run) => run.bindingId === binding.id)
+                }
               />
             ) : (
               <p className="wb-note">
@@ -834,7 +1056,10 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
               <Mono>{d.correlationId}</Mono>
               <CopyIdentifier value={d.correlationId} />
             </div>
-            <p className="wb-note">One id links this delivery to its runs, jobs and checks. Search for it in any log.</p>
+            <p className="wb-note">
+              One id links this delivery to its runs, jobs and checks. Search
+              for it in any log.
+            </p>
           </section>
           {startedRuns.length > 0 && (
             <section className="wb-panel">
@@ -845,7 +1070,9 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
                   return (
                     <li key={run.id}>
                       <StateChip state={run.state} size="sm" />
-                      <LinkButton onClick={() => openRun(run.id)}>Run {run.number}</LinkButton>
+                      <LinkButton onClick={() => openRun(run.id)}>
+                        Run {run.number}
+                      </LinkButton>
                       <span className="wb-muted">{run.check}</span>
                     </li>
                   );
@@ -863,7 +1090,9 @@ export function DeliveryPage({ deliveryId }: { deliveryId: string }) {
                 </div>
               ))}
             </dl>
-            <p className="wb-note">Only these headers are kept. Signatures stay masked.</p>
+            <p className="wb-note">
+              Only these headers are kept. Signatures stay masked.
+            </p>
           </section>
           {d.changedPaths.length > 0 && (
             <section className="wb-panel">
@@ -909,15 +1138,27 @@ function VerdictTable({
           return (
             <TableRow key={row.binding.id} data-matched={row.matched}>
               <TableCell data-label="Binding" className="wb-cell-title">
-                <LinkButton onClick={() => go({ name: "bindings", bindingId: row.binding.id })}>{row.binding.name}</LinkButton>
+                <LinkButton
+                  onClick={() =>
+                    go({ name: "bindings", bindingId: row.binding.id })
+                  }
+                >
+                  {row.binding.name}
+                </LinkButton>
                 <small className="wb-muted">{row.binding.scope}</small>
               </TableCell>
               <TableCell data-label="Verdict">
                 <span className="wb-verdict" data-matched={row.matched}>
-                  {row.matched ? <CircleCheck size={13} aria-hidden="true" /> : <CircleMinus size={13} aria-hidden="true" />}
+                  {row.matched ? (
+                    <CircleCheck size={13} aria-hidden="true" />
+                  ) : (
+                    <CircleMinus size={13} aria-hidden="true" />
+                  )}
                   {row.matched ? "Matched" : "Not matched"}
                 </span>
-                {showChange && row.changed && <span className="wb-changed">Changed</span>}
+                {showChange && row.changed && (
+                  <span className="wb-changed">Changed</span>
+                )}
               </TableCell>
               <TableCell data-label="Reason" className="wb-reason">
                 {row.reason}
@@ -927,7 +1168,10 @@ function VerdictTable({
                   {started.length ? (
                     <span className="wb-inline-links">
                       {started.map((run) => (
-                        <LinkButton key={run.id} onClick={() => openRun(run.id)}>
+                        <LinkButton
+                          key={run.id}
+                          onClick={() => openRun(run.id)}
+                        >
                           {run.number}
                         </LinkButton>
                       ))}
@@ -956,16 +1200,32 @@ export function BindingsPage({ selected }: { selected?: string }) {
   const [notes, setNotes] = useState<Record<string, string>>({});
   useEffect(() => {
     if (!selected) return;
-    setOpen((current) => (current.includes(selected) ? current : [...current, selected]));
+    setOpen((current) =>
+      current.includes(selected) ? current : [...current, selected],
+    );
     window.requestAnimationFrame(() =>
-      document.getElementById(`wb-binding-${selected}`)?.scrollIntoView({ block: "start", behavior: prefersReduced() ? "auto" : "smooth" }),
+      document
+        .getElementById(`wb-binding-${selected}`)
+        ?.scrollIntoView({
+          block: "start",
+          behavior: prefersReduced() ? "auto" : "smooth",
+        }),
     );
   }, [selected]);
   const q = query.trim().toLowerCase();
   const list = bindings.filter(
     (b) =>
       (scope === "all" || b.scope.startsWith(scope)) &&
-      (!q || [b.name, b.repositories, ...b.filters, ...b.actions.map((a) => a.command + a.check)].join(" ").toLowerCase().includes(q)),
+      (!q ||
+        [
+          b.name,
+          b.repositories,
+          ...b.filters,
+          ...b.actions.map((a) => a.command + a.check),
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)),
   );
   return (
     <>
@@ -975,9 +1235,18 @@ export function BindingsPage({ selected }: { selected?: string }) {
         lede="Bindings decide which webhook events start which oyzu commands. They live in the platform, not in the repository, and every change is audited."
       />
       <div className="wb-toolbar">
-        <SearchField value={query} onChange={setQuery} label="Search bindings" placeholder="Search by name, filter or command…" />
+        <SearchField
+          value={query}
+          onChange={setQuery}
+          label="Search bindings"
+          placeholder="Search by name, filter or command…"
+        />
         <Select value={scope} onValueChange={setScope}>
-          <SelectTrigger size="sm" aria-label="Filter by scope" className="wb-select">
+          <SelectTrigger
+            size="sm"
+            aria-label="Filter by scope"
+            className="wb-select"
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -1009,8 +1278,13 @@ export function BindingsPage({ selected }: { selected?: string }) {
       <div className="wb-bindings">
         {list.map((binding) => {
           const on = enabled[binding.id];
-          const seen = deliveries.filter((d) => d.evaluations.some((e) => e.bindingId === binding.id));
-          const hits = seen.filter((d) => d.evaluations.find((e) => e.bindingId === binding.id)?.matched).length;
+          const seen = deliveries.filter((d) =>
+            d.evaluations.some((e) => e.bindingId === binding.id),
+          );
+          const hits = seen.filter(
+            (d) =>
+              d.evaluations.find((e) => e.bindingId === binding.id)?.matched,
+          ).length;
           const expanded = open.includes(binding.id);
           return (
             <article
@@ -1055,7 +1329,9 @@ export function BindingsPage({ selected }: { selected?: string }) {
                     : `Enable ${binding.name}? Matching deliveries run ${binding.actions.map((a) => a.command).join(" and ")} again.`}
                 </ConfirmStrip>
               )}
-              {notes[binding.id] && <p className="wb-audit-note">{notes[binding.id]}</p>}
+              {notes[binding.id] && (
+                <p className="wb-audit-note">{notes[binding.id]}</p>
+              )}
               <dl className="wb-binding-grid">
                 <div>
                   <dt>Filters</dt>
@@ -1083,14 +1359,22 @@ export function BindingsPage({ selected }: { selected?: string }) {
                   <dt>Behavior</dt>
                   <dd className="wb-chips">
                     {binding.mandatory ? (
-                      <Badge variant="outline" className="wb-badge" title="Projects in scope can't turn this binding off">
+                      <Badge
+                        variant="outline"
+                        className="wb-badge"
+                        title="Projects in scope can't turn this binding off"
+                      >
                         <Lock /> Mandatory
                       </Badge>
                     ) : (
                       <span className="wb-muted">Optional</span>
                     )}
                     {binding.cancelPrevious ? (
-                      <Badge variant="outline" className="wb-badge" title="A new push cancels this pull request's unfinished runs">
+                      <Badge
+                        variant="outline"
+                        className="wb-badge"
+                        title="A new push cancels this pull request's unfinished runs"
+                      >
                         Cancels previous
                       </Badge>
                     ) : (
@@ -1104,33 +1388,64 @@ export function BindingsPage({ selected }: { selected?: string }) {
                   type="button"
                   aria-expanded={expanded}
                   onClick={() => {
-                    setOpen(expanded ? open.filter((id) => id !== binding.id) : [...open, binding.id]);
-                    if (!expanded) go({ name: "bindings", bindingId: binding.id });
+                    setOpen(
+                      expanded
+                        ? open.filter((id) => id !== binding.id)
+                        : [...open, binding.id],
+                    );
+                    if (!expanded)
+                      go({ name: "bindings", bindingId: binding.id });
                   }}
                 >
                   <ChevronDown size={14} aria-hidden="true" />
                   Recent deliveries
                   <span className="wb-muted">
-                    {seen.length ? `${hits} hit, ${seen.length - hits} miss today` : "none today"}
+                    {seen.length
+                      ? `${hits} hit, ${seen.length - hits} miss today`
+                      : "none today"}
                   </span>
                 </button>
                 {expanded && (
                   <ul>
-                    {seen.length === 0 && <li className="wb-muted">No deliveries reached this binding today.</li>}
+                    {seen.length === 0 && (
+                      <li className="wb-muted">
+                        No deliveries reached this binding today.
+                      </li>
+                    )}
                     {seen.map((d) => {
-                      const evaluation = d.evaluations.find((e) => e.bindingId === binding.id)!;
+                      const evaluation = d.evaluations.find(
+                        (e) => e.bindingId === binding.id,
+                      )!;
                       return (
                         <li key={d.id} data-hit={evaluation.matched}>
-                          <span className="wb-verdict" data-matched={evaluation.matched}>
-                            {evaluation.matched ? <CircleCheck size={13} aria-hidden="true" /> : <CircleMinus size={13} aria-hidden="true" />}
+                          <span
+                            className="wb-verdict"
+                            data-matched={evaluation.matched}
+                          >
+                            {evaluation.matched ? (
+                              <CircleCheck size={13} aria-hidden="true" />
+                            ) : (
+                              <CircleMinus size={13} aria-hidden="true" />
+                            )}
                             {evaluation.matched ? "Hit" : "Miss"}
                           </span>
                           <span className="wb-recent-what">
-                            <Mono>{d.event}</Mono> {d.pr ? `#${d.pr.number}` : d.ref}
+                            <Mono>{d.event}</Mono>{" "}
+                            {d.pr ? `#${d.pr.number}` : d.ref}
                           </span>
-                          <span className="wb-recent-why">{evaluation.reason}</span>
-                          <span className="wb-muted wb-recent-when">{clock(d.receivedAt)}</span>
-                          <LinkButton onClick={() => go({ name: "delivery", deliveryId: d.id })}>{d.id}</LinkButton>
+                          <span className="wb-recent-why">
+                            {evaluation.reason}
+                          </span>
+                          <span className="wb-muted wb-recent-when">
+                            {clock(d.receivedAt)}
+                          </span>
+                          <LinkButton
+                            onClick={() =>
+                              go({ name: "delivery", deliveryId: d.id })
+                            }
+                          >
+                            {d.id}
+                          </LinkButton>
                         </li>
                       );
                     })}
@@ -1147,7 +1462,11 @@ export function BindingsPage({ selected }: { selected?: string }) {
 
 // ---------------------------------------------------------------- pools
 
-const kindIcon = { "Oyzu hosted": Cloud, "Customer network": Building, "Developer machine": Laptop } as const;
+const kindIcon = {
+  "Oyzu hosted": Cloud,
+  "Customer network": Building,
+  "Developer machine": Laptop,
+} as const;
 
 function PoolCard({ pool }: { pool: Pool }) {
   const { role, go, shipping, setShipping } = useWb();
@@ -1163,7 +1482,11 @@ function PoolCard({ pool }: { pool: Pool }) {
         </span>
         <div>
           <h2>
-            <button type="button" className="wb-card-link" onClick={() => go({ name: "pool", poolId: pool.id })}>
+            <button
+              type="button"
+              className="wb-card-link"
+              onClick={() => go({ name: "pool", poolId: pool.id })}
+            >
               {pool.name}
             </button>
           </h2>
@@ -1171,7 +1494,11 @@ function PoolCard({ pool }: { pool: Pool }) {
             {pool.kind} · {pool.scope}
           </p>
         </div>
-        <StateChip state={pool.status} size="sm" label={pool.status === "warning" ? "Needs attention" : undefined} />
+        <StateChip
+          state={pool.status}
+          size="sm"
+          label={pool.status === "warning" ? "Needs attention" : undefined}
+        />
       </header>
       {admin ? (
         <div className="wb-capacity">
@@ -1181,11 +1508,16 @@ function PoolCard({ pool }: { pool: Pool }) {
             </span>
             <span className="wb-muted">{pool.queued} queued</span>
           </div>
-          <Progress value={(pool.busy / pool.capacity) * 100} aria-label={`${pool.name} capacity in use`} className="wb-progress" />
+          <Progress
+            value={(pool.busy / pool.capacity) * 100}
+            aria-label={`${pool.name} capacity in use`}
+            className="wb-progress"
+          />
         </div>
       ) : (
         <p className="wb-note wb-pool-member">
-          <Lock size={12} aria-hidden="true" /> Capacity and managers are visible to pool admins.
+          <Lock size={12} aria-hidden="true" /> Capacity and managers are
+          visible to pool admins.
         </p>
       )}
       <div className="wb-chips">
@@ -1198,7 +1530,8 @@ function PoolCard({ pool }: { pool: Pool }) {
         )}
         {admin && (
           <span className="wb-tag">
-            {pool.managers.length} {pool.managers.length === 1 ? "manager" : "managers"}
+            {pool.managers.length}{" "}
+            {pool.managers.length === 1 ? "manager" : "managers"}
           </span>
         )}
       </div>
@@ -1207,12 +1540,16 @@ function PoolCard({ pool }: { pool: Pool }) {
           <label className="wb-switch">
             <Switch
               checked={ships}
-              onCheckedChange={(value) => (value ? setShipping(pool.id, true) : setPending(true))}
+              onCheckedChange={(value) =>
+                value ? setShipping(pool.id, true) : setPending(true)
+              }
               aria-label={`Ship pool logs for ${pool.name}`}
             />
             <span>Ship pool logs</span>
           </label>
-          <span className="wb-muted">{ships ? "Diagnostics available" : "Logs stay on the host"}</span>
+          <span className="wb-muted">
+            {ships ? "Diagnostics available" : "Logs stay on the host"}
+          </span>
         </footer>
       )}
       {pending && (
@@ -1225,7 +1562,8 @@ function PoolCard({ pool }: { pool: Pool }) {
             setShipping(pool.id, false);
           }}
         >
-          Stop shipping pool logs for {pool.name}? Runner diagnostics show nothing new until you turn it back on.
+          Stop shipping pool logs for {pool.name}? Runner diagnostics show
+          nothing new until you turn it back on.
         </ConfirmStrip>
       )}
     </article>
@@ -1243,18 +1581,28 @@ export function PoolsPage() {
         lede="Pools run build jobs through outbound-only managers: Oyzu hosted, in your network, or on a developer machine. Developer machines never build releases."
       />
       {role !== "pool-admin" && (
-        <FeedbackBanner tone="info" title="You're viewing pools as a project member">
-          You can see which pools builds for payments use and whether they're healthy. Managers, capacity and pool logs are
-          for pool admins.
+        <FeedbackBanner
+          tone="info"
+          title="You're viewing pools as a project member"
+        >
+          You can see which pools builds for payments use and whether they're
+          healthy. Managers, capacity and pool logs are for pool admins.
         </FeedbackBanner>
       )}
       <div className="wb-pools">
         {loading
           ? pools.map((pool) => (
-              <div key={pool.id} className="wb-pool wb-pool-skeleton" aria-hidden="true">
+              <div
+                key={pool.id}
+                className="wb-pool wb-pool-skeleton"
+                aria-hidden="true"
+              >
                 <Skeleton className="wb-skeleton" style={{ width: "55%" }} />
                 <Skeleton className="wb-skeleton" style={{ width: "35%" }} />
-                <Skeleton className="wb-skeleton" style={{ width: "90%", height: 6 }} />
+                <Skeleton
+                  className="wb-skeleton"
+                  style={{ width: "90%", height: 6 }}
+                />
               </div>
             ))
           : pools.map((pool) => <PoolCard key={pool.id} pool={pool} />)}
@@ -1274,7 +1622,10 @@ export function PoolDetail({
 }) {
   const { role, go, openRun, askAbout, drained, drain, shipping } = useWb();
   const pool = poolById(poolId);
-  const [pending, setPending] = useState<{ id: string; kind: "drain" | "rotate" }>();
+  const [pending, setPending] = useState<{
+    id: string;
+    kind: "drain" | "rotate";
+  }>();
   const [done, setDone] = useState<string>();
   if (!pool)
     return (
@@ -1282,23 +1633,38 @@ export function PoolDetail({
         title="Pool not found"
         description="It may have been removed."
         action={
-          <Button size="sm" variant="outline" onClick={() => go({ name: "pools" })}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => go({ name: "pools" })}
+          >
             All pools
           </Button>
         }
       />
     );
-  const back = <BackLink label="All pools" onClick={() => go({ name: "pools" })} />;
+  const back = (
+    <BackLink label="All pools" onClick={() => go({ name: "pools" })} />
+  );
   if (role !== "pool-admin")
     return (
       <>
-        <PageHead back={back} eyebrow="Infrastructure · Pool" title={pool.name} meta={<StateChip state={pool.status} />} />
+        <PageHead
+          back={back}
+          eyebrow="Infrastructure · Pool"
+          title={pool.name}
+          meta={<StateChip state={pool.status} />}
+        />
         <div className="wb-panel wb-restricted">
           <EmptyState
             title="Pool details are for pool admins"
             description={`Managers, capacity and pool logs for ${pool.name} are visible to its admins. When a pool problem affects your run, the run log says so in plain words, and the admins already see the details.`}
             action={
-              <Button size="sm" variant="outline" onClick={() => askAbout("Is the pool healthy?")}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => askAbout("Is the pool healthy?")}
+              >
                 <Sparkles /> Ask if my builds are affected
               </Button>
             }
@@ -1314,9 +1680,13 @@ export function PoolDetail({
       (view.manager === "all" || log.manager === view.manager) &&
       (!view.job.trim() || (log.jobId ?? "").includes(view.job.trim())),
   );
-  const jobRun = view.job ? runs.find((run) => run.attempts.some((a) => a.jobId === view.job.trim())) : undefined;
+  const jobRun = view.job
+    ? runs.find((run) => run.attempts.some((a) => a.jobId === view.job.trim()))
+    : undefined;
   const jobAttempt = jobRun?.attempts.find((a) => a.jobId === view.job.trim());
-  const late = pool.managers.find((m) => m.status === "warning" && !drained.includes(m.id));
+  const late = pool.managers.find(
+    (m) => m.status === "warning" && !drained.includes(m.id),
+  );
   const ships = shipping[pool.id];
   return (
     <>
@@ -1326,7 +1696,10 @@ export function PoolDetail({
         title={pool.name}
         meta={
           <>
-            <StateChip state={pool.status} label={pool.status === "warning" ? "Needs attention" : undefined} />
+            <StateChip
+              state={pool.status}
+              label={pool.status === "warning" ? "Needs attention" : undefined}
+            />
             <span className="wb-meta-item">{pool.kind}</span>
             <span className="wb-meta-item">{pool.scope}</span>
             <span className="wb-meta-item">
@@ -1342,7 +1715,15 @@ export function PoolDetail({
           </>
         }
         actions={
-          <Button size="sm" variant="ghost" onClick={() => askAbout(late ? `Why is ${late.id} unhealthy?` : "Is the pool healthy?")}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() =>
+              askAbout(
+                late ? `Why is ${late.id} unhealthy?` : "Is the pool healthy?",
+              )
+            }
+          >
             <Sparkles /> Ask Oyzu
           </Button>
         }
@@ -1353,10 +1734,26 @@ export function PoolDetail({
           title={`${late.id} is missing heartbeats`}
           action={
             <div className="wb-banner-actions">
-              <Button size="sm" variant="outline" onClick={() => onView({ ...view, tab: "logs", manager: late.id, job: "", level: "all" })}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  onView({
+                    ...view,
+                    tab: "logs",
+                    manager: late.id,
+                    job: "",
+                    level: "all",
+                  })
+                }
+              >
                 <Stethoscope /> Pool logs for {late.id}
               </Button>
-              <Button size="sm" variant="ghost" onClick={() => setPending({ id: late.id, kind: "drain" })}>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setPending({ id: late.id, kind: "drain" })}
+              >
                 Drain {late.id}
               </Button>
             </div>
@@ -1366,8 +1763,12 @@ export function PoolDetail({
         </FeedbackBanner>
       )}
       {!pool.releaseEligible && (
-        <FeedbackBanner tone="info" title="Developer machines never build releases">
-          Runs here are fine for trying things out. Release bindings skip this pool even when it's the only one free.
+        <FeedbackBanner
+          tone="info"
+          title="Developer machines never build releases"
+        >
+          Runs here are fine for trying things out. Release bindings skip this
+          pool even when it's the only one free.
         </FeedbackBanner>
       )}
       {done && <Done text={done} onDismiss={() => setDone(undefined)} />}
@@ -1401,66 +1802,119 @@ export function PoolDetail({
               const isDrained = drained.includes(m.id);
               return (
                 <Fragment key={m.id}>
-                <TableRow data-status={m.status}>
-                  <TableCell data-label="Manager" className="wb-cell-title">
-                    <strong className="wb-cell-main">{m.id}</strong>
-                    <small className="wb-muted">{m.host}</small>
-                    {m.note && <small className="wb-manager-note">{m.note}</small>}
-                  </TableCell>
-                  <TableCell data-label="Status">
-                    {isDrained ? <StateChip state="paused" label="Draining" size="sm" /> : <StateChip state={m.status} size="sm" />}
-                  </TableCell>
-                  <TableCell data-label="Version">
-                    <Mono>{m.version}</Mono>
-                    {m.version !== "0.4.1" && <small className="wb-warn-text"> behind 0.4.1</small>}
-                  </TableCell>
-                  <TableCell data-label="Adapter">{m.adapter}</TableCell>
-                  <TableCell data-label="Heartbeat">
-                    <span className={m.status === "warning" ? "wb-warn-text" : undefined}>{m.heartbeat}</span>
-                  </TableCell>
-                  <TableCell data-label="Jobs">{m.activeJobs}</TableCell>
-                  <TableCell data-label="Key age">
-                    <span className={m.keyAgeDays >= 30 ? "wb-warn-text" : undefined}>{m.keyAgeDays} days</span>
-                  </TableCell>
-                  <TableCell data-label="Actions" className="wb-row-actions">
-                    <Button size="xs" variant="outline" onClick={() => onView({ ...view, tab: "logs", manager: m.id, job: "", level: "all" })}>
-                      Logs
-                    </Button>
-                    {m.keyAgeDays >= 27 && (
-                      <Button size="xs" variant="ghost" onClick={() => setPending({ id: m.id, kind: "rotate" })}>
-                        Rotate key
-                      </Button>
-                    )}
-                    {m.status !== "paused" && (
-                      <Button size="xs" variant="ghost" disabled={isDrained} onClick={() => setPending({ id: m.id, kind: "drain" })}>
-                        {isDrained ? "Draining" : "Drain"}
-                      </Button>
-                    )}
-                  </TableCell>
-                </TableRow>
-                {pending?.id === m.id && (
-                  <TableRow className="wb-confirm-row">
-                    <TableCell colSpan={8}>
-                      <ConfirmStrip
-                        danger={pending.kind === "drain"}
-                        confirmLabel={pending.kind === "drain" ? "Drain manager" : "Rotate key"}
-                        onCancel={() => setPending(undefined)}
-                        onConfirm={() => {
-                          setPending(undefined);
-                          if (pending.kind === "drain") {
-                            drain(m.id);
-                            setDone(actionResult("drain-manager", m.id) ?? "");
-                          } else
-                            setDone(`Started key rotation on ${m.id}. Both keys stay valid for 24 hours, then the old one stops working.`);
-                        }}
+                  <TableRow data-status={m.status}>
+                    <TableCell data-label="Manager" className="wb-cell-title">
+                      <strong className="wb-cell-main">{m.id}</strong>
+                      <small className="wb-muted">{m.host}</small>
+                      {m.note && (
+                        <small className="wb-manager-note">{m.note}</small>
+                      )}
+                    </TableCell>
+                    <TableCell data-label="Status">
+                      {isDrained ? (
+                        <StateChip state="paused" label="Draining" size="sm" />
+                      ) : (
+                        <StateChip state={m.status} size="sm" />
+                      )}
+                    </TableCell>
+                    <TableCell data-label="Version">
+                      <Mono>{m.version}</Mono>
+                      {m.version !== "0.4.1" && (
+                        <small className="wb-warn-text"> behind 0.4.1</small>
+                      )}
+                    </TableCell>
+                    <TableCell data-label="Adapter">{m.adapter}</TableCell>
+                    <TableCell data-label="Heartbeat">
+                      <span
+                        className={
+                          m.status === "warning" ? "wb-warn-text" : undefined
+                        }
                       >
-                        {pending.kind === "drain"
-                          ? `Drain ${m.id}? It stops claiming new jobs; ${m.activeJobs ? `its ${m.activeJobs} running job finishes` : "nothing is running on it now"}.`
-                          : `Rotate the key for ${m.id}? The manager picks up the new key on its next heartbeat.`}
-                      </ConfirmStrip>
+                        {m.heartbeat}
+                      </span>
+                    </TableCell>
+                    <TableCell data-label="Jobs">{m.activeJobs}</TableCell>
+                    <TableCell data-label="Key age">
+                      <span
+                        className={
+                          m.keyAgeDays >= 30 ? "wb-warn-text" : undefined
+                        }
+                      >
+                        {m.keyAgeDays} days
+                      </span>
+                    </TableCell>
+                    <TableCell data-label="Actions" className="wb-row-actions">
+                      <Button
+                        size="xs"
+                        variant="outline"
+                        onClick={() =>
+                          onView({
+                            ...view,
+                            tab: "logs",
+                            manager: m.id,
+                            job: "",
+                            level: "all",
+                          })
+                        }
+                      >
+                        Logs
+                      </Button>
+                      {m.keyAgeDays >= 27 && (
+                        <Button
+                          size="xs"
+                          variant="ghost"
+                          onClick={() =>
+                            setPending({ id: m.id, kind: "rotate" })
+                          }
+                        >
+                          Rotate key
+                        </Button>
+                      )}
+                      {m.status !== "paused" && (
+                        <Button
+                          size="xs"
+                          variant="ghost"
+                          disabled={isDrained}
+                          onClick={() =>
+                            setPending({ id: m.id, kind: "drain" })
+                          }
+                        >
+                          {isDrained ? "Draining" : "Drain"}
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
-                )}
+                  {pending?.id === m.id && (
+                    <TableRow className="wb-confirm-row">
+                      <TableCell colSpan={8}>
+                        <ConfirmStrip
+                          danger={pending.kind === "drain"}
+                          confirmLabel={
+                            pending.kind === "drain"
+                              ? "Drain manager"
+                              : "Rotate key"
+                          }
+                          onCancel={() => setPending(undefined)}
+                          onConfirm={() => {
+                            setPending(undefined);
+                            if (pending.kind === "drain") {
+                              drain(m.id);
+                              setDone(
+                                actionResult("drain-manager", m.id) ?? "",
+                              );
+                            } else
+                              setDone(
+                                `Started key rotation on ${m.id}. Both keys stay valid for 24 hours, then the old one stops working.`,
+                              );
+                          }}
+                        >
+                          {pending.kind === "drain"
+                            ? `Drain ${m.id}? It stops claiming new jobs; ${m.activeJobs ? `its ${m.activeJobs} running job finishes` : "nothing is running on it now"}.`
+                            : `Rotate the key for ${m.id}? The manager picks up the new key on its next heartbeat.`}
+                        </ConfirmStrip>
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </Fragment>
               );
             })}
@@ -1471,7 +1925,11 @@ export function PoolDetail({
           title="Pool log shipping is off"
           description={`Logs for ${pool.name} stay on the host. Turn on shipping from the Pools page to see runner diagnostics here.`}
           action={
-            <Button size="sm" variant="outline" onClick={() => go({ name: "pools" })}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => go({ name: "pools" })}
+            >
               Go to Pools
             </Button>
           }
@@ -1479,7 +1937,10 @@ export function PoolDetail({
       ) : (
         <section className="wb-section">
           <div className="wb-toolbar wb-log-filters">
-            <Select value={view.level} onValueChange={(level) => onView({ ...view, level })}>
+            <Select
+              value={view.level}
+              onValueChange={(level) => onView({ ...view, level })}
+            >
               <SelectTrigger size="sm" aria-label="Level" className="wb-select">
                 <SelectValue />
               </SelectTrigger>
@@ -1490,8 +1951,15 @@ export function PoolDetail({
                 <SelectItem value="error">Errors</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={view.manager} onValueChange={(manager) => onView({ ...view, manager })}>
-              <SelectTrigger size="sm" aria-label="Manager" className="wb-select">
+            <Select
+              value={view.manager}
+              onValueChange={(manager) => onView({ ...view, manager })}
+            >
+              <SelectTrigger
+                size="sm"
+                aria-label="Manager"
+                className="wb-select"
+              >
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -1509,11 +1977,19 @@ export function PoolDetail({
                 value={view.job}
                 placeholder="job-…"
                 aria-label="Filter by job id"
-                onChange={(event) => onView({ ...view, job: event.target.value })}
+                onChange={(event) =>
+                  onView({ ...view, job: event.target.value })
+                }
               />
             </label>
             {(view.job || view.manager !== "all" || view.level !== "all") && (
-              <Button size="sm" variant="ghost" onClick={() => onView({ ...view, job: "", manager: "all", level: "all" })}>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() =>
+                  onView({ ...view, job: "", manager: "all", level: "all" })
+                }
+              >
                 Clear filters
               </Button>
             )}
@@ -1522,10 +1998,17 @@ export function PoolDetail({
             <p className="wb-job-context">
               <Stethoscope size={14} aria-hidden="true" />
               <span>
-                Runner diagnostics for <Mono>{jobAttempt.jobId}</Mono>: run {jobRun.number}, attempt {jobAttempt.n} on{" "}
-                {jobAttempt.manager}. Build output isn't in pool logs; it stays in the run log.
+                Runner diagnostics for <Mono>{jobAttempt.jobId}</Mono>: run{" "}
+                {jobRun.number}, attempt {jobAttempt.n} on {jobAttempt.manager}.
+                Build output isn't in pool logs; it stays in the run log.
               </span>
-              <LinkButton onClick={() => openRun(jobRun.id, { tab: "logs", attempt: jobAttempt.n })}>Open run log</LinkButton>
+              <LinkButton
+                onClick={() =>
+                  openRun(jobRun.id, { tab: "logs", attempt: jobAttempt.n })
+                }
+              >
+                Open run log
+              </LinkButton>
             </p>
           )}
           {logs.length === 0 ? (
@@ -1556,7 +2039,11 @@ export function PoolDetail({
                     ))}
                   </span>
                   {log.jobId ? (
-                    <button type="button" className="wb-poollog-job" onClick={() => onView({ ...view, job: log.jobId ?? "" })}>
+                    <button
+                      type="button"
+                      className="wb-poollog-job"
+                      onClick={() => onView({ ...view, job: log.jobId ?? "" })}
+                    >
                       {log.jobId}
                     </button>
                   ) : (
@@ -1566,7 +2053,10 @@ export function PoolDetail({
               ))}
             </ol>
           )}
-          <p className="wb-note">Times are US Eastern. Pool logs carry manager and runner events only, never build output.</p>
+          <p className="wb-note">
+            Times are US Eastern. Pool logs carry manager and runner events
+            only, never build output.
+          </p>
         </section>
       )}
     </>

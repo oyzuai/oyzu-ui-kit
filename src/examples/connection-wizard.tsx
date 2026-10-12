@@ -144,7 +144,17 @@ export function ConnectionWizard({
   const secretRef = referencesFor(scope).find((item) => item.id === secret);
   return (
     <PageLayout
-      identity={connector ? <img className="wizard-header-logo" src={`/brands/${connector.id}.svg`} width="48" height="48" alt=""/> : undefined}
+      identity={
+        connector ? (
+          <img
+            className="wizard-header-logo"
+            src={`/brands/${connector.id}.svg`}
+            width="48"
+            height="48"
+            alt=""
+          />
+        ) : undefined
+      }
       eyebrow={
         connector
           ? "PROJECT / CHECKOUT SERVICE / CONNECTIONS"
@@ -231,7 +241,16 @@ export function ConnectionWizard({
       )}
       {done ? (
         <div className="wizard-success">
-          <div className="wizard-completion" role="status"><span aria-hidden="true">✓</span><div><h2>{identity.name} is ready</h2><p>Connection created after successful verification. Saved in this preview session.</p></div></div>
+          <div className="wizard-completion" role="status">
+            <span aria-hidden="true">✓</span>
+            <div>
+              <h2>{identity.name} is ready</h2>
+              <p>
+                Connection created after successful verification. Saved in this
+                preview session.
+              </p>
+            </div>
+          </div>
           <dl className="page-facts">
             <div>
               <dt>Identifier</dt>
@@ -266,8 +285,23 @@ export function ConnectionWizard({
             <h2 tabIndex={-1} ref={heading}>
               {labels[step]}
             </h2>
-            <p className="wizard-step-intent">{["Give this connection a recognizable name and service address.", "Choose how this connection will authenticate. Credentials stay in secret storage.", "Decide how changes made through this connection are applied.", "Verify the service and credentials before creating this connection."][step]}</p>
-            {error && step !== 0 && !(step === 1 && auth === "password" && !username.trim()) && <p role="alert" className="wizard-action-error">{error}</p>}
+            <p className="wizard-step-intent">
+              {
+                [
+                  "Give this connection a recognizable name and service address.",
+                  "Choose how this connection will authenticate. Credentials stay in secret storage.",
+                  "Decide how changes made through this connection are applied.",
+                  "Verify the service and credentials before creating this connection.",
+                ][step]
+              }
+            </p>
+            {error &&
+              step !== 0 &&
+              !(step === 1 && auth === "password" && !username.trim()) && (
+                <p role="alert" className="wizard-action-error">
+                  {error}
+                </p>
+              )}
             <DocumentEditor
               disabled={busy}
               onPendingChange={setSourcePending}
@@ -345,8 +379,16 @@ export function ConnectionWizard({
                     <IdentityFields
                       mode="create"
                       nameLabel="Connection name"
-                      nameError={error && identity.name.trim().length < 2 ? error : undefined}
-                      identifierError={error && identity.name.trim().length >= 2 ? identifierError(identity.identifier) ?? undefined : undefined}
+                      nameError={
+                        error && identity.name.trim().length < 2
+                          ? error
+                          : undefined
+                      }
+                      identifierError={
+                        error && identity.name.trim().length >= 2
+                          ? (identifierError(identity.identifier) ?? undefined)
+                          : undefined
+                      }
                       value={identity}
                       onChange={(value) => {
                         setIdentity(value);
@@ -355,7 +397,13 @@ export function ConnectionWizard({
                     />
                     <TextField
                       label="Service URL"
-                      error={error && identity.name.trim().length >= 2 && !identifierError(identity.identifier) ? error : undefined}
+                      error={
+                        error &&
+                        identity.name.trim().length >= 2 &&
+                        !identifierError(identity.identifier)
+                          ? error
+                          : undefined
+                      }
                       value={endpoint}
                       onChange={(value) => {
                         setEndpoint(value);
@@ -475,51 +523,56 @@ export function ConnectionWizard({
                 )}
                 {step === 3 && (
                   <>
-                    <div className="wizard-review-identity"><strong>{identity.name}</strong><span>{endpoint}</span></div>
-                    <details className="supporting-details"><summary>Configuration summary</summary>
-                    <dl className="wizard-summary">
-                      <div>
-                        <dt>Name</dt>
-                        <dd>{identity.name}</dd>
-                      </div>
-                      <div>
-                        <dt>Identifier</dt>
-                        <dd>
-                          <code>{identity.identifier}</code>
-                        </dd>
-                      </div>
-                      <div>
-                        <dt>Service</dt>
-                        <dd>{endpoint}</dd>
-                      </div>
-                      <div>
-                        <dt>Authentication</dt>
-                        <dd>
-                          {
-                            {
-                              anonymous: "Anonymous",
-                              password: "Username and password",
-                              token: "API token",
-                              oauth: "OAuth",
-                              managed: "Managed identity",
-                            }[auth]
-                          }
-                        </dd>
-                      </div>
-                      {secretRef && (
+                    <div className="wizard-review-identity">
+                      <strong>{identity.name}</strong>
+                      <span>{endpoint}</span>
+                    </div>
+                    <details className="supporting-details">
+                      <summary>Configuration summary</summary>
+                      <dl className="wizard-summary">
                         <div>
-                          <dt>Secret reference</dt>
+                          <dt>Name</dt>
+                          <dd>{identity.name}</dd>
+                        </div>
+                        <div>
+                          <dt>Identifier</dt>
                           <dd>
-                            {secretRef.name} · {secretRef.scope}
-                            <small>{secretRef.scopeName}</small>
+                            <code>{identity.identifier}</code>
                           </dd>
                         </div>
-                      )}
-                      <div>
-                        <dt>Review changes</dt>
-                        <dd>{review ? "Required" : "Automatic"}</dd>
-                      </div>
-                    </dl></details>
+                        <div>
+                          <dt>Service</dt>
+                          <dd>{endpoint}</dd>
+                        </div>
+                        <div>
+                          <dt>Authentication</dt>
+                          <dd>
+                            {
+                              {
+                                anonymous: "Anonymous",
+                                password: "Username and password",
+                                token: "API token",
+                                oauth: "OAuth",
+                                managed: "Managed identity",
+                              }[auth]
+                            }
+                          </dd>
+                        </div>
+                        {secretRef && (
+                          <div>
+                            <dt>Secret reference</dt>
+                            <dd>
+                              {secretRef.name} · {secretRef.scope}
+                              <small>{secretRef.scopeName}</small>
+                            </dd>
+                          </div>
+                        )}
+                        <div>
+                          <dt>Review changes</dt>
+                          <dd>{review ? "Required" : "Automatic"}</dd>
+                        </div>
+                      </dl>
+                    </details>
                     <ConnectionDiagnostics
                       status={status}
                       stage={testStage}

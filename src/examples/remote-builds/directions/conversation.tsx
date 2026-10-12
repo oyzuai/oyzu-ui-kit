@@ -1,4 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentProps,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import {
   ArrowLeft,
   ArrowUp,
@@ -35,7 +44,12 @@ import { TooltipProvider } from "../../../components/ui/tooltip";
 import { SearchField } from "../../../components/patterns/search-field";
 import { EmptyState } from "../../../components/patterns/empty-state";
 import { BlockView, useAssistant, type ChatMessage } from "../assistant";
-import { respond, type ActionId, type AssistantContext, type Reply } from "../assistant-engine";
+import {
+  respond,
+  type ActionId,
+  type AssistantContext,
+  type Reply,
+} from "../assistant-engine";
 import { GroupIcon, LogText } from "../log-viewer";
 import { useLiveRun } from "../live";
 import {
@@ -83,7 +97,16 @@ import "./conversation.css";
 
 type Live = ReturnType<typeof useLiveRun>;
 type ChipState = ComponentProps<typeof StateChip>["state"];
-type IconKey = "failed" | "draft" | "shield" | "pool" | "running" | "ok" | "skipped" | "cancelled" | "unregistered";
+type IconKey =
+  | "failed"
+  | "draft"
+  | "shield"
+  | "pool"
+  | "running"
+  | "ok"
+  | "skipped"
+  | "cancelled"
+  | "unregistered";
 
 type ThreadDef = {
   id: string;
@@ -152,7 +175,10 @@ const threads: ThreadDef[] = [
     context: { kind: "delivery", deliveryId: "dlv-rej" },
     summary: "Why are webhooks being rejected?",
     explain: "Why are webhooks being rejected?",
-    suggestions: ["Why are webhooks being rejected?", "Which bindings matched?"],
+    suggestions: [
+      "Why are webhooks being rejected?",
+      "Which bindings matched?",
+    ],
     deliveryId: "dlv-rej",
     people: [],
   },
@@ -272,7 +298,12 @@ const threads: ThreadDef[] = [
     preview: "Webhook verified, then stopped: no project owns this repository",
     at: "2026-10-09T14:41:37-04:00",
     chip: { state: "skipped", label: "Not registered" },
-    meta: { pr: 12, commit: "f00d1e2", ref: "feat/export", extra: "acme/ledger-tools" },
+    meta: {
+      pr: 12,
+      commit: "f00d1e2",
+      ref: "feat/export",
+      extra: "acme/ledger-tools",
+    },
     context: { kind: "delivery", deliveryId: "dlv-7e40" },
     explain: "Why did nothing run?",
     suggestions: ["Why did nothing run?"],
@@ -291,10 +322,30 @@ const localReplies: Record<string, Record<string, Reply>> = {
           type: "text",
           text: "**Policy check passed.** `oyzu run policy-check` evaluated 12 policies against 9c41e2a on Hosted Linux in 39s. All passed, including `policy/refunds.rego`, which this pull request changed. That file is why the Policy and image binding matched.",
         },
-        { type: "facts", rows: [["Check", "oyzu / policy: success"], ["Pool", "Hosted Linux"], ["Outputs", "dist/policy/report.json"]] },
-        { type: "actions", actions: [{ id: "open-run", label: "Open its log", primary: true, target: run9013.id }] },
+        {
+          type: "facts",
+          rows: [
+            ["Check", "oyzu / policy: success"],
+            ["Pool", "Hosted Linux"],
+            ["Outputs", "dist/policy/report.json"],
+          ],
+        },
+        {
+          type: "actions",
+          actions: [
+            {
+              id: "open-run",
+              label: "Open its log",
+              primary: true,
+              target: run9013.id,
+            },
+          ],
+        },
       ],
-      sources: ["Run 9013 log (17 lines)", "Binding verdicts for delivery dlv-7f3a"],
+      sources: [
+        "Run 9013 log (17 lines)",
+        "Binding verdicts for delivery dlv-7f3a",
+      ],
     },
   },
   "t-9009": {
@@ -304,8 +355,25 @@ const localReplies: Record<string, Record<string, Reply>> = {
           type: "text",
           text: "**main is green.** The merge of #477 built every target with `oyzu build --full` in 6m 53s on Hosted Linux. Runs on main are never cancelled by newer pushes, so each merge keeps its own complete result.",
         },
-        { type: "facts", rows: [["Commit", "3f2a9c1 by lee.marsh"], ["Binding", "Full build on main"], ["Output", "dist/manifest.json · sha256:c41d…0b9a"]] },
-        { type: "actions", actions: [{ id: "open-run", label: "Run details", primary: true, target: run9009.id }] },
+        {
+          type: "facts",
+          rows: [
+            ["Commit", "3f2a9c1 by lee.marsh"],
+            ["Binding", "Full build on main"],
+            ["Output", "dist/manifest.json · sha256:c41d…0b9a"],
+          ],
+        },
+        {
+          type: "actions",
+          actions: [
+            {
+              id: "open-run",
+              label: "Run details",
+              primary: true,
+              target: run9009.id,
+            },
+          ],
+        },
       ],
       sources: ["Run 9009 record", "Delivery dlv-7e91"],
     },
@@ -317,9 +385,16 @@ const localReplies: Record<string, Record<string, Reply>> = {
           type: "text",
           text: "**Nothing ran because the task doesn't exist at that commit.** The Policy and image binding asks for `oyzu run policy-check`, but at b81e04c the project doesn't define `policy-check`; it reached main after fix/ledger-timeouts branched. Oyzu decided this before claiming an executor, so no pool time was used and the check reports skipped.",
         },
-        { type: "command", command: "git rebase origin/main", note: "Brings in the task definition; the next push runs the check" },
+        {
+          type: "command",
+          command: "git rebase origin/main",
+          note: "Brings in the task definition; the next push runs the check",
+        },
       ],
-      sources: ["Run 9004 decision record", "oyzu project definition at b81e04c"],
+      sources: [
+        "Run 9004 decision record",
+        "oyzu project definition at b81e04c",
+      ],
     },
   },
   "t-9001": {
@@ -329,9 +404,22 @@ const localReplies: Record<string, Record<string, Reply>> = {
           type: "text",
           text: "**A newer push replaced it.** dana.okafor pushed 9c41e2a to #482 while this run was 1m 36s in. The Affected build on pull requests binding cancels unfinished runs on the same pull request, so run 9012 took over the `oyzu / build` check.",
         },
-        { type: "actions", actions: [{ id: "open-run", label: "Open run 9012's log", primary: true, target: run9012.id }] },
+        {
+          type: "actions",
+          actions: [
+            {
+              id: "open-run",
+              label: "Open run 9012's log",
+              primary: true,
+              target: run9012.id,
+            },
+          ],
+        },
       ],
-      sources: ["Run 9001 record", "Delivery dlv-7f3a (started runs and cancellations)"],
+      sources: [
+        "Run 9001 record",
+        "Delivery dlv-7f3a (started runs and cancellations)",
+      ],
     },
   },
   "t-8998": {
@@ -341,7 +429,10 @@ const localReplies: Record<string, Record<string, Reply>> = {
           type: "text",
           text: "**No.** It ran on Micah's desktop, a developer machine, and developer machines are never release-eligible. The build succeeded and its outputs are fine for testing. For a releasable build, run the same command on an eligible pool:",
         },
-        { type: "command", command: "oyzu build cli --full --remote --pool hosted-linux" },
+        {
+          type: "command",
+          command: "oyzu build cli --full --remote --pool hosted-linux",
+        },
       ],
       sources: ["Run 8998 attempt 1", "Pool settings for Micah's desktop"],
     },
@@ -356,8 +447,16 @@ const localReplies: Record<string, Record<string, Reply>> = {
         {
           type: "actions",
           actions: [
-            { id: "register-repo", label: "Register acme/ledger-tools", primary: true },
-            { id: "open-delivery", label: "Open delivery record", target: "dlv-7e40" },
+            {
+              id: "register-repo",
+              label: "Register acme/ledger-tools",
+              primary: true,
+            },
+            {
+              id: "open-delivery",
+              label: "Open delivery record",
+              target: "dlv-7e40",
+            },
           ],
         },
       ],
@@ -366,16 +465,23 @@ const localReplies: Record<string, Record<string, Reply>> = {
   },
 };
 
-const people: Record<string, { name: string; initials: string; hue: number }> = {
-  you: { name: "You", initials: "M", hue: 0 },
-  "dana.okafor": { name: "dana.okafor", initials: "DO", hue: 1 },
-  "lee.marsh": { name: "lee.marsh", initials: "LM", hue: 2 },
-  "sam.ito": { name: "sam.ito", initials: "SI", hue: 3 },
-  "jo.pereira": { name: "jo.pereira", initials: "JP", hue: 4 },
-};
+const people: Record<string, { name: string; initials: string; hue: number }> =
+  {
+    you: { name: "You", initials: "M", hue: 0 },
+    "dana.okafor": { name: "dana.okafor", initials: "DO", hue: 1 },
+    "lee.marsh": { name: "lee.marsh", initials: "LM", hue: 2 },
+    "sam.ito": { name: "sam.ito", initials: "SI", hue: 3 },
+    "jo.pereira": { name: "jo.pereira", initials: "JP", hue: 4 },
+  };
 const teammates = ["dana.okafor", "lee.marsh", "sam.ito", "jo.pereira"];
 
-type Mention = { token: string; label: string; group: string; hint: string; tab: Tab };
+type Mention = {
+  token: string;
+  label: string;
+  group: string;
+  hint: string;
+  tab: Tab;
+};
 const mentionables: Mention[] = [
   ...runs.map((run) => ({
     token: `run-${run.number}`,
@@ -384,9 +490,27 @@ const mentionables: Mention[] = [
     hint: `${run.check} · ${run.ref}`,
     tab: { kind: "run", runId: run.id } as Tab,
   })),
-  { token: "pr-482", label: "PR #482", group: "Pull requests", hint: "Retry refunds with the original idempotency key", tab: { kind: "delivery", deliveryId: "dlv-7f3a" } },
-  { token: "pr-483", label: "PR #483", group: "Pull requests", hint: "Spike: FX rounding modes (draft)", tab: { kind: "delivery", deliveryId: "dlv-7f12" } },
-  { token: "pr-480", label: "PR #480", group: "Pull requests", hint: "Shorten ledger client timeouts", tab: { kind: "run", runId: run9004.id } },
+  {
+    token: "pr-482",
+    label: "PR #482",
+    group: "Pull requests",
+    hint: "Retry refunds with the original idempotency key",
+    tab: { kind: "delivery", deliveryId: "dlv-7f3a" },
+  },
+  {
+    token: "pr-483",
+    label: "PR #483",
+    group: "Pull requests",
+    hint: "Spike: FX rounding modes (draft)",
+    tab: { kind: "delivery", deliveryId: "dlv-7f12" },
+  },
+  {
+    token: "pr-480",
+    label: "PR #480",
+    group: "Pull requests",
+    hint: "Shorten ledger client timeouts",
+    tab: { kind: "run", runId: run9004.id },
+  },
   ...bindings.map((binding) => ({
     token: `binding-${binding.id}`,
     label: binding.name,
@@ -402,31 +526,62 @@ const mentionables: Mention[] = [
     tab: { kind: "pool", poolId: pool.id } as Tab,
   })),
 ];
-const mentionByToken = (token: string) => mentionables.find((mention) => mention.token === token);
+const mentionByToken = (token: string) =>
+  mentionables.find((mention) => mention.token === token);
 const mentionPattern = /(@[a-z]+-[\w#.-]*[\w])/g;
 
 const commands = [
-  { name: "rerun", hint: "Rerun this run, or replay this delivery. Asks first." },
+  {
+    name: "rerun",
+    hint: "Rerun this run, or replay this delivery. Asks first.",
+  },
   { name: "logs", hint: "Open the log or record in the canvas" },
   { name: "explain", hint: "Ask the assistant what happened here" },
-  { name: "diagnostics", hint: "Runner diagnostics for this job (pool admins)", admin: true },
+  {
+    name: "diagnostics",
+    hint: "Runner diagnostics for this job (pool admins)",
+    admin: true,
+  },
   { name: "reproduce", hint: "The exact command to run it yourself" },
   { name: "assign", hint: "Assign this thread to a teammate" },
 ];
 
-const reducedMotion = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+const reducedMotion = () =>
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 
 function livePercent(live: Live) {
   if (live.state !== "running") return 100;
-  return Math.min(99, Math.round(((live.entries.length - liveInitialLog.length) / liveScript.length) * 100));
+  return Math.min(
+    99,
+    Math.round(
+      ((live.entries.length - liveInitialLog.length) / liveScript.length) * 100,
+    ),
+  );
 }
 
 function liveMilestones(live: Live) {
   const list: { key: string; title: string; tone: "ok" | "info" }[] = [];
-  if (live.groups["api-image/compile"] === "succeeded") list.push({ key: "compile", title: "api-image/compile succeeded", tone: "ok" });
-  if (live.groups["api-image/image"] && live.groups["api-image/image"] !== "queued")
-    list.push({ key: "image", title: "api-image/image started: building the container image", tone: "info" });
-  if (live.state === "succeeded") list.push({ key: "done", title: `Run 9014 succeeded in ${duration(live.elapsedMs)}`, tone: "ok" });
+  if (live.groups["api-image/compile"] === "succeeded")
+    list.push({
+      key: "compile",
+      title: "api-image/compile succeeded",
+      tone: "ok",
+    });
+  if (
+    live.groups["api-image/image"] &&
+    live.groups["api-image/image"] !== "queued"
+  )
+    list.push({
+      key: "image",
+      title: "api-image/image started: building the container image",
+      tone: "info",
+    });
+  if (live.state === "succeeded")
+    list.push({
+      key: "done",
+      title: `Run 9014 succeeded in ${duration(live.elapsedMs)}`,
+      tone: "ok",
+    });
   return list;
 }
 
@@ -437,19 +592,45 @@ function StateIcon({ icon, size = 15 }: { icon: IconKey; size?: number }) {
     case "failed":
       return <CircleX size={size} className="cv-bad" aria-label="Failed" />;
     case "draft":
-      return <GitPullRequestDraft size={size} className="cv-warn" aria-label="Nothing matched" />;
+      return (
+        <GitPullRequestDraft
+          size={size}
+          className="cv-warn"
+          aria-label="Nothing matched"
+        />
+      );
     case "shield":
-      return <ShieldAlert size={size} className="cv-bad" aria-label="Rejected" />;
+      return (
+        <ShieldAlert size={size} className="cv-bad" aria-label="Rejected" />
+      );
     case "pool":
-      return <HeartPulse size={size} className="cv-warn" aria-label="Warning" />;
+      return (
+        <HeartPulse size={size} className="cv-warn" aria-label="Warning" />
+      );
     case "running":
-      return <LoaderCircle size={size} className="cv-run animate-spin" aria-label="Running" />;
+      return (
+        <LoaderCircle
+          size={size}
+          className="cv-run animate-spin"
+          aria-label="Running"
+        />
+      );
     case "ok":
-      return <CircleCheck size={size} className="cv-ok" aria-label="Succeeded" />;
+      return (
+        <CircleCheck size={size} className="cv-ok" aria-label="Succeeded" />
+      );
     case "unregistered":
-      return <Webhook size={size} className="cv-warn" aria-label="Not registered" />;
+      return (
+        <Webhook size={size} className="cv-warn" aria-label="Not registered" />
+      );
     default:
-      return <CircleMinus size={size} className="cv-mute" aria-label={icon === "skipped" ? "Skipped" : "Cancelled"} />;
+      return (
+        <CircleMinus
+          size={size}
+          className="cv-mute"
+          aria-label={icon === "skipped" ? "Skipped" : "Cancelled"}
+        />
+      );
   }
 }
 
@@ -460,7 +641,10 @@ function Avatar({ who }: { who: string }) {
         <Sparkles size={13} />
       </span>
     );
-  const person = people[who] ?? { initials: who.slice(0, 2).toUpperCase(), hue: 0 };
+  const person = people[who] ?? {
+    initials: who.slice(0, 2).toUpperCase(),
+    hue: 0,
+  };
   return (
     <span className="cv-avatar" data-hue={person.hue} aria-hidden="true">
       {person.initials}
@@ -468,7 +652,15 @@ function Avatar({ who }: { who: string }) {
   );
 }
 
-function Said({ who, at, children }: { who: string; at: string; children: ReactNode }) {
+function Said({
+  who,
+  at,
+  children,
+}: {
+  who: string;
+  at: string;
+  children: ReactNode;
+}) {
   return (
     <div className="cv-item cv-msg">
       <Avatar who={who} />
@@ -500,7 +692,10 @@ function SysEvent({
   compact?: boolean;
 }) {
   return (
-    <div className={"cv-item cv-ev" + (compact ? " is-compact" : "")} data-tone={tone}>
+    <div
+      className={"cv-item cv-ev" + (compact ? " is-compact" : "")}
+      data-tone={tone}
+    >
       <span className="cv-node" aria-hidden="true">
         {icon}
       </span>
@@ -523,7 +718,8 @@ function Sources({ sources }: { sources: string[] }) {
   return (
     <div className="cv-sources">
       <button type="button" aria-expanded={open} onClick={() => setOpen(!open)}>
-        Read {sources.length} {sources.length === 1 ? "record" : "records"} <ChevronDown size={12} aria-hidden="true" />
+        Read {sources.length} {sources.length === 1 ? "record" : "records"}{" "}
+        <ChevronDown size={12} aria-hidden="true" />
       </button>
       {open && (
         <ul>
@@ -581,9 +777,17 @@ function AssistantItem({
           ) : (
             <>
               {reply.blocks.slice(0, shown).map((block, index) => (
-                <BlockView key={index} block={block} animate={animateLast && index === shown - 1} onCite={onCite} onAction={onAction} />
+                <BlockView
+                  key={index}
+                  block={block}
+                  animate={animateLast && index === shown - 1}
+                  onCite={onCite}
+                  onAction={onAction}
+                />
               ))}
-              {shown >= reply.blocks.length && <Sources sources={reply.sources} />}
+              {shown >= reply.blocks.length && (
+                <Sources sources={reply.sources} />
+              )}
             </>
           )}
         </div>
@@ -593,17 +797,42 @@ function AssistantItem({
 }
 
 /** A locally answered question: thinks briefly, then shows the whole reply. */
-function LocalReply({ reply, onCite, onAction }: { reply: Reply; onCite: CiteFn; onAction: ActionFn }) {
+function LocalReply({
+  reply,
+  onCite,
+  onAction,
+}: {
+  reply: Reply;
+  onCite: CiteFn;
+  onAction: ActionFn;
+}) {
   const [ready, setReady] = useState(reducedMotion);
   useEffect(() => {
     if (ready) return;
     const timer = window.setTimeout(() => setReady(true), 850);
     return () => window.clearTimeout(timer);
   }, [ready]);
-  return <AssistantItem reply={reply} shown={reply.blocks.length} thinking={!ready} animateLast={false} onCite={onCite} onAction={onAction} />;
+  return (
+    <AssistantItem
+      reply={reply}
+      shown={reply.blocks.length}
+      thinking={!ready}
+      animateLast={false}
+      onCite={onCite}
+      onAction={onAction}
+    />
+  );
 }
 
-function PinnedSummary({ reply, onCite, onAction }: { reply: Reply; onCite: CiteFn; onAction: ActionFn }) {
+function PinnedSummary({
+  reply,
+  onCite,
+  onAction,
+}: {
+  reply: Reply;
+  onCite: CiteFn;
+  onAction: ActionFn;
+}) {
   const [ready, setReady] = useState(reducedMotion);
   const [open, setOpen] = useState(true);
   useEffect(() => {
@@ -618,10 +847,17 @@ function PinnedSummary({ reply, onCite, onAction }: { reply: Reply; onCite: Cite
         <Avatar who="assistant" />
         <div>
           <strong>Here's what happened</strong>
-          <small>Assistant · summarized from the records when you opened this thread</small>
+          <small>
+            Assistant · summarized from the records when you opened this thread
+          </small>
         </div>
         {ready && (
-          <Button variant="ghost" size="xs" aria-expanded={open} onClick={() => setOpen(!open)}>
+          <Button
+            variant="ghost"
+            size="xs"
+            aria-expanded={open}
+            onClick={() => setOpen(!open)}
+          >
             {open ? "Collapse" : "Show all"}
           </Button>
         )}
@@ -632,7 +868,13 @@ function PinnedSummary({ reply, onCite, onAction }: { reply: Reply; onCite: Cite
         ) : (
           <>
             {blocks.map((block, index) => (
-              <BlockView key={index} block={block} animate={false} onCite={onCite} onAction={onAction} />
+              <BlockView
+                key={index}
+                block={block}
+                animate={false}
+                onCite={onCite}
+                onAction={onAction}
+              />
             ))}
             {open && <Sources sources={reply.sources} />}
           </>
@@ -642,14 +884,28 @@ function PinnedSummary({ reply, onCite, onAction }: { reply: Reply; onCite: Cite
   );
 }
 
-function MentionText({ text, open }: { text: string; open: (tab: Tab) => void }) {
+function MentionText({
+  text,
+  open,
+}: {
+  text: string;
+  open: (tab: Tab) => void;
+}) {
   return (
     <>
       {text.split(mentionPattern).map((part, index) => {
-        const mention = part.startsWith("@") ? mentionByToken(part.slice(1)) : undefined;
+        const mention = part.startsWith("@")
+          ? mentionByToken(part.slice(1))
+          : undefined;
         if (!mention) return <span key={index}>{part}</span>;
         return (
-          <button key={index} type="button" className="cv-mention" onClick={() => open(mention.tab)} title={`Open ${mention.label}`}>
+          <button
+            key={index}
+            type="button"
+            className="cv-mention"
+            onClick={() => open(mention.tab)}
+            title={`Open ${mention.label}`}
+          >
             <AtSign size={11} aria-hidden="true" />
             {mention.label}
           </button>
@@ -661,11 +917,23 @@ function MentionText({ text, open }: { text: string; open: (tab: Tab) => void })
 
 // ---------------------------------------------------------------- record-backed event cards
 
-function DeliveryEvent({ delivery, open }: { delivery: Delivery; open: (tab: Tab) => void }) {
+function DeliveryEvent({
+  delivery,
+  open,
+}: {
+  delivery: Delivery;
+  open: (tab: Tab) => void;
+}) {
   return (
-    <SysEvent icon={<Webhook size={13} />} tone="ok" title="Webhook received and verified" at={clock(delivery.receivedAt)}>
+    <SysEvent
+      icon={<Webhook size={13} />}
+      tone="ok"
+      title="Webhook received and verified"
+      at={clock(delivery.receivedAt)}
+    >
       <p className="cv-line">
-        <code>{delivery.event}</code> from {delivery.connector} · signature valid
+        <code>{delivery.event}</code> from {delivery.connector} · signature
+        valid
       </p>
       <dl className="cv-kv">
         <div>
@@ -678,7 +946,11 @@ function DeliveryEvent({ delivery, open }: { delivery: Delivery; open: (tab: Tab
         </div>
       </dl>
       <div className="cv-card-actions">
-        <Button size="xs" variant="outline" onClick={() => open({ kind: "delivery", deliveryId: delivery.id })}>
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => open({ kind: "delivery", deliveryId: delivery.id })}
+        >
           <Webhook /> Delivery record
         </Button>
       </div>
@@ -686,9 +958,17 @@ function DeliveryEvent({ delivery, open }: { delivery: Delivery; open: (tab: Tab
   );
 }
 
-function VerdictEvent({ delivery, defaultOpen = false }: { delivery: Delivery; defaultOpen?: boolean }) {
+function VerdictEvent({
+  delivery,
+  defaultOpen = false,
+}: {
+  delivery: Delivery;
+  defaultOpen?: boolean;
+}) {
   const [open, setOpen] = useState(defaultOpen);
-  const matched = delivery.evaluations.filter((evaluation) => evaluation.matched).length;
+  const matched = delivery.evaluations.filter(
+    (evaluation) => evaluation.matched,
+  ).length;
   return (
     <SysEvent
       icon={<GitBranch size={13} />}
@@ -696,7 +976,12 @@ function VerdictEvent({ delivery, defaultOpen = false }: { delivery: Delivery; d
       title={`${matched} of ${delivery.evaluations.length} bindings matched`}
       at={clock(delivery.receivedAt)}
     >
-      <button type="button" className="cv-disclose" aria-expanded={open} onClick={() => setOpen(!open)}>
+      <button
+        type="button"
+        className="cv-disclose"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+      >
         <ChevronDown size={13} aria-hidden="true" />
         {open ? "Hide verdicts" : "Show every binding's verdict and reason"}
       </button>
@@ -705,21 +990,43 @@ function VerdictEvent({ delivery, defaultOpen = false }: { delivery: Delivery; d
   );
 }
 
-function RunStartedEvent({ run, open, extra }: { run: Run; open: (tab: Tab) => void; extra?: ReactNode }) {
+function RunStartedEvent({
+  run,
+  open,
+  extra,
+}: {
+  run: Run;
+  open: (tab: Tab) => void;
+  extra?: ReactNode;
+}) {
   const attempt = run.attempts[0];
-  const pool = attempt ? poolById(attempt.pool)?.name ?? attempt.pool : "no pool";
-  const binding = run.bindingId ? bindings.find((b) => b.id === run.bindingId)?.name : undefined;
+  const pool = attempt
+    ? (poolById(attempt.pool)?.name ?? attempt.pool)
+    : "no pool";
+  const binding = run.bindingId
+    ? bindings.find((b) => b.id === run.bindingId)?.name
+    : undefined;
   return (
-    <SysEvent icon={<Play size={12} />} title={`Run ${run.number} started on ${pool}`} at={clock(run.createdAt)}>
+    <SysEvent
+      icon={<Play size={12} />}
+      title={`Run ${run.number} started on ${pool}`}
+      at={clock(run.createdAt)}
+    >
       <CommandLine command={run.command} />
       <p className="cv-line cv-quiet">
         Reports as <strong>{run.check}</strong>
         {binding ? ` · binding ${binding}` : " · started from the CLI"}
-        {run.operation.kind === "build" && run.operation.affectedBase ? ` · merge base ${run.operation.affectedBase}` : ""}
+        {run.operation.kind === "build" && run.operation.affectedBase
+          ? ` · merge base ${run.operation.affectedBase}`
+          : ""}
       </p>
       {extra}
       <div className="cv-card-actions">
-        <Button size="xs" variant="outline" onClick={() => open({ kind: "run", runId: run.id })}>
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => open({ kind: "run", runId: run.id })}
+        >
           <Workflow /> Run details
         </Button>
       </div>
@@ -727,33 +1034,62 @@ function RunStartedEvent({ run, open, extra }: { run: Run; open: (tab: Tab) => v
   );
 }
 
-function AttemptLostEvent({ role, open }: { role: Role; open: (tab: Tab) => void }) {
+function AttemptLostEvent({
+  role,
+  open,
+}: {
+  role: Role;
+  open: (tab: Tab) => void;
+}) {
   const attempt = run9012.attempts[0];
   if (role !== "pool-admin")
     return (
-      <SysEvent icon={<RotateCcw size={12} />} tone="warn" title="Attempt 1 lost its executor" at={clock(attempt.startedAt)}>
+      <SysEvent
+        icon={<RotateCcw size={12} />}
+        tone="warn"
+        title="Attempt 1 lost its executor"
+        at={clock(attempt.startedAt)}
+      >
         <p className="cv-line">
-          The machine running attempt 1 stopped responding. Oyzu retried it automatically as attempt 2; there's nothing
-          for you to do.
+          The machine running attempt 1 stopped responding. Oyzu retried it
+          automatically as attempt 2; there's nothing for you to do.
         </p>
         <div className="cv-card-actions">
-          <Button size="xs" variant="outline" onClick={() => open({ kind: "log", runId: run9012.id, attempt: 1 })}>
+          <Button
+            size="xs"
+            variant="outline"
+            onClick={() => open({ kind: "log", runId: run9012.id, attempt: 1 })}
+          >
             <FileText /> Attempt 1 log
           </Button>
         </div>
       </SysEvent>
     );
   return (
-    <SysEvent icon={<RotateCcw size={12} />} tone="warn" title="Attempt 1 lost its executor" at={clock(attempt.startedAt)}>
+    <SysEvent
+      icon={<RotateCcw size={12} />}
+      tone="warn"
+      title="Attempt 1 lost its executor"
+      at={clock(attempt.startedAt)}
+    >
       <p className="cv-line">{attempt.reason}</p>
       <p className="cv-line cv-quiet">
-        {attempt.manager} · {attempt.jobId} · retried as attempt 2 on {run9012.attempts[1].manager}
+        {attempt.manager} · {attempt.jobId} · retried as attempt 2 on{" "}
+        {run9012.attempts[1].manager}
       </p>
       <div className="cv-card-actions">
-        <Button size="xs" variant="outline" onClick={() => open({ kind: "poollogs", filter: attempt.jobId })}>
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() => open({ kind: "poollogs", filter: attempt.jobId })}
+        >
           <Stethoscope /> Runner diagnostics
         </Button>
-        <Button size="xs" variant="ghost" onClick={() => open({ kind: "log", runId: run9012.id, attempt: 1 })}>
+        <Button
+          size="xs"
+          variant="ghost"
+          onClick={() => open({ kind: "log", runId: run9012.id, attempt: 1 })}
+        >
           <FileText /> Attempt 1 log
         </Button>
       </div>
@@ -761,24 +1097,52 @@ function AttemptLostEvent({ role, open }: { role: Role; open: (tab: Tab) => void
   );
 }
 
-const excerptNeedles = ["panicked at", "assertion `left == right`", "  left:", "  right:"];
+const excerptNeedles = [
+  "panicked at",
+  "assertion `left == right`",
+  "  left:",
+  "  right:",
+];
 
-function FailureEvent({ open, onExplain }: { open: (tab: Tab) => void; onExplain: () => void }) {
+function FailureEvent({
+  open,
+  onExplain,
+}: {
+  open: (tab: Tab) => void;
+  onExplain: () => void;
+}) {
   const lines = excerptNeedles
-    .map((needle) => failedLog.find((entry) => stripAnsiText(entry.text).includes(needle)))
+    .map((needle) =>
+      failedLog.find((entry) => stripAnsiText(entry.text).includes(needle)),
+    )
     .filter((entry): entry is LogEntry => Boolean(entry));
-  const group = run9012.groups.find((item) => item.scope === "payments-core/test")!;
+  const group = run9012.groups.find(
+    (item) => item.scope === "payments-core/test",
+  )!;
   return (
-    <SysEvent icon={<CircleX size={13} />} tone="bad" title="payments-core/test failed" at={clock(run9012.attempts[1].startedAt)}>
+    <SysEvent
+      icon={<CircleX size={13} />}
+      tone="bad"
+      title="payments-core/test failed"
+      at={clock(run9012.attempts[1].startedAt)}
+    >
       <p className="cv-line">
-        1 of 64 tests failed after {duration(group.durationMs)} on attempt 2. First error:
+        1 of 64 tests failed after {duration(group.durationMs)} on attempt 2.
+        First error:
       </p>
       <div className="cv-excerpt" role="group" aria-label="First error excerpt">
         {lines.map((entry) => (
           <button
             key={entry.seq}
             type="button"
-            onClick={() => open({ kind: "log", runId: run9012.id, attempt: 2, focusSeq: entry.seq })}
+            onClick={() =>
+              open({
+                kind: "log",
+                runId: run9012.id,
+                attempt: 2,
+                focusSeq: entry.seq,
+              })
+            }
             aria-label={`Open log at line ${entry.seq}`}
           >
             <span>{entry.seq}</span>
@@ -789,7 +1153,18 @@ function FailureEvent({ open, onExplain }: { open: (tab: Tab) => void; onExplain
         ))}
       </div>
       <div className="cv-card-actions">
-        <Button size="xs" variant="outline" onClick={() => open({ kind: "log", runId: run9012.id, attempt: 2, focusSeq: lines[0]?.seq ?? firstError.seq })}>
+        <Button
+          size="xs"
+          variant="outline"
+          onClick={() =>
+            open({
+              kind: "log",
+              runId: run9012.id,
+              attempt: 2,
+              focusSeq: lines[0]?.seq ?? firstError.seq,
+            })
+          }
+        >
           <FileText /> Open log
         </Button>
         <Button size="xs" variant="ghost" onClick={onExplain}>
@@ -802,17 +1177,32 @@ function FailureEvent({ open, onExplain }: { open: (tab: Tab) => void; onExplain
 
 function ChecksEvent({ open, live }: { open: (tab: Tab) => void; live: Live }) {
   return (
-    <SysEvent icon={<GitPullRequest size={12} />} tone="bad" title="Reported oyzu / build: failure to GitHub" at={clock("2026-10-09T15:39:26-04:00")}>
-      <p className="cv-line cv-quiet">Every action reports as its own check on 9c41e2a. Required targets this change didn't touch report skipped.</p>
+    <SysEvent
+      icon={<GitPullRequest size={12} />}
+      tone="bad"
+      title="Reported oyzu / build: failure to GitHub"
+      at={clock("2026-10-09T15:39:26-04:00")}
+    >
+      <p className="cv-line cv-quiet">
+        Every action reports as its own check on 9c41e2a. Required targets this
+        change didn't touch report skipped.
+      </p>
       <ul className="cv-checks">
         {checks.map((check) => {
-          const conclusion = check.runId === liveRun.id && live.state === "succeeded" ? "success" : check.conclusion;
+          const conclusion =
+            check.runId === liveRun.id && live.state === "succeeded"
+              ? "success"
+              : check.conclusion;
           const body = (
             <>
               <StateChip size="sm" state={conclusion} />
               <strong>{check.name}</strong>
               {check.required && <em>required</em>}
-              <span>{check.runId === liveRun.id && live.state === "succeeded" ? "Built api-image" : check.summary}</span>
+              <span>
+                {check.runId === liveRun.id && live.state === "succeeded"
+                  ? "Built api-image"
+                  : check.summary}
+              </span>
             </>
           );
           return (
@@ -821,7 +1211,11 @@ function ChecksEvent({ open, live }: { open: (tab: Tab) => void; live: Live }) {
                 <button
                   type="button"
                   onClick={() =>
-                    open({ kind: "log", runId: check.runId!, attempt: runById(check.runId!)!.attempt || 1 })
+                    open({
+                      kind: "log",
+                      runId: check.runId!,
+                      attempt: runById(check.runId!)!.attempt || 1,
+                    })
                   }
                 >
                   {body}
@@ -838,19 +1232,33 @@ function ChecksEvent({ open, live }: { open: (tab: Tab) => void; live: Live }) {
 }
 
 function LiveCard({ live, open }: { live: Live; open: (tab: Tab) => void }) {
-  const groups = liveGroups(live.groups).filter((group) => group.target !== "runner" || group.task === "setup");
+  const groups = liveGroups(live.groups).filter(
+    (group) => group.target !== "runner" || group.task === "setup",
+  );
   const tail = live.entries.slice(-3);
   const pct = livePercent(live);
   return (
-    <div className="cv-item cv-ev" data-tone={live.state === "running" ? "live" : "ok"}>
+    <div
+      className="cv-item cv-ev"
+      data-tone={live.state === "running" ? "live" : "ok"}
+    >
       <span className="cv-node" aria-hidden="true">
-        {live.state === "running" ? <span className="cv-pulse" /> : <CircleCheck size={13} />}
+        {live.state === "running" ? (
+          <span className="cv-pulse" />
+        ) : (
+          <CircleCheck size={13} />
+        )}
       </span>
       <div className="cv-ev-main">
         <p className="cv-ev-title">
-          <strong>{live.state === "running" ? "Building api-image" : "Finished building api-image"}</strong>
+          <strong>
+            {live.state === "running"
+              ? "Building api-image"
+              : "Finished building api-image"}
+          </strong>
           <span className="cv-by-sys">
-            {live.state === "running" ? "Live" : "Done"} · {duration(live.elapsedMs)}
+            {live.state === "running" ? "Live" : "Done"} ·{" "}
+            {duration(live.elapsedMs)}
           </span>
         </p>
         <div className="cv-card cv-live">
@@ -862,7 +1270,9 @@ function LiveCard({ live, open }: { live: Live; open: (tab: Tab) => void }) {
             {groups.map((group) => (
               <li key={group.scope}>
                 <GroupIcon state={group.state} size={13} />
-                <span>{group.target === "runner" ? "runner setup" : group.scope}</span>
+                <span>
+                  {group.target === "runner" ? "runner setup" : group.scope}
+                </span>
                 <small>{group.state}</small>
               </li>
             ))}
@@ -875,8 +1285,15 @@ function LiveCard({ live, open }: { live: Live; open: (tab: Tab) => void }) {
             ))}
           </div>
           <div className="cv-card-actions">
-            <Button size="xs" variant="outline" onClick={() => open({ kind: "log", runId: liveRun.id, attempt: 1 })}>
-              <FileText /> {live.state === "running" ? "Watch live log" : "Open log"}
+            <Button
+              size="xs"
+              variant="outline"
+              onClick={() =>
+                open({ kind: "log", runId: liveRun.id, attempt: 1 })
+              }
+            >
+              <FileText />{" "}
+              {live.state === "running" ? "Watch live log" : "Open log"}
             </Button>
           </div>
         </div>
@@ -886,7 +1303,9 @@ function LiveCard({ live, open }: { live: Live; open: (tab: Tab) => void }) {
 }
 
 function PoolHeartbeatRows() {
-  const rows = poolLogs.filter((row) => row.manager === "mgr-onprem-02" && row.level !== "info");
+  const rows = poolLogs.filter(
+    (row) => row.manager === "mgr-onprem-02" && row.level !== "info",
+  );
   return (
     <ol className="cv-hb">
       {rows.map((row, index) => (
@@ -925,7 +1344,8 @@ function ThreadEvents({
 }) {
   const push482 = (
     <Said who="dana.okafor" at={clock("2026-10-09T15:30:47-04:00")}>
-      Pushed <code>9c41e2a</code> “Retry refunds with the original idempotency key” to feat/refund-retries on #482
+      Pushed <code>9c41e2a</code> “Retry refunds with the original idempotency
+      key” to feat/refund-retries on #482
     </Said>
   );
   switch (thread.id) {
@@ -942,15 +1362,27 @@ function ThreadEvents({
             extra={
               <p className="cv-line cv-quiet">
                 Also started{" "}
-                <button type="button" className="cv-link" onClick={() => goThread("t-9013")}>
+                <button
+                  type="button"
+                  className="cv-link"
+                  onClick={() => goThread("t-9013")}
+                >
                   policy check 9013
                 </button>{" "}
                 and{" "}
-                <button type="button" className="cv-link" onClick={() => goThread("t-9014")}>
+                <button
+                  type="button"
+                  className="cv-link"
+                  onClick={() => goThread("t-9014")}
+                >
                   api-image 9014
                 </button>
                 ; cancelled{" "}
-                <button type="button" className="cv-link" onClick={() => goThread("t-9001")}>
+                <button
+                  type="button"
+                  className="cv-link"
+                  onClick={() => goThread("t-9001")}
+                >
                   run 9001
                 </button>{" "}
                 on the previous push.
@@ -974,20 +1406,37 @@ function ThreadEvents({
       return (
         <>
           <Said who="jo.pereira" at={clock(delivery.receivedAt)}>
-            Opened draft pull request #483 “Spike: FX rounding modes” from spike/fx-rounding
+            Opened draft pull request #483 “Spike: FX rounding modes” from
+            spike/fx-rounding
           </Said>
           <DeliveryEvent delivery={delivery} open={open} />
           <VerdictEvent delivery={delivery} defaultOpen />
-          <SysEvent icon={<CircleMinus size={13} />} tone="muted" title="No runs started and no checks written" at={clock(delivery.receivedAt)}>
+          <SysEvent
+            icon={<CircleMinus size={13} />}
+            tone="muted"
+            title="No runs started and no checks written"
+            at={clock(delivery.receivedAt)}
+          >
             <p className="cv-line">
-              Nothing failed: this delivery matched no binding. Marking #483 ready for review sends a new event that starts{" "}
+              Nothing failed: this delivery matched no binding. Marking #483
+              ready for review sends a new event that starts{" "}
               <code>oyzu / build</code>.
             </p>
             <div className="cv-card-actions">
-              <Button size="xs" variant="outline" onClick={() => note(actionResult("explain")!)}>
+              <Button
+                size="xs"
+                variant="outline"
+                onClick={() => note(actionResult("explain")!)}
+              >
                 Explain against today's bindings
               </Button>
-              <Button size="xs" variant="ghost" onClick={() => open({ kind: "binding", bindingId: "pr-affected" })}>
+              <Button
+                size="xs"
+                variant="ghost"
+                onClick={() =>
+                  open({ kind: "binding", bindingId: "pr-affected" })
+                }
+              >
                 <GitBranch /> Pull request binding
               </Button>
             </div>
@@ -999,12 +1448,18 @@ function ThreadEvents({
       const delivery = deliveryById("dlv-rej")!;
       return (
         <>
-          <SysEvent icon={<ShieldAlert size={13} />} tone="bad" title="Deliveries failing the signature check" at={clock(delivery.receivedAt)}>
+          <SysEvent
+            icon={<ShieldAlert size={13} />}
+            tone="bad"
+            title="Deliveries failing the signature check"
+            at={clock(delivery.receivedAt)}
+          >
             <div className="cv-counter">
               <strong>12</strong>
               <span>
-                deliveries to <code>github-acme-legacy</code> were rejected: signature mismatch. The webhook secret on
-                GitHub probably no longer matches this connector's.
+                deliveries to <code>github-acme-legacy</code> were rejected:
+                signature mismatch. The webhook secret on GitHub probably no
+                longer matches this connector's.
               </span>
             </div>
             <dl className="cv-kv">
@@ -1045,12 +1500,23 @@ function ThreadEvents({
                   onDone={note}
                 />
               )}
-              <Button size="xs" variant="ghost" onClick={() => open({ kind: "delivery", deliveryId: "dlv-rej" })}>
+              <Button
+                size="xs"
+                variant="ghost"
+                onClick={() =>
+                  open({ kind: "delivery", deliveryId: "dlv-rej" })
+                }
+              >
                 Rejected deliveries
               </Button>
             </div>
           </SysEvent>
-          <SysEvent icon={<Webhook size={13} />} tone="muted" title="Where each delivery stopped" at={clock(delivery.receivedAt)}>
+          <SysEvent
+            icon={<Webhook size={13} />}
+            tone="muted"
+            title="Where each delivery stopped"
+            at={clock(delivery.receivedAt)}
+          >
             <StageList delivery={delivery} />
           </SysEvent>
         </>
@@ -1061,7 +1527,12 @@ function ThreadEvents({
       const manager = pool.managers[1];
       return (
         <>
-          <SysEvent icon={<HeartPulse size={13} />} tone="warn" title={`${manager.id} is missing heartbeats`} at={clock("2026-10-09T15:32:31-04:00")}>
+          <SysEvent
+            icon={<HeartPulse size={13} />}
+            tone="warn"
+            title={`${manager.id} is missing heartbeats`}
+            at={clock("2026-10-09T15:32:31-04:00")}
+          >
             <dl className="cv-kv">
               <div>
                 <dt>Host</dt>
@@ -1081,24 +1552,50 @@ function ThreadEvents({
               </div>
             </dl>
           </SysEvent>
-          <SysEvent icon={<Stethoscope size={13} />} tone="warn" title="Heartbeat failures from the pool log" at={clock("2026-10-09T15:41:55-04:00")}>
+          <SysEvent
+            icon={<Stethoscope size={13} />}
+            tone="warn"
+            title="Heartbeat failures from the pool log"
+            at={clock("2026-10-09T15:41:55-04:00")}
+          >
             <PoolHeartbeatRows />
             <div className="cv-card-actions">
-              <Button size="xs" variant="outline" onClick={() => open({ kind: "poollogs", filter: manager.id })}>
+              <Button
+                size="xs"
+                variant="outline"
+                onClick={() => open({ kind: "poollogs", filter: manager.id })}
+              >
                 <Stethoscope /> Pool logs
               </Button>
             </div>
           </SysEvent>
-          <SysEvent icon={<RotateCcw size={12} />} tone="muted" title="1 job lost and retried" at={clock("2026-10-09T15:34:02-04:00")}>
+          <SysEvent
+            icon={<RotateCcw size={12} />}
+            tone="muted"
+            title="1 job lost and retried"
+            at={clock("2026-10-09T15:34:02-04:00")}
+          >
             <p className="cv-line">
-              job-5521 (run 9012, attempt 1) lost its lease and was retried on mgr-onprem-01, which ran it to completion.{" "}
-              <button type="button" className="cv-link" onClick={() => goThread("t-9012")}>
+              job-5521 (run 9012, attempt 1) lost its lease and was retried on
+              mgr-onprem-01, which ran it to completion.{" "}
+              <button
+                type="button"
+                className="cv-link"
+                onClick={() => goThread("t-9012")}
+              >
                 Open the run's thread
               </button>
             </p>
           </SysEvent>
-          <SysEvent icon={<Server size={13} />} tone="info" title="Stop new work while you fix the proxy">
-            <p className="cv-line">Draining keeps running jobs going and stops new claims. mgr-onprem-01 carries the pool meanwhile.</p>
+          <SysEvent
+            icon={<Server size={13} />}
+            tone="info"
+            title="Stop new work while you fix the proxy"
+          >
+            <p className="cv-line">
+              Draining keeps running jobs going and stops new claims.
+              mgr-onprem-01 carries the pool meanwhile.
+            </p>
             <div className="cv-card-actions">
               <InlineConfirm
                 label="Drain mgr-onprem-02"
@@ -1108,7 +1605,11 @@ function ThreadEvents({
                 result={actionResult("drain-manager", manager.id)!}
                 onDone={note}
               />
-              <Button size="xs" variant="ghost" onClick={() => open({ kind: "pool", poolId: pool.id })}>
+              <Button
+                size="xs"
+                variant="ghost"
+                onClick={() => open({ kind: "pool", poolId: pool.id })}
+              >
                 <Server /> Pool
               </Button>
             </div>
@@ -1126,15 +1627,22 @@ function ThreadEvents({
             <SysEvent
               key={milestone.key}
               compact={milestone.key !== "done"}
-              icon={milestone.tone === "ok" ? <CircleCheck size={13} /> : <Play size={12} />}
+              icon={
+                milestone.tone === "ok" ? (
+                  <CircleCheck size={13} />
+                ) : (
+                  <Play size={12} />
+                )
+              }
               tone={milestone.tone}
               title={milestone.title}
               at="just now"
             >
               {milestone.key === "done" ? (
                 <p className="cv-line">
-                  Reported <strong>oyzu / api-image: success</strong> to GitHub. 2 outputs uploaded. <code>oyzu / build</code>{" "}
-                  stays red until build 9012 is fixed.
+                  Reported <strong>oyzu / api-image: success</strong> to GitHub.
+                  2 outputs uploaded. <code>oyzu / build</code> stays red until
+                  build 9012 is fixed.
                 </p>
               ) : undefined}
             </SysEvent>
@@ -1147,12 +1655,24 @@ function ThreadEvents({
         <>
           {push482}
           <RunStartedEvent run={run9013} open={open} />
-          <SysEvent icon={<CircleCheck size={13} />} tone="ok" title={`Run 9013 succeeded in ${duration(run9013.durationMs)}`} at={clock("2026-10-09T15:31:41-04:00")}>
+          <SysEvent
+            icon={<CircleCheck size={13} />}
+            tone="ok"
+            title={`Run 9013 succeeded in ${duration(run9013.durationMs)}`}
+            at={clock("2026-10-09T15:31:41-04:00")}
+          >
             <p className="cv-line">
-              12 policies passed. Reported <strong>oyzu / policy: success</strong> to GitHub.
+              12 policies passed. Reported{" "}
+              <strong>oyzu / policy: success</strong> to GitHub.
             </p>
             <div className="cv-card-actions">
-              <Button size="xs" variant="outline" onClick={() => open({ kind: "log", runId: run9013.id, attempt: 1 })}>
+              <Button
+                size="xs"
+                variant="outline"
+                onClick={() =>
+                  open({ kind: "log", runId: run9013.id, attempt: 1 })
+                }
+              >
                 <FileText /> Open log
               </Button>
             </div>
@@ -1169,9 +1689,15 @@ function ThreadEvents({
           <DeliveryEvent delivery={delivery} open={open} />
           <VerdictEvent delivery={delivery} />
           <RunStartedEvent run={run9009} open={open} />
-          <SysEvent icon={<CircleCheck size={13} />} tone="ok" title={`Run 9009 succeeded in ${duration(run9009.durationMs)}`} at={clock(thread.at)}>
+          <SysEvent
+            icon={<CircleCheck size={13} />}
+            tone="ok"
+            title={`Run 9009 succeeded in ${duration(run9009.durationMs)}`}
+            at={clock(thread.at)}
+          >
             <p className="cv-line">
-              Reported <strong>oyzu / build: success</strong>. Output <code>dist/manifest.json</code> ·{" "}
+              Reported <strong>oyzu / build: success</strong>. Output{" "}
+              <code>dist/manifest.json</code> ·{" "}
               <code>{run9009.outputs[0].digest}</code>
             </p>
           </SysEvent>
@@ -1184,14 +1710,24 @@ function ThreadEvents({
           <Said who="sam.ito" at={clock("2026-10-09T13:12:40-04:00")}>
             Pushed <code>b81e04c</code> to fix/ledger-timeouts on #480
           </Said>
-          <SysEvent icon={<CircleMinus size={13} />} tone="muted" title="Run 9004 skipped: task not defined" at={clock(run9004.createdAt)}>
+          <SysEvent
+            icon={<CircleMinus size={13} />}
+            tone="muted"
+            title="Run 9004 skipped: task not defined"
+            at={clock(run9004.createdAt)}
+          >
             <p className="cv-line">
-              <code>{run9004.reason!.code}</code> {run9004.reason!.message}. Decided before any executor was claimed; no pool
-              time used. Reported <strong>oyzu / policy: skipped</strong>.
+              <code>{run9004.reason!.code}</code> {run9004.reason!.message}.
+              Decided before any executor was claimed; no pool time used.
+              Reported <strong>oyzu / policy: skipped</strong>.
             </p>
             <CommandLine command={run9004.command} />
             <div className="cv-card-actions">
-              <Button size="xs" variant="outline" onClick={() => open({ kind: "run", runId: run9004.id })}>
+              <Button
+                size="xs"
+                variant="outline"
+                onClick={() => open({ kind: "run", runId: run9004.id })}
+              >
                 <Workflow /> Run details
               </Button>
             </div>
@@ -1202,13 +1738,24 @@ function ThreadEvents({
       return (
         <>
           <Said who="dana.okafor" at={clock("2026-10-09T15:22:15-04:00")}>
-            Pushed <code>e5c9a1b</code> “Add refund retry worker” to feat/refund-retries on #482
+            Pushed <code>e5c9a1b</code> “Add refund retry worker” to
+            feat/refund-retries on #482
           </Said>
           <RunStartedEvent run={run9001} open={open} />
-          <SysEvent icon={<CircleMinus size={13} />} tone="muted" title="Cancelled: superseded by a newer push" at={clock(thread.at)}>
+          <SysEvent
+            icon={<CircleMinus size={13} />}
+            tone="muted"
+            title="Cancelled: superseded by a newer push"
+            at={clock(thread.at)}
+          >
             <p className="cv-line">
-              {run9001.reason!.message}. The pull request binding cancels unfinished runs.{" "}
-              <button type="button" className="cv-link" onClick={() => goThread("t-9012")}>
+              {run9001.reason!.message}. The pull request binding cancels
+              unfinished runs.{" "}
+              <button
+                type="button"
+                className="cv-link"
+                onClick={() => goThread("t-9012")}
+              >
                 Go to run 9012
               </button>
             </p>
@@ -1222,9 +1769,15 @@ function ThreadEvents({
             Ran <code>oyzu build cli --remote</code> from a terminal
           </Said>
           <RunStartedEvent run={run8998} open={open} />
-          <SysEvent icon={<CircleCheck size={13} />} tone="ok" title={`Run 8998 succeeded in ${duration(run8998.durationMs)}`} at={clock(thread.at)}>
+          <SysEvent
+            icon={<CircleCheck size={13} />}
+            tone="ok"
+            title={`Run 8998 succeeded in ${duration(run8998.durationMs)}`}
+            at={clock(thread.at)}
+          >
             <p className="cv-line">
-              Ran on Micah's desktop, a developer machine. Its outputs are fine for testing and never release-eligible.
+              Ran on Micah's desktop, a developer machine. Its outputs are fine
+              for testing and never release-eligible.
             </p>
           </SysEvent>
         </>
@@ -1237,8 +1790,16 @@ function ThreadEvents({
             Pushed <code>f00d1e2</code> to feat/export on acme/ledger-tools #12
           </Said>
           <DeliveryEvent delivery={delivery} open={open} />
-          <SysEvent icon={<TriangleAlert size={13} />} tone="warn" title="Stopped: repository not registered" at={clock(delivery.receivedAt)}>
-            <p className="cv-line">acme/ledger-tools isn't registered to any project, so no binding was evaluated and nothing ran.</p>
+          <SysEvent
+            icon={<TriangleAlert size={13} />}
+            tone="warn"
+            title="Stopped: repository not registered"
+            at={clock(delivery.receivedAt)}
+          >
+            <p className="cv-line">
+              acme/ledger-tools isn't registered to any project, so no binding
+              was evaluated and nothing ran.
+            </p>
             <div className="cv-card-actions">
               <InlineConfirm
                 label="Register acme/ledger-tools"
@@ -1276,19 +1837,29 @@ function Composer({
   const [index, setIndex] = useState(0);
   const [dismissed, setDismissed] = useState(false);
   const input = useRef<HTMLTextAreaElement>(null);
-  const available = commands.filter((command) => !command.admin || role === "pool-admin");
+  const available = commands.filter(
+    (command) => !command.admin || role === "pool-admin",
+  );
 
   const slash = /^\/(\w*)$/.exec(draft);
   const at = /(^|\s)@([\w#.-]*)$/.exec(draft);
   const menu = slash
-    ? { kind: "slash" as const, items: available.filter((command) => command.name.startsWith(slash[1].toLowerCase())) }
+    ? {
+        kind: "slash" as const,
+        items: available.filter((command) =>
+          command.name.startsWith(slash[1].toLowerCase()),
+        ),
+      }
     : at
       ? {
           kind: "mention" as const,
           items: mentionables
             .filter((mention) => {
               const q = at[2].toLowerCase();
-              return mention.token.includes(q) || mention.label.toLowerCase().includes(q);
+              return (
+                mention.token.includes(q) ||
+                mention.label.toLowerCase().includes(q)
+              );
             })
             .slice(0, 9),
         }
@@ -1322,7 +1893,8 @@ function Composer({
     if (!text) return;
     const exact = /^\/(\w+)$/.exec(text);
     if (exact) {
-      if (available.some((command) => command.name === exact[1])) runCommand(exact[1]);
+      if (available.some((command) => command.name === exact[1]))
+        runCommand(exact[1]);
       return;
     }
     onSend(text);
@@ -1334,7 +1906,11 @@ function Composer({
       {suggestions.length > 0 && (
         <div className="cv-suggest" aria-label="Suggested questions">
           {suggestions.map((suggestion) => (
-            <button key={suggestion} type="button" onClick={() => onSend(suggestion)}>
+            <button
+              key={suggestion}
+              type="button"
+              onClick={() => onSend(suggestion)}
+            >
               <Sparkles size={11} aria-hidden="true" /> {suggestion}
             </button>
           ))}
@@ -1348,8 +1924,16 @@ function Composer({
         }}
       >
         {showMenu && menu && (
-          <div className="cv-pop" role="listbox" aria-label={menu.kind === "slash" ? "Commands" : "Mention"}>
-            <p className="cv-pop-head">{menu.kind === "slash" ? "Commands" : "Mention a run, pull request, binding or pool"}</p>
+          <div
+            className="cv-pop"
+            role="listbox"
+            aria-label={menu.kind === "slash" ? "Commands" : "Mention"}
+          >
+            <p className="cv-pop-head">
+              {menu.kind === "slash"
+                ? "Commands"
+                : "Mention a run, pull request, binding or pool"}
+            </p>
             {menu.kind === "slash"
               ? menu.items.map((command, position) => (
                   <button
@@ -1384,9 +1968,18 @@ function Composer({
           </div>
         )}
         {draftMentions.length > 0 && (
-          <div className="cv-draft-chips" aria-label="Mentioned in this message">
+          <div
+            className="cv-draft-chips"
+            aria-label="Mentioned in this message"
+          >
             {draftMentions.map((mention) => (
-              <button key={mention.token} type="button" className="cv-mention" onClick={() => openMention(mention.tab)} title={`Open ${mention.label} in the canvas`}>
+              <button
+                key={mention.token}
+                type="button"
+                className="cv-mention"
+                onClick={() => openMention(mention.tab)}
+                title={`Open ${mention.label} in the canvas`}
+              >
                 <AtSign size={11} aria-hidden="true" />
                 {mention.label}
               </button>
@@ -1415,7 +2008,10 @@ function Composer({
                   setIndex((index - 1 + count) % count);
                   return;
                 }
-                if (event.key === "Tab" || (event.key === "Enter" && !event.shiftKey)) {
+                if (
+                  event.key === "Tab" ||
+                  (event.key === "Enter" && !event.shiftKey)
+                ) {
                   event.preventDefault();
                   pick(Math.min(index, count - 1));
                   return;
@@ -1433,7 +2029,17 @@ function Composer({
             }}
           />
           <div className="cv-input-tools">
-            <Button type="button" variant="ghost" size="icon-sm" aria-label="Insert a command" title="Commands" onClick={() => { change("/"); input.current?.focus(); }}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Insert a command"
+              title="Commands"
+              onClick={() => {
+                change("/");
+                input.current?.focus();
+              }}
+            >
               <SquareSlash />
             </Button>
             <Button
@@ -1443,20 +2049,28 @@ function Composer({
               aria-label="Mention something"
               title="Mention"
               onClick={() => {
-                change(draft && !/\s$/.test(draft) ? `${draft} @` : `${draft}@`);
+                change(
+                  draft && !/\s$/.test(draft) ? `${draft} @` : `${draft}@`,
+                );
                 input.current?.focus();
               }}
             >
               <AtSign />
             </Button>
-            <Button type="submit" size="icon-sm" aria-label="Send" disabled={!draft.trim()}>
+            <Button
+              type="submit"
+              size="icon-sm"
+              aria-label="Send"
+              disabled={!draft.trim()}
+            >
               <ArrowUp />
             </Button>
           </div>
         </div>
       </form>
       <p className="cv-hint">
-        <kbd>/</kbd> commands · <kbd>@</kbd> mention · answers come from this project's records; masked values stay masked
+        <kbd>/</kbd> commands · <kbd>@</kbd> mention · answers come from this
+        project's records; masked values stay masked
       </p>
     </div>
   );
@@ -1468,7 +2082,15 @@ type LocalItem =
   | { id: number; after: number; kind: "user"; text: string }
   | { id: number; after: number; kind: "reply"; reply: Reply }
   | { id: number; after: number; kind: "cmd"; text: string; result: string }
-  | { id: number; after: number; kind: "confirm"; prompt: string; confirmLabel: string; result: string; state: "asking" | "done" | "cancelled" }
+  | {
+      id: number;
+      after: number;
+      kind: "confirm";
+      prompt: string;
+      confirmLabel: string;
+      result: string;
+      state: "asking" | "done" | "cancelled";
+    }
   | { id: number; after: number; kind: "reproduce"; run: Run }
   | { id: number; after: number; kind: "assign"; picked?: string };
 
@@ -1477,7 +2099,10 @@ type LocalDraft = DistOmit<LocalItem>;
 
 let localId = 1;
 
-type Registry = Record<string, { ask: (text: string, line?: LogEntry) => void; note: (text: string) => void }>;
+type Registry = Record<
+  string,
+  { ask: (text: string, line?: LogEntry) => void; note: (text: string) => void }
+>;
 
 function ThreadView({
   thread,
@@ -1507,7 +2132,10 @@ function ThreadView({
   const run = thread.runId ? runById(thread.runId) : undefined;
   const isLive = run?.id === liveRun.id;
   const summary = useMemo(
-    () => (thread.summary ? respond(thread.summary, thread.context, role) : undefined),
+    () =>
+      thread.summary
+        ? respond(thread.summary, thread.context, role)
+        : undefined,
     [thread.summary, thread.context, role],
   );
 
@@ -1517,11 +2145,18 @@ function ThreadView({
 
   const add = useCallback(
     (item: LocalDraft) =>
-      setLocal((current) => [...current, { ...item, id: localId++, after: messages.length } as LocalItem]),
+      setLocal((current) => [
+        ...current,
+        { ...item, id: localId++, after: messages.length } as LocalItem,
+      ]),
     [messages.length],
   );
   const update = (id: number, patch: Partial<LocalItem>) =>
-    setLocal((current) => current.map((item) => (item.id === id ? ({ ...item, ...patch } as LocalItem) : item)));
+    setLocal((current) =>
+      current.map((item) =>
+        item.id === id ? ({ ...item, ...patch } as LocalItem) : item,
+      ),
+    );
 
   const last = messages[messages.length - 1];
   const milestoneCount = isLive ? liveMilestones(live).length : 0;
@@ -1531,7 +2166,11 @@ function ThreadView({
   useEffect(() => {
     if (seenKey.current === feedKey) return;
     seenKey.current = feedKey;
-    if (active) end.current?.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
+    if (active)
+      end.current?.scrollIntoView({
+        block: "nearest",
+        behavior: reducedMotion() ? "auto" : "smooth",
+      });
   }, [feedKey, active]);
 
   const send = (text: string) => {
@@ -1545,11 +2184,17 @@ function ThreadView({
   };
   const explain = () => send(thread.explain);
 
-  const onCite: CiteFn = (runId, attempt, seq) => open({ kind: "log", runId, attempt, focusSeq: seq });
+  const onCite: CiteFn = (runId, attempt, seq) =>
+    open({ kind: "log", runId, attempt, focusSeq: seq });
   const onAction: ActionFn = (id, target) => {
     switch (id) {
       case "open-logs":
-        open({ kind: "log", runId: run9012.id, attempt: 2, focusSeq: firstError.seq });
+        open({
+          kind: "log",
+          runId: run9012.id,
+          attempt: 2,
+          focusSeq: firstError.seq,
+        });
         return;
       case "open-attempt-1":
         open({ kind: "log", runId: run9012.id, attempt: 1 });
@@ -1558,7 +2203,10 @@ function ThreadView({
         open({ kind: "poollogs", filter: target ?? "job-5521" });
         return;
       case "open-delivery":
-        open({ kind: "delivery", deliveryId: target ?? thread.deliveryId ?? "dlv-7f12" });
+        open({
+          kind: "delivery",
+          deliveryId: target ?? thread.deliveryId ?? "dlv-7f12",
+        });
         return;
       case "register-repo":
         open({ kind: "delivery", deliveryId: "dlv-7e40" });
@@ -1571,7 +2219,11 @@ function ThreadView({
         return;
       case "open-run": {
         const target_ = runById(target ?? liveRun.id) ?? liveRun;
-        open(hasLog(target_.id) ? { kind: "log", runId: target_.id, attempt: target_.attempt || 1 } : { kind: "run", runId: target_.id });
+        open(
+          hasLog(target_.id)
+            ? { kind: "log", runId: target_.id, attempt: target_.attempt || 1 }
+            : { kind: "run", runId: target_.id },
+        );
         return;
       }
       case "suggest-fix":
@@ -1589,15 +2241,20 @@ function ThreadView({
   };
 
   const onCommand = (name: string) => {
-    const echo = (result: string) => add({ kind: "cmd", text: `/${name}`, result });
+    const echo = (result: string) =>
+      add({ kind: "cmd", text: `/${name}`, result });
     switch (name) {
       case "logs":
         if (run && hasLog(run.id)) {
           open({ kind: "log", runId: run.id, attempt: run.attempt || 1 });
-          echo(`Opened run ${run.number}'s log in the canvas${run.state === "failed" ? " at the first error" : ""}.`);
+          echo(
+            `Opened run ${run.number}'s log in the canvas${run.state === "failed" ? " at the first error" : ""}.`,
+          );
         } else if (run) {
           open({ kind: "run", runId: run.id });
-          echo(`Run ${run.number} has no log in this prototype; opened its details instead.`);
+          echo(
+            `Run ${run.number} has no log in this prototype; opened its details instead.`,
+          );
         } else if (thread.deliveryId) {
           open({ kind: "delivery", deliveryId: thread.deliveryId });
           echo("Opened the delivery record in the canvas.");
@@ -1611,30 +2268,44 @@ function ThreadView({
         return;
       case "diagnostics": {
         if (role !== "pool-admin") return;
-        const job = run?.attempts.find((attempt) => attempt.state !== "succeeded")?.jobId ?? run?.attempts[run.attempts.length - 1]?.jobId;
-        if (job && run?.attempts.some((attempt) => attempt.pool === "acme-onprem")) {
+        const job =
+          run?.attempts.find((attempt) => attempt.state !== "succeeded")
+            ?.jobId ?? run?.attempts[run.attempts.length - 1]?.jobId;
+        if (
+          job &&
+          run?.attempts.some((attempt) => attempt.pool === "acme-onprem")
+        ) {
           open({ kind: "poollogs", filter: job });
           echo(`Opened runner diagnostics filtered to ${job}.`);
         } else if (thread.poolId) {
           open({ kind: "poollogs", filter: "mgr-onprem-02" });
           echo("Opened pool logs filtered to mgr-onprem-02.");
         } else if (run && job) {
-          echo(`${job} ran on ${poolById(run.attempts[0].pool)?.name}, which doesn't ship pool logs to this prototype. Nothing unusual was reported for it.`);
+          echo(
+            `${job} ran on ${poolById(run.attempts[0].pool)?.name}, which doesn't ship pool logs to this prototype. Nothing unusual was reported for it.`,
+          );
         } else {
-          echo("Runner diagnostics belong to runs. This thread didn't start one, so there's no job to look at.");
+          echo(
+            "Runner diagnostics belong to runs. This thread didn't start one, so there's no job to look at.",
+          );
         }
         return;
       }
       case "reproduce":
         if (run) add({ kind: "reproduce", run });
-        else echo("Reproduce applies to runs. This thread is about a delivery, so there's no command to repeat; replay or explain it instead.");
+        else
+          echo(
+            "Reproduce applies to runs. This thread is about a delivery, so there's no command to repeat; replay or explain it instead.",
+          );
         return;
       case "assign":
         add({ kind: "assign" });
         return;
       case "rerun":
         if (run && isLive && live.state === "running") {
-          echo("Run 9014 is still running. Rerun becomes available when it finishes.");
+          echo(
+            "Run 9014 is still running. Rerun becomes available when it finishes.",
+          );
         } else if (run && run.attempts.length) {
           add({
             kind: "confirm",
@@ -1643,13 +2314,20 @@ function ThreadView({
                 ? "Rerun payments-core/test for 9c41e2a on Acme on-prem? It creates attempt 3 of the same check; the commit and command don't change."
                 : `Rerun ${run.check} for ${run.commit.slice(0, 7)}? It creates a new attempt with the same command.`,
             confirmLabel: "Rerun",
-            result: run.id === run9012.id ? actionResult("rerun-failed")! : `Queued attempt ${run.attempts.length + 1} of run ${run.number}.`,
+            result:
+              run.id === run9012.id
+                ? actionResult("rerun-failed")!
+                : `Queued attempt ${run.attempts.length + 1} of run ${run.number}.`,
             state: "asking",
           });
         } else if (run) {
-          echo(`Run ${run.number} never started an attempt. Fix the cause first: ${run.reason?.message ?? "nothing ran"}.`);
+          echo(
+            `Run ${run.number} never started an attempt. Fix the cause first: ${run.reason?.message ?? "nothing ran"}.`,
+          );
         } else if (thread.deliveryId === "dlv-rej") {
-          echo("Rejected deliveries can't be replayed from Oyzu because their bodies were never stored. Rotate the secret, then redeliver them from GitHub.");
+          echo(
+            "Rejected deliveries can't be replayed from Oyzu because their bodies were never stored. Rotate the secret, then redeliver them from GitHub.",
+          );
         } else if (thread.deliveryId) {
           add({
             kind: "confirm",
@@ -1659,7 +2337,9 @@ function ThreadView({
             state: "asking",
           });
         } else {
-          echo("There's nothing to rerun in a pool thread. Drain the manager or open its logs instead.");
+          echo(
+            "There's nothing to rerun in a pool thread. Drain the manager or open its logs instead.",
+          );
         }
         return;
       default:
@@ -1685,7 +2365,14 @@ function ThreadView({
           </div>
         );
       case "reply":
-        return <LocalReply key={`l${item.id}`} reply={item.reply} onCite={onCite} onAction={onAction} />;
+        return (
+          <LocalReply
+            key={`l${item.id}`}
+            reply={item.reply}
+            onCite={onCite}
+            onAction={onAction}
+          />
+        );
       case "cmd":
         return (
           <div key={`l${item.id}`} className="cv-item cv-cmdline">
@@ -1698,7 +2385,11 @@ function ThreadView({
         );
       case "confirm":
         return (
-          <div key={`l${item.id}`} className="cv-item cv-confirm-card" data-state={item.state}>
+          <div
+            key={`l${item.id}`}
+            className="cv-item cv-confirm-card"
+            data-state={item.state}
+          >
             <Avatar who="you" />
             <div>
               <p className="cv-by">
@@ -1717,13 +2408,21 @@ function ThreadView({
                     >
                       {item.confirmLabel}
                     </Button>
-                    <Button size="sm" variant="ghost" onClick={() => update(item.id, { state: "cancelled" })}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => update(item.id, { state: "cancelled" })}
+                    >
                       Cancel
                     </Button>
                   </div>
                 </div>
               ) : (
-                <p className="cv-quiet">{item.state === "done" ? "Confirmed." : "Cancelled. Nothing was changed."}</p>
+                <p className="cv-quiet">
+                  {item.state === "done"
+                    ? "Confirmed."
+                    : "Cancelled. Nothing was changed."}
+                </p>
               )}
             </div>
           </div>
@@ -1740,9 +2439,18 @@ function ThreadView({
                 <span className="cv-by-sys">Oyzu · for /reproduce</span>
               </p>
               <div className="cv-card">
-                <p className="cv-line cv-quiet">Every run is one oyzu command on one commit, so it reproduces exactly.</p>
-                <CommandLine command={`git checkout ${item.run.commit.slice(0, 7)} && ${item.run.command}`} note="On your machine" />
-                <CommandLine command={`${item.run.command} --remote --ref ${item.run.commit.slice(0, 7)}`} note="Its --remote twin, on the same pool, without a local toolchain" />
+                <p className="cv-line cv-quiet">
+                  Every run is one oyzu command on one commit, so it reproduces
+                  exactly.
+                </p>
+                <CommandLine
+                  command={`git checkout ${item.run.commit.slice(0, 7)} && ${item.run.command}`}
+                  note="On your machine"
+                />
+                <CommandLine
+                  command={`${item.run.command} --remote --ref ${item.run.commit.slice(0, 7)}`}
+                  note="Its --remote twin, on the same pool, without a local toolchain"
+                />
               </div>
             </div>
           </div>
@@ -1766,7 +2474,9 @@ function ThreadView({
                       onClick={() => {
                         update(item.id, { picked: who });
                         setAssignee(who);
-                        note(`Assigned to ${who}. They get a notification with a link to this thread.`);
+                        note(
+                          `Assigned to ${who}. They get a notification with a link to this thread.`,
+                        );
                       }}
                     >
                       <Avatar who={who} /> {who}
@@ -1782,7 +2492,9 @@ function ThreadView({
 
   const feed: ReactNode[] = [];
   for (let position = 0; position <= messages.length; position += 1) {
-    local.filter((item) => item.after === position).forEach((item) => feed.push(renderLocal(item)));
+    local
+      .filter((item) => item.after === position)
+      .forEach((item) => feed.push(renderLocal(item)));
     const message: ChatMessage | undefined = messages[position];
     if (!message) continue;
     if (message.author === "user")
@@ -1802,7 +2514,11 @@ function ThreadView({
       );
     else if (message.author === "system")
       feed.push(
-        <div key={`m${message.id}`} className="cv-item cv-ev is-compact" data-tone="ok">
+        <div
+          key={`m${message.id}`}
+          className="cv-item cv-ev is-compact"
+          data-tone="ok"
+        >
           <span className="cv-node" aria-hidden="true">
             <CircleCheck size={13} />
           </span>
@@ -1834,21 +2550,37 @@ function ThreadView({
   return (
     <section className="cv-thread" hidden={!active} aria-label={thread.title}>
       <header className="cv-thread-head">
-        <Button className="cv-phone-only" variant="ghost" size="icon-sm" aria-label="Back to inbox" onClick={onBack}>
+        <Button
+          className="cv-phone-only"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Back to inbox"
+          onClick={onBack}
+        >
           <ArrowLeft />
         </Button>
         <div className="cv-thread-title">
-          <h2>{isLive && live.state === "succeeded" ? "api-image 9014 succeeded" : thread.title}</h2>
+          <h2>
+            {isLive && live.state === "succeeded"
+              ? "api-image 9014 succeeded"
+              : thread.title}
+          </h2>
           <div className="cv-thread-meta">
-            <StateChip size="sm" state={state} label={isLive ? undefined : thread.chip.label} />
+            <StateChip
+              size="sm"
+              state={state}
+              label={isLive ? undefined : thread.chip.label}
+            />
             {thread.meta.pr && (
               <span>
-                <GitPullRequest size={12} aria-hidden="true" /> #{thread.meta.pr}
+                <GitPullRequest size={12} aria-hidden="true" /> #
+                {thread.meta.pr}
               </span>
             )}
             {thread.meta.commit && (
               <span>
-                <GitCommitHorizontal size={12} aria-hidden="true" /> <code>{thread.meta.commit}</code>
+                <GitCommitHorizontal size={12} aria-hidden="true" />{" "}
+                <code>{thread.meta.commit}</code>
               </span>
             )}
             {thread.meta.ref && (
@@ -1866,31 +2598,68 @@ function ThreadView({
         </div>
         <div className="cv-quick">
           {run && hasLog(run.id) && (
-            <Button size="sm" variant="outline" aria-label="Open log" onClick={() => open({ kind: "log", runId: run.id, attempt: run.attempt || 1 })}>
+            <Button
+              size="sm"
+              variant="outline"
+              aria-label="Open log"
+              onClick={() =>
+                open({ kind: "log", runId: run.id, attempt: run.attempt || 1 })
+              }
+            >
               <FileText /> <span className="cv-hide-sm">Log</span>
             </Button>
           )}
           {run && (
-            <Button size="sm" variant="ghost" aria-label="Run details" onClick={() => open({ kind: "run", runId: run.id })}>
+            <Button
+              size="sm"
+              variant="ghost"
+              aria-label="Run details"
+              onClick={() => open({ kind: "run", runId: run.id })}
+            >
               <Workflow /> <span className="cv-hide-sm">Details</span>
             </Button>
           )}
-          {run && run.attempts.length > 0 && !(isLive && live.state === "running") && (
-            <Button size="sm" variant="ghost" aria-label="Rerun" onClick={() => onCommand("rerun")}>
-              <RotateCcw /> <span className="cv-hide-sm">Rerun</span>
-            </Button>
-          )}
+          {run &&
+            run.attempts.length > 0 &&
+            !(isLive && live.state === "running") && (
+              <Button
+                size="sm"
+                variant="ghost"
+                aria-label="Rerun"
+                onClick={() => onCommand("rerun")}
+              >
+                <RotateCcw /> <span className="cv-hide-sm">Rerun</span>
+              </Button>
+            )}
           {thread.deliveryId && !run && (
-            <Button size="sm" variant="outline" aria-label="Delivery record" onClick={() => open({ kind: "delivery", deliveryId: thread.deliveryId! })}>
+            <Button
+              size="sm"
+              variant="outline"
+              aria-label="Delivery record"
+              onClick={() =>
+                open({ kind: "delivery", deliveryId: thread.deliveryId! })
+              }
+            >
               <Webhook /> <span className="cv-hide-sm">Record</span>
             </Button>
           )}
           {thread.poolId && (
-            <Button size="sm" variant="outline" aria-label="Pool" onClick={() => open({ kind: "pool", poolId: thread.poolId! })}>
+            <Button
+              size="sm"
+              variant="outline"
+              aria-label="Pool"
+              onClick={() => open({ kind: "pool", poolId: thread.poolId! })}
+            >
               <Server /> <span className="cv-hide-sm">Pool</span>
             </Button>
           )}
-          <Button size="sm" variant="ghost" aria-label="Assign" title="Assign this thread" onClick={() => onCommand("assign")}>
+          <Button
+            size="sm"
+            variant="ghost"
+            aria-label="Assign"
+            title="Assign this thread"
+            onClick={() => onCommand("assign")}
+          >
             <UserPlus />
           </Button>
         </div>
@@ -1900,8 +2669,22 @@ function ThreadView({
           <p className="cv-day">
             <span>Today · times in ET</span>
           </p>
-          {summary && <PinnedSummary reply={summary} onCite={onCite} onAction={onAction} />}
-          <ThreadEvents thread={thread} role={role} live={live} open={open} goThread={goThread} note={note} explain={explain} />
+          {summary && (
+            <PinnedSummary
+              reply={summary}
+              onCite={onCite}
+              onAction={onAction}
+            />
+          )}
+          <ThreadEvents
+            thread={thread}
+            role={role}
+            live={live}
+            open={open}
+            goThread={goThread}
+            note={note}
+            explain={explain}
+          />
           {feed.length > 0 && (
             <p className="cv-day">
               <span>Conversation</span>
@@ -1957,14 +2740,30 @@ function InboxRow({
     : thread.preview;
   return (
     <li>
-      <button type="button" className="cv-row" aria-current={active ? "true" : undefined} data-unread={unread} onClick={onSelect}>
+      <button
+        type="button"
+        className="cv-row"
+        aria-current={active ? "true" : undefined}
+        data-unread={unread}
+        onClick={onSelect}
+      >
         <span className="cv-row-icon">
           <StateIcon icon={liveDone ? "ok" : thread.icon} />
         </span>
         <span className="cv-row-main">
-          <strong>{isLive && liveDone ? "api-image 9014 succeeded" : thread.title}</strong>
-          <span className={isLive && !liveDone ? "cv-row-live" : undefined}>{preview}</span>
-          {isLive && !liveDone && <Progress value={livePercent(live)} aria-label="api-image progress" className="cv-row-progress" />}
+          <strong>
+            {isLive && liveDone ? "api-image 9014 succeeded" : thread.title}
+          </strong>
+          <span className={isLive && !liveDone ? "cv-row-live" : undefined}>
+            {preview}
+          </span>
+          {isLive && !liveDone && (
+            <Progress
+              value={livePercent(live)}
+              aria-label="api-image progress"
+              className="cv-row-progress"
+            />
+          )}
         </span>
         <span className="cv-row-side">
           <time>{isLive && !liveDone ? "live" : ago(thread.at)}</time>
@@ -1994,27 +2793,52 @@ function BrowseList({
 }) {
   const [filter, setFilter] = useState<"all" | RunState>("all");
   const q = query.trim().toLowerCase();
-  const hit = (...values: string[]) => !q || values.some((value) => value.toLowerCase().includes(q));
+  const hit = (...values: string[]) =>
+    !q || values.some((value) => value.toLowerCase().includes(q));
   if (tab === "runs") {
     const list = runs
-      .map((run) => ({ run, state: run.id === liveRun.id ? live.state : run.state }))
-      .filter(({ run, state }) => (filter === "all" || state === filter) && hit(String(run.number), run.check, run.ref, run.title, run.author));
+      .map((run) => ({
+        run,
+        state: run.id === liveRun.id ? live.state : run.state,
+      }))
+      .filter(
+        ({ run, state }) =>
+          (filter === "all" || state === filter) &&
+          hit(String(run.number), run.check, run.ref, run.title, run.author),
+      );
     return (
       <>
-        <div className="cv-filters" role="group" aria-label="Filter runs by state">
+        <div
+          className="cv-filters"
+          role="group"
+          aria-label="Filter runs by state"
+        >
           {runFilters.map((item) => (
-            <button key={item.id} type="button" aria-pressed={filter === item.id} onClick={() => setFilter(item.id)}>
+            <button
+              key={item.id}
+              type="button"
+              aria-pressed={filter === item.id}
+              onClick={() => setFilter(item.id)}
+            >
               {item.label}
             </button>
           ))}
         </div>
         {list.length === 0 ? (
-          <EmptyState filtered title="No runs match" description="Try another state or clear the search." />
+          <EmptyState
+            filtered
+            title="No runs match"
+            description="Try another state or clear the search."
+          />
         ) : (
           <ul className="cv-list">
             {list.map(({ run, state }) => (
               <li key={run.id}>
-                <button type="button" className="cv-row" onClick={() => onRun(run)}>
+                <button
+                  type="button"
+                  className="cv-row"
+                  onClick={() => onRun(run)}
+                >
                   <span className="cv-row-main">
                     <strong>
                       Run {run.number} <em>{run.check}</em>
@@ -2026,7 +2850,9 @@ function BrowseList({
                   </span>
                   <span className="cv-row-side">
                     <StateChip size="sm" state={state} />
-                    <time>{state === "running" ? "live" : ago(run.createdAt)}</time>
+                    <time>
+                      {state === "running" ? "live" : ago(run.createdAt)}
+                    </time>
                   </span>
                 </button>
               </li>
@@ -2037,15 +2863,30 @@ function BrowseList({
     );
   }
   if (tab === "deliveries") {
-    const list = deliveries.filter((delivery) => hit(delivery.id, delivery.event, delivery.repository, delivery.outcomeLabel, delivery.connector));
+    const list = deliveries.filter((delivery) =>
+      hit(
+        delivery.id,
+        delivery.event,
+        delivery.repository,
+        delivery.outcomeLabel,
+        delivery.connector,
+      ),
+    );
     return (
       <ul className="cv-list">
         {list.map((delivery) => (
           <li key={delivery.id}>
-            <button type="button" className="cv-row" onClick={() => onDelivery(delivery)}>
+            <button
+              type="button"
+              className="cv-row"
+              onClick={() => onDelivery(delivery)}
+            >
               <span className="cv-row-main">
                 <strong>
-                  {delivery.event} <em>{delivery.pr ? `#${delivery.pr.number}` : delivery.ref}</em>
+                  {delivery.event}{" "}
+                  <em>
+                    {delivery.pr ? `#${delivery.pr.number}` : delivery.ref}
+                  </em>
                 </strong>
                 <span>
                   {delivery.repository} · {delivery.outcomeLabel}
@@ -2054,8 +2895,23 @@ function BrowseList({
               <span className="cv-row-side">
                 <StateChip
                   size="sm"
-                  state={delivery.outcome === "started" ? "success" : delivery.outcome === "no-match" || delivery.outcome === "unregistered" ? "skipped" : "failure"}
-                  label={delivery.outcome === "started" ? "Started" : delivery.outcome === "no-match" ? "No match" : delivery.outcome === "unregistered" ? "Unregistered" : "Rejected"}
+                  state={
+                    delivery.outcome === "started"
+                      ? "success"
+                      : delivery.outcome === "no-match" ||
+                          delivery.outcome === "unregistered"
+                        ? "skipped"
+                        : "failure"
+                  }
+                  label={
+                    delivery.outcome === "started"
+                      ? "Started"
+                      : delivery.outcome === "no-match"
+                        ? "No match"
+                        : delivery.outcome === "unregistered"
+                          ? "Unregistered"
+                          : "Rejected"
+                  }
                 />
                 <time>{ago(delivery.receivedAt)}</time>
               </span>
@@ -2072,7 +2928,11 @@ function BrowseList({
           .filter((pool) => hit(pool.name, pool.kind, pool.id))
           .map((pool) => (
             <li key={pool.id}>
-              <button type="button" className="cv-row" onClick={() => open({ kind: "pool", poolId: pool.id })}>
+              <button
+                type="button"
+                className="cv-row"
+                onClick={() => open({ kind: "pool", poolId: pool.id })}
+              >
                 <span className="cv-row-main">
                   <strong>
                     {pool.name} <em>{pool.kind}</em>
@@ -2084,7 +2944,21 @@ function BrowseList({
                   </span>
                 </span>
                 <span className="cv-row-side">
-                  <StateChip size="sm" state={role === "pool-admin" || pool.status === "paused" ? pool.status : "healthy"} label={role === "pool-admin" ? undefined : pool.status === "paused" ? "Paused" : "Running"} />
+                  <StateChip
+                    size="sm"
+                    state={
+                      role === "pool-admin" || pool.status === "paused"
+                        ? pool.status
+                        : "healthy"
+                    }
+                    label={
+                      role === "pool-admin"
+                        ? undefined
+                        : pool.status === "paused"
+                          ? "Paused"
+                          : "Running"
+                    }
+                  />
                 </span>
               </button>
             </li>
@@ -2094,10 +2968,16 @@ function BrowseList({
   return (
     <ul className="cv-list">
       {bindings
-        .filter((binding) => hit(binding.name, binding.scope, binding.filters.join(" ")))
+        .filter((binding) =>
+          hit(binding.name, binding.scope, binding.filters.join(" ")),
+        )
         .map((binding) => (
           <li key={binding.id}>
-            <button type="button" className="cv-row" onClick={() => open({ kind: "binding", bindingId: binding.id })}>
+            <button
+              type="button"
+              className="cv-row"
+              onClick={() => open({ kind: "binding", bindingId: binding.id })}
+            >
               <span className="cv-row-main">
                 <strong>{binding.name}</strong>
                 <span>
@@ -2105,7 +2985,11 @@ function BrowseList({
                 </span>
               </span>
               <span className="cv-row-side">
-                <StateChip size="sm" state={binding.enabled ? "success" : "skipped"} label={binding.enabled ? "On" : "Off"} />
+                <StateChip
+                  size="sm"
+                  state={binding.enabled ? "success" : "skipped"}
+                  label={binding.enabled ? "On" : "Off"}
+                />
               </span>
             </button>
           </li>
@@ -2128,7 +3012,9 @@ export function Conversation() {
   const [mode, setMode] = useState<"inbox" | "browse">("inbox");
   const [browse, setBrowse] = useState<BrowseTab>("runs");
   const [query, setQuery] = useState("");
-  const [tabs, setTabs] = useState<Tab[]>([{ kind: "log", runId: run9012.id, attempt: 2 }]);
+  const [tabs, setTabs] = useState<Tab[]>([
+    { kind: "log", runId: run9012.id, attempt: 2 },
+  ]);
   const [activeTab, setActiveTab] = useState(`log:${run9012.id}`);
   const [expanded, setExpanded] = useState(false);
   const [liveSeen, setLiveSeen] = useState(0);
@@ -2140,13 +3026,20 @@ export function Conversation() {
     paneNow.current = pane;
   }, [pane]);
 
-  const visible = threads.filter((thread) => !thread.adminOnly || role === "pool-admin");
+  const visible = threads.filter(
+    (thread) => !thread.adminOnly || role === "pool-admin",
+  );
   const milestoneCount = liveMilestones(live).length;
 
   useEffect(() => {
-    if (role !== "pool-admin" && threadById(activeId)?.adminOnly) setActiveId("t-9012");
+    if (role !== "pool-admin" && threadById(activeId)?.adminOnly)
+      setActiveId("t-9012");
     if (role !== "pool-admin")
-      setTabs((current) => (current.some((tab) => tab.kind === "poollogs") ? current.filter((tab) => tab.kind !== "poollogs") : current));
+      setTabs((current) =>
+        current.some((tab) => tab.kind === "poollogs")
+          ? current.filter((tab) => tab.kind !== "poollogs")
+          : current,
+      );
   }, [role, activeId]);
 
   useEffect(() => {
@@ -2155,14 +3048,20 @@ export function Conversation() {
 
   const selectThread = useCallback((id: string) => {
     setActiveId(id);
-    setVisited((current) => (current.includes(id) ? current : [...current, id]));
+    setVisited((current) =>
+      current.includes(id) ? current : [...current, id],
+    );
     setUnread((current) => current.filter((item) => item !== id));
     setPane("thread");
   }, []);
 
   const open = useCallback((tab: Tab) => {
     const key = tabKey(tab);
-    setTabs((current) => (current.some((item) => tabKey(item) === key) ? current.map((item) => (tabKey(item) === key ? tab : item)) : [...current, tab]));
+    setTabs((current) =>
+      current.some((item) => tabKey(item) === key)
+        ? current.map((item) => (tabKey(item) === key ? tab : item))
+        : [...current, tab],
+    );
     setActiveTab(key);
     if (paneNow.current !== "canvas") returnTo.current = paneNow.current;
     setPane("canvas");
@@ -2171,7 +3070,8 @@ export function Conversation() {
   const closeTab = (key: string) => {
     const rest = tabs.filter((tab) => tabKey(tab) !== key);
     setTabs(rest);
-    if (key === activeTab && rest.length) setActiveTab(tabKey(rest[rest.length - 1]));
+    if (key === activeTab && rest.length)
+      setActiveTab(tabKey(rest[rest.length - 1]));
     if (!rest.length) {
       setPane("thread");
       setExpanded(false);
@@ -2179,35 +3079,66 @@ export function Conversation() {
   };
 
   const isUnread = (id: string) =>
-    id !== activeId && (unread.includes(id) || (id === "t-9014" && milestoneCount > liveSeen));
+    id !== activeId &&
+    (unread.includes(id) || (id === "t-9014" && milestoneCount > liveSeen));
 
   const q = query.trim().toLowerCase();
   const filtered = visible.filter(
-    (thread) => !q || [thread.title, thread.preview, thread.meta.ref ?? "", thread.meta.extra ?? ""].some((text) => text.toLowerCase().includes(q)),
+    (thread) =>
+      !q ||
+      [
+        thread.title,
+        thread.preview,
+        thread.meta.ref ?? "",
+        thread.meta.extra ?? "",
+      ].some((text) => text.toLowerCase().includes(q)),
   );
-  const groupOf = (thread: ThreadDef) => (thread.id === "t-9014" && live.state !== "running" ? "recent" : thread.group);
+  const groupOf = (thread: ThreadDef) =>
+    thread.id === "t-9014" && live.state !== "running"
+      ? "recent"
+      : thread.group;
   const groups = [
     { id: "attention", label: "Needs attention" },
     { id: "running", label: "Running" },
     { id: "recent", label: "Recent" },
   ] as const;
-  const attentionCount = visible.filter((thread) => thread.group === "attention" && isUnread(thread.id)).length;
+  const attentionCount = visible.filter(
+    (thread) => thread.group === "attention" && isUnread(thread.id),
+  ).length;
 
   return (
-    <div className="cv" data-pane={pane} data-canvas={tabs.length ? "open" : "closed"} data-expanded={expanded && tabs.length > 0}>
+    <div
+      className="cv"
+      data-pane={pane}
+      data-canvas={tabs.length ? "open" : "closed"}
+      data-expanded={expanded && tabs.length > 0}
+    >
       <nav className="cv-inbox" aria-label="Threads">
         <div className="cv-inbox-head">
           <div className="cv-brandline">
-            <img src="/brand/oyzu-mark-color.svg" alt="" width={18} height={18} />
+            <img
+              src="/brand/oyzu-mark-color.svg"
+              alt=""
+              width={18}
+              height={18}
+            />
             <strong>payments</strong>
             <span>acme</span>
           </div>
           <div className="cv-seg" role="group" aria-label="Inbox or browse">
-            <button type="button" aria-pressed={mode === "inbox"} onClick={() => setMode("inbox")}>
+            <button
+              type="button"
+              aria-pressed={mode === "inbox"}
+              onClick={() => setMode("inbox")}
+            >
               <Inbox size={13} aria-hidden="true" /> Inbox
               {attentionCount > 0 && <b>{attentionCount}</b>}
             </button>
-            <button type="button" aria-pressed={mode === "browse"} onClick={() => setMode("browse")}>
+            <button
+              type="button"
+              aria-pressed={mode === "browse"}
+              onClick={() => setMode("browse")}
+            >
               <Workflow size={13} aria-hidden="true" /> Browse
             </button>
           </div>
@@ -2215,25 +3146,45 @@ export function Conversation() {
             value={query}
             onChange={setQuery}
             label={mode === "inbox" ? "Search threads" : `Search ${browse}`}
-            placeholder={mode === "inbox" ? "Search threads" : `Search ${browse}`}
+            placeholder={
+              mode === "inbox" ? "Search threads" : `Search ${browse}`
+            }
           />
           {mode === "browse" && (
-            <div className="cv-browse-tabs" role="tablist" aria-label="Record type">
-              {(["runs", "deliveries", "pools", "bindings"] as const).map((item) => (
-                <button key={item} type="button" role="tab" aria-selected={browse === item} onClick={() => setBrowse(item)}>
-                  {item[0].toUpperCase() + item.slice(1)}
-                </button>
-              ))}
+            <div
+              className="cv-browse-tabs"
+              role="tablist"
+              aria-label="Record type"
+            >
+              {(["runs", "deliveries", "pools", "bindings"] as const).map(
+                (item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    role="tab"
+                    aria-selected={browse === item}
+                    onClick={() => setBrowse(item)}
+                  >
+                    {item[0].toUpperCase() + item.slice(1)}
+                  </button>
+                ),
+              )}
             </div>
           )}
         </div>
         <div className="cv-inbox-body">
           {mode === "inbox" ? (
             filtered.length === 0 ? (
-              <EmptyState filtered title="No threads match" description="Clear the search, or switch to Browse to look through every record." />
+              <EmptyState
+                filtered
+                title="No threads match"
+                description="Clear the search, or switch to Browse to look through every record."
+              />
             ) : (
               groups.map((group) => {
-                const list = filtered.filter((thread) => groupOf(thread) === group.id);
+                const list = filtered.filter(
+                  (thread) => groupOf(thread) === group.id,
+                );
                 if (!list.length) return null;
                 return (
                   <section key={group.id} className="cv-group">
@@ -2269,12 +3220,16 @@ export function Conversation() {
                 else open({ kind: "run", runId: run.id });
               }}
               onDelivery={(delivery) => {
-                const thread = threads.find((item) => item.deliveryId === delivery.id && !item.runId);
+                const thread = threads.find(
+                  (item) => item.deliveryId === delivery.id && !item.runId,
+                );
                 if (thread && (!thread.adminOnly || role === "pool-admin")) {
                   selectThread(thread.id);
                   return;
                 }
-                const owner = threads.find((item) => item.deliveryId === delivery.id);
+                const owner = threads.find(
+                  (item) => item.deliveryId === delivery.id,
+                );
                 if (owner) selectThread(owner.id);
                 open({ kind: "delivery", deliveryId: delivery.id });
               }}

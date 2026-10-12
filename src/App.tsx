@@ -335,7 +335,14 @@ export default function App({
           {guard}
           <ActiveContextProvider value={activeContext}>
             <main key={contextKey} id="main" tabIndex={-1}>
-              {hash === "#pages/automation" ? (<AutomationIdentities onStateChange={onEditorState} />) : hash.startsWith("#pages/user-groups") ? (<UserGroups key={hash} groupId={hash.split("/")[2]} />) : hash.startsWith("#pages/access-library") ? (<AccessLibrary />) : (hash === "#pages/access" || hash.startsWith("#pages/access?")) ? (
+              {hash === "#pages/automation" ? (
+                <AutomationIdentities onStateChange={onEditorState} />
+              ) : hash.startsWith("#pages/user-groups") ? (
+                <UserGroups key={hash} groupId={hash.split("/")[2]} />
+              ) : hash.startsWith("#pages/access-library") ? (
+                <AccessLibrary />
+              ) : hash === "#pages/access" ||
+                hash.startsWith("#pages/access?") ? (
                 <AccessAssignments />
               ) : hash === "#pages/oauth" ? (
                 <OAuthDevicePage />
@@ -343,7 +350,9 @@ export default function App({
                 <ConnectionHistory onStateChange={onEditorState} />
               ) : hash === "#pages/audit" ? (
                 <AuditPage />
-              ) : hash === "#pages/member-patterns" ? (<MembersAccess />) : hash === "#pages/members" ? (
+              ) : hash === "#pages/member-patterns" ? (
+                <MembersAccess />
+              ) : hash === "#pages/members" ? (
                 <AccessLibrary />
               ) : hash.startsWith("#pages/connectors") ? (
                 <ConnectorCatalog

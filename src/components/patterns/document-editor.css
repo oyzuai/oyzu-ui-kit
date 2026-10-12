@@ -220,4 +220,6 @@
     font-size: 12px;
   }
 }
-.document-editor .cm-gutters {padding:0 8px 0 4px}
+.document-editor .cm-gutters {
+  padding: 0 8px 0 4px;
+}

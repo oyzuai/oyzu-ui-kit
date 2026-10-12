@@ -1,4 +1,12 @@
-import { Fragment, useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   ArrowUp,
   Check,
@@ -39,7 +47,10 @@ let nextId = 1;
 export function useAssistant(context: AssistantContext, role: Role) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const timers = useRef<number[]>([]);
-  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
+  useEffect(
+    () => () => timers.current.forEach((t) => window.clearTimeout(t)),
+    [],
+  );
 
   const ask = useCallback(
     (text: string, line?: LogEntry) => {
@@ -52,40 +63,60 @@ export function useAssistant(context: AssistantContext, role: Role) {
       ]);
       const reveal = (count: number) =>
         setMessages((current) =>
-          current.map((message) => (message.id === id ? { ...message, shown: count, thinking: false } : message)),
+          current.map((message) =>
+            message.id === id
+              ? { ...message, shown: count, thinking: false }
+              : message,
+          ),
         );
-      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      const reduce = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
       if (reduce) {
         reveal(reply.blocks.length);
         return;
       }
       timers.current.push(window.setTimeout(() => reveal(1), 900));
       reply.blocks.forEach((_, index) => {
-        if (index > 0) timers.current.push(window.setTimeout(() => reveal(index + 1), 900 + index * 380));
+        if (index > 0)
+          timers.current.push(
+            window.setTimeout(() => reveal(index + 1), 900 + index * 380),
+          );
       });
     },
     [context, role],
   );
   const note = useCallback((text: string) => {
-    setMessages((current) => [...current, { id: nextId++, author: "system", text }]);
+    setMessages((current) => [
+      ...current,
+      { id: nextId++, author: "system", text },
+    ]);
   }, []);
   const reset = useCallback(() => setMessages([]), []);
-  return { messages, ask, note, reset, suggestions: suggestionsFor(context, role) };
+  return {
+    messages,
+    ask,
+    note,
+    reset,
+    suggestions: suggestionsFor(context, role),
+  };
 }
 
 /** Light markdown: **bold** and `code` only. */
 export function Rich({ text }: { text: string }) {
   return (
     <>
-      {text.split(/(\*\*[^*]+\*\*|`[^`]+`)/).map((part, index) =>
-        part.startsWith("**") ? (
-          <strong key={index}>{part.slice(2, -2)}</strong>
-        ) : part.startsWith("`") ? (
-          <code key={index}>{part.slice(1, -1)}</code>
-        ) : (
-          <Fragment key={index}>{part}</Fragment>
-        ),
-      )}
+      {text
+        .split(/(\*\*[^*]+\*\*|`[^`]+`)/)
+        .map((part, index) =>
+          part.startsWith("**") ? (
+            <strong key={index}>{part.slice(2, -2)}</strong>
+          ) : part.startsWith("`") ? (
+            <code key={index}>{part.slice(1, -1)}</code>
+          ) : (
+            <Fragment key={index}>{part}</Fragment>
+          ),
+        )}
     </>
   );
 }
@@ -106,13 +137,22 @@ function Typed({ text, animate }: { text: string; animate: boolean }) {
     return () => window.clearInterval(timer);
   }, [text, animate]);
   // Reveal whole words only so markdown markers never split mid-token.
-  const cut = !animate || length >= text.length ? text : text.slice(0, text.lastIndexOf(" ", length) + 1);
+  const cut =
+    !animate || length >= text.length
+      ? text
+      : text.slice(0, text.lastIndexOf(" ", length) + 1);
   const balanced = (cut.match(/\*\*/g)?.length ?? 0) % 2 ? cut + "**" : cut;
-  return <Rich text={(balanced.match(/`/g)?.length ?? 0) % 2 ? balanced + "`" : balanced} />;
+  return (
+    <Rich
+      text={(balanced.match(/`/g)?.length ?? 0) % 2 ? balanced + "`" : balanced}
+    />
+  );
 }
 
 function CopyCommand({ command, note }: { command: string; note?: string }) {
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">(
+    "idle",
+  );
   return (
     <div className="as-command">
       <code>{command}</code>
@@ -132,7 +172,12 @@ function CopyCommand({ command, note }: { command: string; note?: string }) {
         {copyState === "copied" ? <Check size={13} /> : <Copy size={13} />}
       </button>
       {note && <small>{note}</small>}
-      {copyState === "failed" && <span role="status">Couldn’t copy. Select the command and copy it manually: <code tabIndex={0}>{command}</code></span>}
+      {copyState === "failed" && (
+        <span role="status">
+          Couldn’t copy. Select the command and copy it manually:{" "}
+          <code tabIndex={0}>{command}</code>
+        </span>
+      )}
     </div>
   );
 }
@@ -159,10 +204,18 @@ function Actions({
             key={action.id + (action.target ?? "")}
             size="sm"
             variant={action.primary ? "default" : "outline"}
-            disabled={done.includes(action.id) && Boolean(confirmFirst[action.id])}
-            onClick={() => (confirmFirst[action.id] ? setPending(action.id) : run(action.id, action.target))}
+            disabled={
+              done.includes(action.id) && Boolean(confirmFirst[action.id])
+            }
+            onClick={() =>
+              confirmFirst[action.id]
+                ? setPending(action.id)
+                : run(action.id, action.target)
+            }
           >
-            {done.includes(action.id) && confirmFirst[action.id] ? <Check /> : null}
+            {done.includes(action.id) && confirmFirst[action.id] ? (
+              <Check />
+            ) : null}
             {action.label}
           </Button>
         ))}
@@ -171,10 +224,19 @@ function Actions({
         <div className="as-confirm" role="group" aria-label="Confirm action">
           <p>{confirmFirst[pending]}</p>
           <div>
-            <Button size="sm" onClick={() => run(pending, actions.find((a) => a.id === pending)?.target)}>
+            <Button
+              size="sm"
+              onClick={() =>
+                run(pending, actions.find((a) => a.id === pending)?.target)
+              }
+            >
               Confirm
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => setPending(undefined)}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setPending(undefined)}
+            >
               Cancel
             </Button>
           </div>
@@ -204,9 +266,14 @@ export function BlockView({
       );
     case "cite":
       return (
-        <button type="button" className="as-cite" onClick={() => onCite(block.runId, block.attempt, block.seq)}>
+        <button
+          type="button"
+          className="as-cite"
+          onClick={() => onCite(block.runId, block.attempt, block.seq)}
+        >
           <span>
-            <FileText size={12} aria-hidden="true" /> {block.label} · line {block.seq}
+            <FileText size={12} aria-hidden="true" /> {block.label} · line{" "}
+            {block.seq}
           </span>
           <code>{block.excerpt}</code>
         </button>
@@ -229,7 +296,11 @@ export function BlockView({
         <ul className="as-verdicts">
           {block.rows.map((row) => (
             <li key={row.name} data-matched={row.matched}>
-              {row.matched ? <CheckCircle2 size={14} aria-label="Matched" /> : <XCircle size={14} aria-label="Not matched" />}
+              {row.matched ? (
+                <CheckCircle2 size={14} aria-label="Matched" />
+              ) : (
+                <XCircle size={14} aria-label="Not matched" />
+              )}
               <span>
                 <strong>{row.name}</strong>
                 <small>{row.reason}</small>
@@ -263,7 +334,8 @@ function Sources({ sources }: { sources: string[] }) {
   return (
     <div className="as-sources">
       <button type="button" aria-expanded={open} onClick={() => setOpen(!open)}>
-        Read {sources.length} {sources.length === 1 ? "source" : "sources"} <ChevronDown size={12} aria-hidden="true" />
+        Read {sources.length} {sources.length === 1 ? "source" : "sources"}{" "}
+        <ChevronDown size={12} aria-hidden="true" />
       </button>
       {open && (
         <ul>
@@ -281,8 +353,17 @@ function announcement(message: ChatMessage | undefined) {
   if (!message || message.author === "user") return "";
   if (message.author === "system") return message.text ?? "";
   const reply = message.reply;
-  if (!reply || message.thinking || (message.shown ?? reply.blocks.length) < reply.blocks.length) return "";
-  return reply.blocks.flatMap((block) => (block.type === "text" ? [block.text.replace(/\*\*|`/g, "")] : [])).join(" ");
+  if (
+    !reply ||
+    message.thinking ||
+    (message.shown ?? reply.blocks.length) < reply.blocks.length
+  )
+    return "";
+  return reply.blocks
+    .flatMap((block) =>
+      block.type === "text" ? [block.text.replace(/\*\*|`/g, "")] : [],
+    )
+    .join(" ");
 }
 
 export function AssistantMessages({
@@ -323,7 +404,11 @@ export function AssistantMessages({
         const reply = message.reply!;
         const shown = message.shown ?? reply.blocks.length;
         return (
-          <article key={message.id} className="as-reply" aria-busy={message.thinking}>
+          <article
+            key={message.id}
+            className="as-reply"
+            aria-busy={message.thinking}
+          >
             <span className="as-avatar" aria-hidden="true">
               <Sparkles size={13} />
             </span>
@@ -348,7 +433,9 @@ export function AssistantMessages({
                       onAction={onAction}
                     />
                   ))}
-                  {shown >= reply.blocks.length && <Sources sources={reply.sources} />}
+                  {shown >= reply.blocks.length && (
+                    <Sources sources={reply.sources} />
+                  )}
                 </>
               )}
             </div>
@@ -383,7 +470,11 @@ export function AssistantComposer({
       {suggestions.length > 0 && (
         <div className="as-suggestions" aria-label="Suggested questions">
           {suggestions.map((suggestion) => (
-            <button key={suggestion} type="button" onClick={() => send(suggestion)}>
+            <button
+              key={suggestion}
+              type="button"
+              onClick={() => send(suggestion)}
+            >
               {suggestion}
             </button>
           ))}
@@ -410,13 +501,19 @@ export function AssistantComposer({
             }
           }}
         />
-        <Button type="submit" size="icon-sm" aria-label="Send" disabled={!draft.trim()}>
+        <Button
+          type="submit"
+          size="icon-sm"
+          aria-label="Send"
+          disabled={!draft.trim()}
+        >
           <ArrowUp />
         </Button>
       </form>
       <p className="as-hint">
-        <CornerDownLeft size={11} aria-hidden="true" /> Answers come from this project's runs, deliveries and logs. Masked
-        values stay masked. Actions always ask first.
+        <CornerDownLeft size={11} aria-hidden="true" /> Answers come from this
+        project's runs, deliveries and logs. Masked values stay masked. Actions
+        always ask first.
       </p>
     </div>
   );
@@ -454,7 +551,12 @@ export function AssistantPanel({
           </Button>
         )}
         {onClose && (
-          <Button variant="ghost" size="icon-sm" aria-label="Close assistant" onClick={onClose}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Close assistant"
+            onClick={onClose}
+          >
             <X />
           </Button>
         )}
@@ -468,14 +570,21 @@ export function AssistantPanel({
             <div className="as-empty">
               <Sparkles size={18} aria-hidden="true" />
               <p>
-                I can read this {contextLabel.toLowerCase().startsWith("run") ? "run's logs and attempts" : "page's records"},
-                find the first error, and propose a next step. Pick a question or type your own.
+                I can read this{" "}
+                {contextLabel.toLowerCase().startsWith("run")
+                  ? "run's logs and attempts"
+                  : "page's records"}
+                , find the first error, and propose a next step. Pick a question
+                or type your own.
               </p>
             </div>
           }
         />
       </div>
-      <AssistantComposer onSend={(text) => assistant.ask(text)} suggestions={assistant.suggestions} />
+      <AssistantComposer
+        onSend={(text) => assistant.ask(text)}
+        suggestions={assistant.suggestions}
+      />
     </section>
   );
 }

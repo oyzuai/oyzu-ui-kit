@@ -32,7 +32,9 @@ test("modal protects drafts, restores focus and completes tested setup", async (
   await page
     .getByRole("button", { name: "Test connection", exact: true })
     .click();
-  await expect(page.getByText("Connection verified", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Connection verified", { exact: true }),
+  ).toBeVisible();
   await page
     .getByRole("button", { name: "Create connection", exact: true })
     .click();
