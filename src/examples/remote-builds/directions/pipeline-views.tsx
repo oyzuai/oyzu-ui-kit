@@ -1,4 +1,13 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ComponentType, type ReactElement, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentType,
+  type ReactElement,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import {
   Ban,
   Boxes,
@@ -138,7 +147,13 @@ export function groupsForAttempt(run: Run, attempt: number): LogGroup[] {
 export function runForAttempt(run: Run, attempt: number): Run {
   const info = run.attempts.find((item) => item.n === attempt);
   if (!info || attempt === run.attempt) return run;
-  return { ...run, state: info.state, durationMs: info.durationMs, groups: groupsForAttempt(run, attempt), outputs: [] };
+  return {
+    ...run,
+    state: info.state,
+    durationMs: info.durationMs,
+    groups: groupsForAttempt(run, attempt),
+    outputs: [],
+  };
 }
 
 export function triggerText(run: Run) {
@@ -157,7 +172,14 @@ export function triggerText(run: Run) {
 export function buildStages(run: Run): PlStage[] {
   const delivery = run.deliveryId ? deliveryById(run.deliveryId) : undefined;
   const binding = run.bindingId ? bindingById(run.bindingId) : undefined;
-  const pre = new Set(["received", "verified", "deduplicated", "parsed", "matched", "started"]);
+  const pre = new Set([
+    "received",
+    "verified",
+    "deduplicated",
+    "parsed",
+    "matched",
+    "started",
+  ]);
   const triggerSteps: PlStep[] = delivery
     ? delivery.stages
         .filter((stage) => pre.has(stage.key))
@@ -173,7 +195,10 @@ export function buildStages(run: Run): PlStage[] {
     : [
         {
           id: "trigger/manual",
-          name: run.trigger === "manual" ? "Started by hand" : "Started on schedule",
+          name:
+            run.trigger === "manual"
+              ? "Started by hand"
+              : "Started on schedule",
           sub: `${run.author} ran ${run.command}`,
           state: "succeeded",
           durationMs: 0,
@@ -185,9 +210,15 @@ export function buildStages(run: Run): PlStage[] {
       id: "trigger",
       kind: "trigger",
       name: "Trigger",
-      caption: delivery ? `${delivery.event}${binding ? ` · ${binding.name}` : ""}` : `${run.author} · CLI`,
-      state: rollup(triggerSteps.map((s) => s.state).filter((s) => s !== "queued")),
-      durationMs: delivery ? Date.parse(run.createdAt) - Date.parse(delivery.receivedAt) : 0,
+      caption: delivery
+        ? `${delivery.event}${binding ? ` · ${binding.name}` : ""}`
+        : `${run.author} · CLI`,
+      state: rollup(
+        triggerSteps.map((s) => s.state).filter((s) => s !== "queued"),
+      ),
+      durationMs: delivery
+        ? Date.parse(run.createdAt) - Date.parse(delivery.receivedAt)
+        : 0,
       steps: triggerSteps,
     },
   ];
@@ -219,7 +250,10 @@ export function buildStages(run: Run): PlStage[] {
       id: `target/${target}`,
       kind: "target",
       name: target === "task" ? groups[0].task : target,
-      caption: target === "task" ? "task" : `${groups.length} ${groups.length === 1 ? "task" : "tasks"}`,
+      caption:
+        target === "task"
+          ? "task"
+          : `${groups.length} ${groups.length === 1 ? "task" : "tasks"}`,
       state: rollup(groups.map((g) => g.state)),
       durationMs: groups.reduce((sum, g) => sum + g.durationMs, 0),
       steps: groups.map(groupStep),
@@ -229,7 +263,10 @@ export function buildStages(run: Run): PlStage[] {
     stages.push({
       id: "target/oyzu",
       kind: "target",
-      name: run.operation.kind === "run" ? run.operation.task : (run.operation.targets?.join(", ") ?? "build"),
+      name:
+        run.operation.kind === "run"
+          ? run.operation.task
+          : (run.operation.targets?.join(", ") ?? "build"),
       caption: run.state === "skipped" ? "not started" : "no log in preview",
       state: groupState(run.state),
       durationMs: run.durationMs,
@@ -246,13 +283,18 @@ export function buildStages(run: Run): PlStage[] {
     });
   const finish = run.groups.filter((group) => group.scope === "runner/finish");
   const checkState: GroupState =
-    run.state === "running" || run.state === "queued" ? "queued" : groupState(run.state);
+    run.state === "running" || run.state === "queued"
+      ? "queued"
+      : groupState(run.state);
   const reportSteps: PlStep[] = [
     ...finish.map(groupStep),
     {
       id: "report/check",
       name: run.check === "manual" ? "Record result" : `Report ${run.check}`,
-      sub: run.check === "manual" ? "Portal only, no check run" : `Check run on ${run.commit.slice(0, 7)}`,
+      sub:
+        run.check === "manual"
+          ? "Portal only, no check run"
+          : `Check run on ${run.commit.slice(0, 7)}`,
       state: checkState,
       durationMs: checkState === "queued" ? 0 : 600,
       kind: "check",
@@ -271,14 +313,19 @@ export function buildStages(run: Run): PlStage[] {
 }
 
 /** Failed first, then running, then the first work stage. */
-export function defaultSelection(stages: PlStage[]): { stage: string; step: string } {
+export function defaultSelection(stages: PlStage[]): {
+  stage: string;
+  step: string;
+} {
   const pick =
     stages.find((s) => s.kind !== "trigger" && s.state === "failed") ??
     stages.find((s) => s.kind !== "trigger" && s.state === "running") ??
     stages.find((s) => s.kind === "target") ??
     stages[0];
   const step =
-    pick.steps.find((s) => s.state === "failed") ?? pick.steps.find((s) => s.state === "running") ?? pick.steps[0];
+    pick.steps.find((s) => s.state === "failed") ??
+    pick.steps.find((s) => s.state === "running") ??
+    pick.steps[0];
   return { stage: pick.id, step: step.id };
 }
 
@@ -291,7 +338,13 @@ const stageIcons: Record<StageKind, ComponentType<{ size?: number }>> = {
 
 export function TriggerIcon({ run, size = 14 }: { run: Run; size?: number }) {
   const Icon =
-    run.trigger === "pull_request" ? GitPullRequest : run.trigger === "push" ? GitCommitHorizontal : run.trigger === "manual" ? Hand : Timer;
+    run.trigger === "pull_request"
+      ? GitPullRequest
+      : run.trigger === "push"
+        ? GitCommitHorizontal
+        : run.trigger === "manual"
+          ? Hand
+          : Timer;
   return <Icon size={size} aria-hidden="true" />;
 }
 
@@ -299,9 +352,19 @@ export function TriggerIcon({ run, size = 14 }: { run: Run; size?: number }) {
 export function StageStrip({ run }: { run: Run }) {
   const stages = buildStages(run);
   return (
-    <span className="pl-strip" role="img" aria-label={stages.map((s) => `${s.name}: ${s.state}`).join(", ")}>
+    <span
+      className="pl-strip"
+      role="img"
+      aria-label={stages.map((s) => `${s.name}: ${s.state}`).join(", ")}
+    >
       {stages.map((stage) => (
-        <span key={stage.id} className="pl-strip-seg" data-state={stage.state} data-kind={stage.kind} title={`${stage.name} · ${stage.state}`} />
+        <span
+          key={stage.id}
+          className="pl-strip-seg"
+          data-state={stage.state}
+          data-kind={stage.kind}
+          title={`${stage.name} · ${stage.state}`}
+        />
       ))}
     </span>
   );
@@ -330,7 +393,17 @@ export type ExecutionProps = {
 type Tab = "logs" | "inputs" | "outputs" | "details";
 
 export function ExecutionPage(props: ExecutionProps) {
-  const { run: base, entriesFor, liveElapsed, role, isPhone, onAskLine, onAsk, onToast, onSelection } = props;
+  const {
+    run: base,
+    entriesFor,
+    liveElapsed,
+    role,
+    isPhone,
+    onAskLine,
+    onAsk,
+    onToast,
+    onSelection,
+  } = props;
   const [attempt, setAttempt] = useState(props.initialAttempt ?? base.attempt);
   const run = useMemo(() => runForAttempt(base, attempt), [base, attempt]);
   const entries = entriesFor(attempt);
@@ -338,33 +411,55 @@ export function ExecutionPage(props: ExecutionProps) {
   const running = run.state === "running";
 
   // A cited line picks its own stage and step.
-  const cited = props.focusSeq ? entries.find((e) => e.seq === props.focusSeq) : undefined;
-  const citedStage = cited && stages.find((s) => s.steps.some((step) => step.id === cited.scope));
-  const [picked, setPicked] = useState<{ stage: string; step: string } | undefined>(
-    citedStage && cited ? { stage: citedStage.id, step: cited.scope } : undefined,
+  const cited = props.focusSeq
+    ? entries.find((e) => e.seq === props.focusSeq)
+    : undefined;
+  const citedStage =
+    cited &&
+    stages.find((s) => s.steps.some((step) => step.id === cited.scope));
+  const [picked, setPicked] = useState<
+    { stage: string; step: string } | undefined
+  >(
+    citedStage && cited
+      ? { stage: citedStage.id, step: cited.scope }
+      : undefined,
   );
   // Until the reader picks, follow the failed or running step (so the live run advances).
-  const selection = picked && stages.some((s) => s.id === picked.stage) ? picked : defaultSelection(stages);
+  const selection =
+    picked && stages.some((s) => s.id === picked.stage)
+      ? picked
+      : defaultSelection(stages);
   const stage = stages.find((s) => s.id === selection.stage) ?? stages[0];
-  const step = stage.steps.find((s) => s.id === selection.step) ?? stage.steps[0];
+  const step =
+    stage.steps.find((s) => s.id === selection.step) ?? stage.steps[0];
   const [tab, setTab] = useState<Tab>("logs");
   const [scope, setScope] = useState<"step" | "run">("step");
   const attemptInfo = run.attempts.find((a) => a.n === attempt);
 
   useEffect(() => {
-    onSelection(attempt, `Run #${run.number} · ${step.group ? step.group.scope : step.name}`);
+    onSelection(
+      attempt,
+      `Run #${run.number} · ${step.group ? step.group.scope : step.name}`,
+    );
   }, [attempt, run.number, step, onSelection]);
 
   const choose = (stageId: string, stepId?: string) => {
     const target = stages.find((s) => s.id === stageId)!;
     const nextStep =
-      stepId ?? (target.steps.find((s) => s.state === "failed") ?? target.steps.find((s) => s.state === "running") ?? target.steps[0]).id;
+      stepId ??
+      (
+        target.steps.find((s) => s.state === "failed") ??
+        target.steps.find((s) => s.state === "running") ??
+        target.steps[0]
+      ).id;
     setPicked({ stage: stageId, step: nextStep });
   };
 
   const delivery = run.deliveryId ? deliveryById(run.deliveryId) : undefined;
   const elapsed = running ? liveElapsed : run.durationMs;
-  const failedGroups = run.groups.filter((g) => g.state === "failed" && g.target !== "runner");
+  const failedGroups = run.groups.filter(
+    (g) => g.state === "failed" && g.target !== "runner",
+  );
 
   return (
     <div className="pl-exec">
@@ -392,13 +487,20 @@ export function ExecutionPage(props: ExecutionProps) {
                   setPicked(undefined);
                 }}
               >
-                <SelectTrigger size="sm" aria-label="Attempt" className="pl-attempt">
+                <SelectTrigger
+                  size="sm"
+                  aria-label="Attempt"
+                  className="pl-attempt"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {base.attempts.map((item) => (
                     <SelectItem key={item.n} value={String(item.n)}>
-                      Attempt {item.n} · {item.state === "timed_out" ? "executor lost" : item.state}
+                      Attempt {item.n} ·{" "}
+                      {item.state === "timed_out"
+                        ? "executor lost"
+                        : item.state}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -410,12 +512,28 @@ export function ExecutionPage(props: ExecutionProps) {
               </Button>
             )}
             {failedGroups.length > 0 && attempt === base.attempt && (
-              <Button size="sm" variant="outline" onClick={() => onToast(`Queued attempt ${base.attempts.length + 1}: re-running ${failedGroups.map((g) => g.scope).join(", ")} only.`)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  onToast(
+                    `Queued attempt ${base.attempts.length + 1}: re-running ${failedGroups.map((g) => g.scope).join(", ")} only.`,
+                  )
+                }
+              >
                 <RotateCcw /> Re-run failed steps
               </Button>
             )}
             {!running && (
-              <Button size="sm" variant="outline" onClick={() => onToast(`Queued a new attempt of #${run.number} on ${run.commit.slice(0, 7)}.`)}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  onToast(
+                    `Queued a new attempt of #${run.number} on ${run.commit.slice(0, 7)}.`,
+                  )
+                }
+              >
                 <RotateCcw /> Re-run
               </Button>
             )}
@@ -427,44 +545,68 @@ export function ExecutionPage(props: ExecutionProps) {
         <p className="pl-exec-meta">
           <span>
             <TriggerIcon run={run} size={13} /> {triggerText(run)}
-            {run.trigger === "pull_request" && delivery ? ` · ${delivery.event.split(".")[1]}` : ""} by <strong>{run.author}</strong>
+            {run.trigger === "pull_request" && delivery
+              ? ` · ${delivery.event.split(".")[1]}`
+              : ""}{" "}
+            by <strong>{run.author}</strong>
           </span>
           <span>
-            <GitCommitHorizontal size={13} aria-hidden="true" /> <code className="rb-mono">{run.commit.slice(0, 7)}</code>
+            <GitCommitHorizontal size={13} aria-hidden="true" />{" "}
+            <code className="rb-mono">{run.commit.slice(0, 7)}</code>
           </span>
           <span>
             <GitBranch size={13} aria-hidden="true" /> {run.ref}
           </span>
           <span>
-            Started {clock(attemptInfo?.startedAt ?? run.createdAt)} · {ago(attemptInfo?.startedAt ?? run.createdAt)}
+            Started {clock(attemptInfo?.startedAt ?? run.createdAt)} ·{" "}
+            {ago(attemptInfo?.startedAt ?? run.createdAt)}
           </span>
           <span>
-            <Timer size={13} aria-hidden="true" /> {running ? `${duration(elapsed)} so far` : duration(elapsed)}
+            <Timer size={13} aria-hidden="true" />{" "}
+            {running ? `${duration(elapsed)} so far` : duration(elapsed)}
           </span>
         </p>
         {attemptInfo?.logState === "incomplete" ? (
           <p className="pl-banner" data-tone="warning">
-            <TriangleAlert size={14} aria-hidden="true" /> Attempt {attempt}: {attemptInfo.reason}
+            <TriangleAlert size={14} aria-hidden="true" /> Attempt {attempt}:{" "}
+            {attemptInfo.reason}
           </p>
         ) : run.reason ? (
-          <p className="pl-banner" data-tone={run.state === "failed" ? "failed" : "neutral"}>
-            {run.state === "failed" ? <TriangleAlert size={14} aria-hidden="true" /> : <Ban size={14} aria-hidden="true" />} {run.reason.message}
+          <p
+            className="pl-banner"
+            data-tone={run.state === "failed" ? "failed" : "neutral"}
+          >
+            {run.state === "failed" ? (
+              <TriangleAlert size={14} aria-hidden="true" />
+            ) : (
+              <Ban size={14} aria-hidden="true" />
+            )}{" "}
+            {run.reason.message}
           </p>
         ) : null}
       </header>
 
-      <PipelineGraph stages={stages} selected={stage.id} onSelect={(id) => choose(id)} />
+      <PipelineGraph
+        stages={stages}
+        selected={stage.id}
+        onSelect={(id) => choose(id)}
+      />
 
       <SplitPanels isPhone={isPhone}>
         <aside className="pl-tree" aria-label={`Steps in ${stage.name}`}>
           <header>
             <GroupIcon state={stage.state} />
             <strong>{stage.name}</strong>
-            <small>{stage.steps.length} {stage.steps.length === 1 ? "step" : "steps"}</small>
+            <small>
+              {stage.steps.length} {stage.steps.length === 1 ? "step" : "steps"}
+            </small>
           </header>
           <ol>
             {stage.steps.map((item, index) => {
-              const live = item.state === "running" && item.group ? liveStepMs(item, entries, liveElapsed) : undefined;
+              const live =
+                item.state === "running" && item.group
+                  ? liveStepMs(item, entries, liveElapsed)
+                  : undefined;
               return (
                 <li key={item.id}>
                   <button
@@ -473,14 +615,26 @@ export function ExecutionPage(props: ExecutionProps) {
                     data-state={item.state}
                     onClick={() => choose(stage.id, item.id)}
                   >
-                    <span className="pl-tree-rail" aria-hidden="true" data-last={index === stage.steps.length - 1} />
+                    <span
+                      className="pl-tree-rail"
+                      aria-hidden="true"
+                      data-last={index === stage.steps.length - 1}
+                    />
                     <GroupIcon state={item.state} />
                     <span className="pl-tree-text">
                       <strong>{item.name}</strong>
                       <small>{item.sub}</small>
                     </span>
                     <span className="pl-tree-time">
-                      {item.state === "running" ? (live ? duration(live) : "running") : item.state === "queued" ? "waiting" : item.durationMs ? duration(item.durationMs) : ""}
+                      {item.state === "running"
+                        ? live
+                          ? duration(live)
+                          : "running"
+                        : item.state === "queued"
+                          ? "waiting"
+                          : item.durationMs
+                            ? duration(item.durationMs)
+                            : ""}
                     </span>
                   </button>
                 </li>
@@ -495,18 +649,41 @@ export function ExecutionPage(props: ExecutionProps) {
                 <GroupIcon state={step.state} size={16} /> {step.name}
               </h2>
               <small>
-                {stage.name} · {step.group ? step.group.scope : step.kind === "delivery" ? "delivery record" : step.kind === "check" ? "check run" : "operation"}
+                {stage.name} ·{" "}
+                {step.group
+                  ? step.group.scope
+                  : step.kind === "delivery"
+                    ? "delivery record"
+                    : step.kind === "check"
+                      ? "check run"
+                      : "operation"}
               </small>
             </div>
-            <Button size="sm" variant="ghost" onClick={() => onAsk(step.state === "failed" ? "Why did this fail?" : undefined)}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() =>
+                onAsk(
+                  step.state === "failed" ? "Why did this fail?" : undefined,
+                )
+              }
+            >
               <Sparkles /> Ask about this step
             </Button>
           </header>
           <div className="pl-tabs" role="tablist" aria-label="Step tabs">
             {(["logs", "inputs", "outputs", "details"] as const).map((id) => (
-              <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setTab(id)}>
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                aria-selected={tab === id}
+                onClick={() => setTab(id)}
+              >
                 {id[0].toUpperCase() + id.slice(1)}
-                {id === "outputs" && run.outputs.length > 0 && <span className="pl-count">{run.outputs.length}</span>}
+                {id === "outputs" && run.outputs.length > 0 && (
+                  <span className="pl-count">{run.outputs.length}</span>
+                )}
               </button>
             ))}
           </div>
@@ -519,7 +696,9 @@ export function ExecutionPage(props: ExecutionProps) {
                 entries={entries}
                 scope={scope}
                 onScope={setScope}
-                focusSeq={cited && cited.scope === step.id ? props.focusSeq : undefined}
+                focusSeq={
+                  cited && cited.scope === step.id ? props.focusSeq : undefined
+                }
                 role={role}
                 isPhone={isPhone}
                 onAskLine={onAskLine}
@@ -530,10 +709,18 @@ export function ExecutionPage(props: ExecutionProps) {
                 }}
               />
             )}
-            {tab === "inputs" && <StepInputs run={run} step={step} attempt={attempt} />}
+            {tab === "inputs" && (
+              <StepInputs run={run} step={step} attempt={attempt} />
+            )}
             {tab === "outputs" && <StepOutputs run={run} step={step} />}
             {tab === "details" && (
-              <StepDetails run={run} step={step} attempt={attempt} role={role} onDiagnostics={props.onDiagnostics} />
+              <StepDetails
+                run={run}
+                step={step}
+                attempt={attempt}
+                role={role}
+                onDiagnostics={props.onDiagnostics}
+              />
             )}
           </div>
         </section>
@@ -542,14 +729,26 @@ export function ExecutionPage(props: ExecutionProps) {
   );
 }
 
-function liveStepMs(step: PlStep, entries: readonly LogEntry[], elapsed: number) {
+function liveStepMs(
+  step: PlStep,
+  entries: readonly LogEntry[],
+  elapsed: number,
+) {
   const first = entries.find((e) => e.scope === step.id);
   return first ? Math.max(0, elapsed - first.t) : undefined;
 }
 
 // ---------------------------------------------------------------- graph
 
-function PipelineGraph({ stages, selected, onSelect }: { stages: PlStage[]; selected: string; onSelect: (id: string) => void }) {
+function PipelineGraph({
+  stages,
+  selected,
+  onSelect,
+}: {
+  stages: PlStage[];
+  selected: string;
+  onSelect: (id: string) => void;
+}) {
   const canvas = useRef<HTMLDivElement>(null);
   const graph = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
@@ -557,7 +756,8 @@ function PipelineGraph({ stages, selected, onSelect }: { stages: PlStage[]; sele
   useLayoutEffect(() => {
     const node = graph.current;
     if (!node) return;
-    const measure = () => setSize({ w: node.offsetWidth, h: node.offsetHeight });
+    const measure = () =>
+      setSize({ w: node.offsetWidth, h: node.offsetHeight });
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(node);
@@ -572,9 +772,14 @@ function PipelineGraph({ stages, selected, onSelect }: { stages: PlStage[]; sele
   // Keep the selected stage in view (the failed stage can sit off-screen on a phone).
   useEffect(() => {
     const pane = canvas.current;
-    const node = pane?.querySelector<HTMLElement>('.pl-node[aria-pressed="true"]');
+    const node = pane?.querySelector<HTMLElement>(
+      '.pl-node[aria-pressed="true"]',
+    );
     if (!pane || !node) return;
-    const left = node.getBoundingClientRect().left - pane.getBoundingClientRect().left + pane.scrollLeft;
+    const left =
+      node.getBoundingClientRect().left -
+      pane.getBoundingClientRect().left +
+      pane.scrollLeft;
     const right = left + node.getBoundingClientRect().width;
     if (left < pane.scrollLeft || right > pane.scrollLeft + pane.clientWidth)
       pane.scrollTo({ left: Math.max(0, left - 24) });
@@ -588,18 +793,36 @@ function PipelineGraph({ stages, selected, onSelect }: { stages: PlStage[]; sele
     if (scale < 1 && scale >= 0.78) setZoom(Math.floor(scale * 100) / 100);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [size.w]);
-  const clamp = (z: number) => Math.round(Math.max(0.4, Math.min(1.6, z)) * 100) / 100;
+  const clamp = (z: number) =>
+    Math.round(Math.max(0.4, Math.min(1.6, z)) * 100) / 100;
   return (
     <section className="pl-canvas-wrap" aria-label="Pipeline graph">
       <div className="pl-canvas" ref={canvas}>
-        <div className="pl-sizer" style={{ width: size.w * zoom, height: size.h * zoom }}>
-          <div className="pl-graph" ref={graph} style={{ transform: `scale(${zoom})` }}>
+        <div
+          className="pl-sizer"
+          style={{ width: size.w * zoom, height: size.h * zoom }}
+        >
+          <div
+            className="pl-graph"
+            ref={graph}
+            style={{ transform: `scale(${zoom})` }}
+          >
             {stages.map((stage, index) => {
               const Icon = stageIcons[stage.kind];
               const isSelected = stage.id === selected;
               return (
-                <div key={stage.id} className="pl-node-slot" data-kind={stage.kind}>
-                  {index > 0 && <span className="pl-edge" data-state={stage.state} aria-hidden="true" />}
+                <div
+                  key={stage.id}
+                  className="pl-node-slot"
+                  data-kind={stage.kind}
+                >
+                  {index > 0 && (
+                    <span
+                      className="pl-edge"
+                      data-state={stage.state}
+                      aria-hidden="true"
+                    />
+                  )}
                   <button
                     type="button"
                     className="pl-node"
@@ -618,7 +841,15 @@ function PipelineGraph({ stages, selected, onSelect }: { stages: PlStage[]; sele
                     <span className="pl-node-foot">
                       <GroupIcon state={stage.state} size={12} />
                       <span>
-                        {stage.state === "running" ? "Running" : stage.state === "queued" ? "Waiting" : stage.durationMs ? duration(stage.durationMs) : stage.state === "skipped" ? "Skipped" : "Done"}
+                        {stage.state === "running"
+                          ? "Running"
+                          : stage.state === "queued"
+                            ? "Waiting"
+                            : stage.durationMs
+                              ? duration(stage.durationMs)
+                              : stage.state === "skipped"
+                                ? "Skipped"
+                                : "Done"}
                       </span>
                       <span className="pl-node-dots" aria-hidden="true">
                         {stage.steps.map((step) => (
@@ -634,11 +865,19 @@ function PipelineGraph({ stages, selected, onSelect }: { stages: PlStage[]; sele
         </div>
       </div>
       <div className="pl-zoom" role="group" aria-label="Zoom">
-        <button type="button" aria-label="Zoom out" onClick={() => setZoom((z) => clamp(z - 0.1))}>
+        <button
+          type="button"
+          aria-label="Zoom out"
+          onClick={() => setZoom((z) => clamp(z - 0.1))}
+        >
           <Minus size={14} />
         </button>
         <span aria-live="polite">{Math.round(zoom * 100)}%</span>
-        <button type="button" aria-label="Zoom in" onClick={() => setZoom((z) => clamp(z + 0.1))}>
+        <button
+          type="button"
+          aria-label="Zoom in"
+          onClick={() => setZoom((z) => clamp(z + 0.1))}
+        >
           <Plus size={14} />
         </button>
         <button type="button" aria-label="Zoom to fit" onClick={fit}>
@@ -651,12 +890,19 @@ function PipelineGraph({ stages, selected, onSelect }: { stages: PlStage[]; sele
 
 // ---------------------------------------------------------------- split
 
-function SplitPanels({ children, isPhone }: { children: [ReactElement, ReactElement]; isPhone: boolean }) {
+function SplitPanels({
+  children,
+  isPhone,
+}: {
+  children: [ReactElement, ReactElement];
+  isPhone: boolean;
+}) {
   const [width, setWidth] = useState(300);
   const start = (event: ReactPointerEvent<HTMLDivElement>) => {
     const x0 = event.clientX;
     const w0 = width;
-    const move = (e: PointerEvent) => setWidth(Math.max(220, Math.min(460, w0 + e.clientX - x0)));
+    const move = (e: PointerEvent) =>
+      setWidth(Math.max(220, Math.min(460, w0 + e.clientX - x0)));
     const up = () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
@@ -665,7 +911,14 @@ function SplitPanels({ children, isPhone }: { children: [ReactElement, ReactElem
     window.addEventListener("pointerup", up);
   };
   return (
-    <div className="pl-split" style={isPhone ? undefined : { gridTemplateColumns: `${width}px 8px minmax(0, 1fr)` }}>
+    <div
+      className="pl-split"
+      style={
+        isPhone
+          ? undefined
+          : { gridTemplateColumns: `${width}px 8px minmax(0, 1fr)` }
+      }
+    >
       {children[0]}
       {!isPhone && (
         <div
@@ -676,8 +929,10 @@ function SplitPanels({ children, isPhone }: { children: [ReactElement, ReactElem
           tabIndex={0}
           onPointerDown={start}
           onKeyDown={(event) => {
-            if (event.key === "ArrowLeft") setWidth((w) => Math.max(220, w - 20));
-            if (event.key === "ArrowRight") setWidth((w) => Math.min(460, w + 20));
+            if (event.key === "ArrowLeft")
+              setWidth((w) => Math.max(220, w - 20));
+            if (event.key === "ArrowRight")
+              setWidth((w) => Math.min(460, w + 20));
           }}
         />
       )}
@@ -716,7 +971,8 @@ function StepLogs({
   onAttemptChange: (n: number) => void;
 }) {
   const { look } = usePrototype();
-  if (step.kind === "delivery") return <DeliveryRecord run={run} focus={step.deliveryStage?.key} />;
+  if (step.kind === "delivery")
+    return <DeliveryRecord run={run} focus={step.deliveryStage?.key} />;
   if (step.kind === "check")
     return (
       <div className="pl-note">
@@ -738,7 +994,11 @@ function StepLogs({
       <div className="pl-note">
         <FileText size={18} aria-hidden="true" />
         <div>
-          <strong>{run.state === "skipped" ? "Nothing ran, so there's no log" : "Log not included in this preview"}</strong>
+          <strong>
+            {run.state === "skipped"
+              ? "Nothing ran, so there's no log"
+              : "Log not included in this preview"}
+          </strong>
           <p>
             {run.state === "skipped"
               ? `Skipped before a runner was assigned: ${run.reason?.message ?? "no reason recorded"}.`
@@ -754,10 +1014,15 @@ function StepLogs({
   const scoped = !summary && scope === "step" && step.group;
   const shown = scoped ? entries.filter((e) => e.scope === step.id) : entries;
   const groups = scoped ? [step.group!] : run.groups;
-  const live = run.state === "running" && (!scoped || step.state === "running" || step.state === "queued");
+  const live =
+    run.state === "running" &&
+    (!scoped || step.state === "running" || step.state === "queued");
   const stepLines = entries.filter((e) => e.scope === step.id);
   const anchor =
-    !scoped && step.state !== "running" && stepLines.length && !stepLines.some((e) => e.level === "error")
+    !scoped &&
+    step.state !== "running" &&
+    stepLines.length &&
+    !stepLines.some((e) => e.level === "error")
       ? stepLines[0].seq
       : undefined;
   const focus = focusSeq ?? anchor;
@@ -765,10 +1030,18 @@ function StepLogs({
     <div className="pl-logs">
       {step.group && !summary && (
         <div className="pl-seg" role="group" aria-label="Log scope">
-          <button type="button" aria-pressed={scope === "step"} onClick={() => onScope("step")}>
+          <button
+            type="button"
+            aria-pressed={scope === "step"}
+            onClick={() => onScope("step")}
+          >
             This step
           </button>
-          <button type="button" aria-pressed={scope === "run"} onClick={() => onScope("run")}>
+          <button
+            type="button"
+            aria-pressed={scope === "run"}
+            onClick={() => onScope("run")}
+          >
             Whole run
           </button>
           <small>{shown.length} lines</small>
@@ -778,8 +1051,18 @@ function StepLogs({
         <div className="pl-note">
           <Timer size={18} aria-hidden="true" />
           <div>
-            <strong>{step.state === "queued" ? "Waiting to start" : step.state === "skipped" ? "This step didn't run" : "No output from this step"}</strong>
-            <p>{step.state === "queued" ? "Output streams here as soon as the step starts." : "Switch to the whole run to see what happened around it."}</p>
+            <strong>
+              {step.state === "queued"
+                ? "Waiting to start"
+                : step.state === "skipped"
+                  ? "This step didn't run"
+                  : "No output from this step"}
+            </strong>
+            <p>
+              {step.state === "queued"
+                ? "Output streams here as soon as the step starts."
+                : "Switch to the whole run to see what happened around it."}
+            </p>
           </div>
         </div>
       ) : (
@@ -812,7 +1095,8 @@ function DeliveryRecord({ run, focus }: { run: Run; focus?: string }) {
         <div>
           <dt>Delivery</dt>
           <dd>
-            <code className="rb-mono">{delivery.id}</code> · {delivery.connector}
+            <code className="rb-mono">{delivery.id}</code> ·{" "}
+            {delivery.connector}
           </dd>
         </div>
         <div>
@@ -828,7 +1112,11 @@ function DeliveryRecord({ run, focus }: { run: Run; focus?: string }) {
       </dl>
       <ol className="pl-timeline">
         {delivery.stages.map((stage) => (
-          <li key={stage.key} data-state={fromStatus[stage.status]} data-focus={stage.key === focus || undefined}>
+          <li
+            key={stage.key}
+            data-state={fromStatus[stage.status]}
+            data-focus={stage.key === focus || undefined}
+          >
             <GroupIcon state={fromStatus[stage.status]} size={13} />
             <strong>{stage.label}</strong>
             <span>{stage.detail}</span>
@@ -839,8 +1127,12 @@ function DeliveryRecord({ run, focus }: { run: Run; focus?: string }) {
       <ul className="pl-verdicts">
         {delivery.evaluations.map((evaluation) => (
           <li key={evaluation.bindingId} data-matched={evaluation.matched}>
-            <span className="pl-verdict">{evaluation.matched ? "Matched" : "No match"}</span>
-            <strong>{bindingById(evaluation.bindingId)?.name ?? evaluation.bindingId}</strong>
+            <span className="pl-verdict">
+              {evaluation.matched ? "Matched" : "No match"}
+            </span>
+            <strong>
+              {bindingById(evaluation.bindingId)?.name ?? evaluation.bindingId}
+            </strong>
             <small>{evaluation.reason}</small>
           </li>
         ))}
@@ -849,7 +1141,15 @@ function DeliveryRecord({ run, focus }: { run: Run; focus?: string }) {
   );
 }
 
-function StepInputs({ run, step, attempt }: { run: Run; step: PlStep; attempt: number }) {
+function StepInputs({
+  run,
+  step,
+  attempt,
+}: {
+  run: Run;
+  step: PlStep;
+  attempt: number;
+}) {
   const info = run.attempts.find((a) => a.n === attempt);
   const [copied, setCopied] = useState(false);
   const env: [string, string, boolean?][] = [
@@ -860,7 +1160,9 @@ function StepInputs({ run, step, attempt }: { run: Run; step: PlStep; attempt: n
     ["OYZU_POOL", info?.pool ?? "—"],
     ["GIT_COMMIT", run.commit.slice(0, 12)],
     ["GIT_REF", run.ref],
-    ...(step.id.endsWith("/test") ? ([["LEDGER_API_KEY", "***", true]] as [string, string, boolean][]) : []),
+    ...(step.id.endsWith("/test")
+      ? ([["LEDGER_API_KEY", "***", true]] as [string, string, boolean][])
+      : []),
   ];
   return (
     <div className="pl-inputs">
@@ -882,7 +1184,11 @@ function StepInputs({ run, step, attempt }: { run: Run; step: PlStep; attempt: n
       <dl className="pl-facts">
         <div>
           <dt>Step</dt>
-          <dd>{step.group ? `${step.group.target === "runner" ? "runner" : step.group.target} · ${step.group.task}` : step.name}</dd>
+          <dd>
+            {step.group
+              ? `${step.group.target === "runner" ? "runner" : step.group.target} · ${step.group.task}`
+              : step.name}
+          </dd>
         </div>
         <div>
           <dt>Operation</dt>
@@ -907,7 +1213,8 @@ function StepInputs({ run, step, attempt }: { run: Run; step: PlStep; attempt: n
         <div>
           <dt>Repository</dt>
           <dd>
-            {run.repository} @ <code className="rb-mono">{run.commit.slice(0, 7)}</code>
+            {run.repository} @{" "}
+            <code className="rb-mono">{run.commit.slice(0, 7)}</code>
           </dd>
         </div>
       </dl>
@@ -932,7 +1239,9 @@ function StepInputs({ run, step, attempt }: { run: Run; step: PlStep; attempt: n
 }
 
 function size(bytes: number) {
-  return bytes >= 1024 ? `${(bytes / 1024).toFixed(bytes >= 10_240 ? 0 : 1)} KiB` : `${bytes} B`;
+  return bytes >= 1024
+    ? `${(bytes / 1024).toFixed(bytes >= 10_240 ? 0 : 1)} KiB`
+    : `${bytes} B`;
 }
 
 function StepOutputs({ run, step }: { run: Run; step: PlStep }) {
@@ -941,7 +1250,11 @@ function StepOutputs({ run, step }: { run: Run; step: PlStep }) {
       <div className="pl-note">
         <Boxes size={18} aria-hidden="true" />
         <div>
-          <strong>{run.state === "running" ? "Outputs appear when the run finishes" : "No outputs"}</strong>
+          <strong>
+            {run.state === "running"
+              ? "Outputs appear when the run finishes"
+              : "No outputs"}
+          </strong>
           <p>
             {run.state === "running"
               ? "The runner uploads outputs and their digests after the last task."
@@ -963,7 +1276,13 @@ function StepOutputs({ run, step }: { run: Run; step: PlStep }) {
       </thead>
       <tbody>
         {run.outputs.map((output) => (
-          <tr key={output.path} data-related={Boolean(target && output.path.includes(`/${target}/`)) || undefined}>
+          <tr
+            key={output.path}
+            data-related={
+              Boolean(target && output.path.includes(`/${target}/`)) ||
+              undefined
+            }
+          >
             <td>
               <code className="rb-mono">{output.path}</code>
             </td>
@@ -999,7 +1318,12 @@ function StepDetails({
         <div>
           <dt>Attempt</dt>
           <dd>
-            {attempt} of {run.attempts.length || 1} · {info ? (info.state === "timed_out" ? "executor lost" : info.state) : run.state}
+            {attempt} of {run.attempts.length || 1} ·{" "}
+            {info
+              ? info.state === "timed_out"
+                ? "executor lost"
+                : info.state
+              : run.state}
           </dd>
         </div>
         <div>
@@ -1018,7 +1342,11 @@ function StepDetails({
         </div>
         <div>
           <dt>Started</dt>
-          <dd>{info ? `${clock(info.startedAt)} · ${ago(info.startedAt)}` : clock(run.createdAt)}</dd>
+          <dd>
+            {info
+              ? `${clock(info.startedAt)} · ${ago(info.startedAt)}`
+              : clock(run.createdAt)}
+          </dd>
         </div>
         <div>
           <dt>Log</dt>
@@ -1038,8 +1366,13 @@ function StepDetails({
         </div>
       </dl>
       {role === "pool-admin" && info && (
-        <button type="button" className="pl-link" onClick={() => onDiagnostics(info.jobId)}>
-          <Stethoscope size={14} aria-hidden="true" /> Runner diagnostics for {info.jobId}
+        <button
+          type="button"
+          className="pl-link"
+          onClick={() => onDiagnostics(info.jobId)}
+        >
+          <Stethoscope size={14} aria-hidden="true" /> Runner diagnostics for{" "}
+          {info.jobId}
         </button>
       )}
     </div>

@@ -126,7 +126,7 @@ export function DirectAccessEditor({
         return (
           <details
             className="gh-category"
-            data-configured={selected.some(e => e.actions.length > 0)}
+            data-configured={selected.some((e) => e.actions.length > 0)}
             key={category.type}
             open={selected.length > 0 || undefined}
           >

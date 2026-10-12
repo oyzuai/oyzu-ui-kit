@@ -17,7 +17,12 @@ export const navigationGroups: SidebarGroup[] = [
     id: "workspace",
     label: "Workspace",
     items: [
-      { id: "automation", label: "Automation identities", href: "#pages/automation", icon: Bot },
+      {
+        id: "automation",
+        label: "Automation identities",
+        href: "#pages/automation",
+        icon: Bot,
+      },
       {
         id: "access-library",
         label: "People & access",
@@ -119,8 +124,14 @@ export const navigationGroups: SidebarGroup[] = [
 ];
 export function activeNavigation(hash: string) {
   if (hash === "#pages/automation") return "automation";
-  if (hash.startsWith("#pages/user-groups") || hash.startsWith("#pages/access-library") || hash === "#pages/members") return "access-library";
-  if (hash.startsWith("#pages/access?") || hash === "#pages/access") return "access";
+  if (
+    hash.startsWith("#pages/user-groups") ||
+    hash.startsWith("#pages/access-library") ||
+    hash === "#pages/members"
+  )
+    return "access-library";
+  if (hash.startsWith("#pages/access?") || hash === "#pages/access")
+    return "access";
   if (hash === "#pages/oauth") return "oauth";
   if (hash.startsWith("#account/")) return "account";
   if (

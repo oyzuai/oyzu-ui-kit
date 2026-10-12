@@ -83,10 +83,16 @@ test("authentication methods require their own inputs", async ({ page }) => {
   await expect(
     page.getByText("Complete the simulated OAuth authorization."),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Generate device code", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Generate device code", exact: true })
+    .click();
   await page.getByRole("button", { name: "Open authorization page" }).click();
-  await page.getByRole("button", { name: "Authorize connector", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Account connected" })).toBeVisible();
+  await page
+    .getByRole("button", { name: "Authorize connector", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Account connected" }),
+  ).toBeVisible();
   await page.getByLabel("Authentication type").selectOption("anonymous");
   await expect(page.getByLabel("Username", { exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Continue", exact: true }).click();

@@ -1,7 +1,9 @@
 /* LogViewer prototype. Uses the kit's surface and text tokens so it follows the
    appearance control; the log pane is a quiet reading surface, not a fake terminal. */
 .log-viewer {
-  --lv-mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  --lv-mono:
+    ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas,
+    monospace;
   --lv-ok: #1f7a4d;
   --lv-bad: #b3261e;
   --lv-warn: #8a5a00;
@@ -28,10 +30,18 @@ html.dark .log-viewer {
 .log-viewer.is-compact {
   grid-template-columns: minmax(0, 1fr);
 }
-.lv-ok { color: var(--lv-ok); }
-.lv-bad { color: var(--lv-bad); }
-.lv-run { color: var(--lv-run); }
-.lv-mute { color: var(--muted-foreground); }
+.lv-ok {
+  color: var(--lv-ok);
+}
+.lv-bad {
+  color: var(--lv-bad);
+}
+.lv-run {
+  color: var(--lv-run);
+}
+.lv-mute {
+  color: var(--muted-foreground);
+}
 
 .lv-rail {
   display: flex;
@@ -61,8 +71,12 @@ html.dark .log-viewer {
   font-size: 12.5px;
   color: var(--foreground);
 }
-.lv-rail-item:hover { background: var(--accent); }
-.lv-rail-item[data-state="failed"] { background: var(--lv-error-bg); }
+.lv-rail-item:hover {
+  background: var(--accent);
+}
+.lv-rail-item[data-state="failed"] {
+  background: var(--lv-error-bg);
+}
 .lv-rail-name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -78,7 +92,9 @@ html.dark .log-viewer {
   font-size: 11px;
   color: var(--muted-foreground);
 }
-.lv-rail-meta small { font-size: 10px; }
+.lv-rail-meta small {
+  font-size: 10px;
+}
 
 .lv-main {
   position: relative;
@@ -94,7 +110,9 @@ html.dark .log-viewer {
   padding: 8px 10px;
   border-bottom: 1px solid var(--border);
 }
-.lv-attempt { min-width: 190px; }
+.lv-attempt {
+  min-width: 190px;
+}
 .lv-attempt-label {
   font-size: 12px;
   color: var(--muted-foreground);
@@ -122,15 +140,22 @@ html.dark .log-viewer {
   color: var(--foreground);
   font-size: 13px;
 }
-.lv-search:focus-within { border-color: var(--ring); }
-.lv-search small { font-variant-numeric: tabular-nums; font-size: 11px; }
+.lv-search:focus-within {
+  border-color: var(--ring);
+}
+.lv-search small {
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+}
 .lv-tools {
   display: flex;
   flex-wrap: wrap;
   gap: 2px;
   margin-left: auto;
 }
-.lv-tools [aria-pressed="true"] { background: var(--accent); }
+.lv-tools [aria-pressed="true"] {
+  background: var(--accent);
+}
 
 .lv-banner {
   display: flex;
@@ -141,8 +166,14 @@ html.dark .log-viewer {
   font-size: 12.5px;
   border-bottom: 1px solid var(--border);
 }
-.lv-banner.is-warning { background: var(--surface-warning, #fff6df); color: var(--text-warning, #6b4711); }
-.lv-banner.is-live { background: var(--surface-blue, #eef2ff); color: var(--foreground); }
+.lv-banner.is-warning {
+  background: var(--surface-warning, #fff6df);
+  color: var(--text-warning, #6b4711);
+}
+.lv-banner.is-live {
+  background: var(--surface-blue, #eef2ff);
+  color: var(--foreground);
+}
 .lv-pulse {
   width: 8px;
   height: 8px;
@@ -151,7 +182,10 @@ html.dark .log-viewer {
   animation: lv-pulse 1.4s ease-in-out infinite;
 }
 @keyframes lv-pulse {
-  50% { opacity: 0.3; transform: scale(0.8); }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
 }
 
 .lv-scroll {
@@ -163,7 +197,9 @@ html.dark .log-viewer {
   line-height: 1.6;
   position: relative;
 }
-.lv-section + .lv-section { border-top: 1px solid var(--border); }
+.lv-section + .lv-section {
+  border-top: 1px solid var(--border);
+}
 .lv-section-head {
   position: sticky;
   top: 0;
@@ -179,19 +215,37 @@ html.dark .log-viewer {
   text-align: left;
   color: var(--foreground);
 }
-.lv-section-head:hover { background: var(--accent); }
-.lv-section[data-state="failed"] > .lv-section-head { background: var(--lv-error-bg); }
-.lv-chevron { transition: transform 120ms ease; color: var(--muted-foreground); }
-[aria-expanded="true"] > .lv-chevron { transform: rotate(90deg); }
-.lv-section-name { font-weight: 550; font-family: var(--lv-mono); font-size: 12px; }
+.lv-section-head:hover {
+  background: var(--accent);
+}
+.lv-section[data-state="failed"] > .lv-section-head {
+  background: var(--lv-error-bg);
+}
+.lv-chevron {
+  transition: transform 120ms ease;
+  color: var(--muted-foreground);
+}
+[aria-expanded="true"] > .lv-chevron {
+  transform: rotate(90deg);
+}
+.lv-section-name {
+  font-weight: 550;
+  font-family: var(--lv-mono);
+  font-size: 12px;
+}
 .lv-section-meta {
   margin-left: auto;
   font-size: 11.5px;
   color: var(--muted-foreground);
   font-variant-numeric: tabular-nums;
 }
-.lv-lines { padding-bottom: 6px; }
-.lv-empty { margin: 4px 0 4px 54px; color: var(--muted-foreground); }
+.lv-lines {
+  padding-bottom: 6px;
+}
+.lv-empty {
+  margin: 4px 0 4px 54px;
+  color: var(--muted-foreground);
+}
 
 .lv-line {
   display: grid;
@@ -199,13 +253,28 @@ html.dark .log-viewer {
   align-items: start;
   padding-right: 8px;
 }
-.lv-line:hover { background: var(--accent); }
-.lv-line.is-system .lv-text { color: var(--muted-foreground); }
-.lv-line.is-error { background: var(--lv-error-bg); }
-.lv-line.is-error .lv-text { color: var(--lv-bad); }
-.lv-line.is-warn .lv-text { color: var(--lv-warn); }
-.lv-line.is-match { box-shadow: inset 3px 0 #e2a400; }
-.lv-line.is-selected { background: var(--lv-select-bg); box-shadow: inset 3px 0 var(--lv-run); }
+.lv-line:hover {
+  background: var(--accent);
+}
+.lv-line.is-system .lv-text {
+  color: var(--muted-foreground);
+}
+.lv-line.is-error {
+  background: var(--lv-error-bg);
+}
+.lv-line.is-error .lv-text {
+  color: var(--lv-bad);
+}
+.lv-line.is-warn .lv-text {
+  color: var(--lv-warn);
+}
+.lv-line.is-match {
+  box-shadow: inset 3px 0 #e2a400;
+}
+.lv-line.is-selected {
+  background: var(--lv-select-bg);
+  box-shadow: inset 3px 0 var(--lv-run);
+}
 .lv-num {
   text-align: right;
   padding-right: 12px;
@@ -214,7 +283,10 @@ html.dark .log-viewer {
   font-variant-numeric: tabular-nums;
   user-select: none;
 }
-.lv-num:hover { opacity: 1; text-decoration: underline; }
+.lv-num:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
 .lv-time {
   padding-right: 10px;
   color: var(--muted-foreground);
@@ -241,14 +313,28 @@ html.dark .log-viewer {
 .lv-line:hover .lv-ask,
 .lv-line.is-error .lv-ask,
 .lv-line.is-selected .lv-ask,
-.lv-ask:focus-visible { display: inline-flex; }
+.lv-ask:focus-visible {
+  display: inline-flex;
+}
 
-.lv-b { font-weight: 700; }
-.lv-dim { opacity: 0.65; }
-.lv-red { color: var(--lv-bad); }
-.lv-green { color: var(--lv-ok); }
-.lv-yellow { color: var(--lv-warn); }
-.lv-cyan { color: var(--lv-run); }
+.lv-b {
+  font-weight: 700;
+}
+.lv-dim {
+  opacity: 0.65;
+}
+.lv-red {
+  color: var(--lv-bad);
+}
+.lv-green {
+  color: var(--lv-ok);
+}
+.lv-yellow {
+  color: var(--lv-warn);
+}
+.lv-cyan {
+  color: var(--lv-run);
+}
 .lv-mask {
   display: inline-flex;
   align-items: center;
@@ -295,12 +381,24 @@ html.dark .log-viewer {
 }
 
 @media (max-width: 760px) {
-  .log-viewer { grid-template-columns: minmax(0, 1fr); }
-  .lv-rail { display: none; }
-  .lv-hide-sm { display: none; }
-  .lv-line { grid-template-columns: 40px auto minmax(0, 1fr) auto; }
-  .lv-attempt { min-width: 0; }
+  .log-viewer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lv-rail {
+    display: none;
+  }
+  .lv-hide-sm {
+    display: none;
+  }
+  .lv-line {
+    grid-template-columns: 40px auto minmax(0, 1fr) auto;
+  }
+  .lv-attempt {
+    min-width: 0;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lv-pulse { animation: none; }
+  .lv-pulse {
+    animation: none;
+  }
 }

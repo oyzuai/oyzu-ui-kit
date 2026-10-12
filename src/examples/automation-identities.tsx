@@ -108,7 +108,11 @@ let saved = seed;
 function savePreview(items: Identity[]) {
   saved = items;
 }
-export function AutomationIdentities({ onStateChange = () => undefined }: { onStateChange?: (dirty: boolean, busy: boolean) => void }) {
+export function AutomationIdentities({
+  onStateChange = () => undefined,
+}: {
+  onStateChange?: (dirty: boolean, busy: boolean) => void;
+}) {
   const context = useActiveContext();
   const entryRoot =
     context.project ??
@@ -137,7 +141,15 @@ export function AutomationIdentities({ onStateChange = () => undefined }: { onSt
     [discard, setDiscard] = useState(false),
     [panel, setPanel] = useState("Identity");
   const item = items.find((i) => i.identifier === selected);
-  const dirty = Boolean((modal === "request" || modal === "review") && (draft.name || purpose || entries.some((e) => e.actions.length || e.selector.ids.length || !e.selector.exact))) || Boolean(modal === "auth" && repository);
+  const dirty =
+    Boolean(
+      (modal === "request" || modal === "review") &&
+      (draft.name ||
+        purpose ||
+        entries.some(
+          (e) => e.actions.length || e.selector.ids.length || !e.selector.exact,
+        )),
+    ) || Boolean(modal === "auth" && repository);
   useEffect(() => {
     onStateChange(dirty, checking);
     return () => onStateChange(false, false);
@@ -151,10 +163,7 @@ export function AutomationIdentities({ onStateChange = () => undefined }: { onSt
   };
   const close = () => {
     if (checking) return;
-    if (
-      dirty
-    )
-      setDiscard(true);
+    if (dirty) setDiscard(true);
     else {
       setModal(null);
       setError("");

@@ -28,7 +28,9 @@ export function ConnectionDiagnostics({
   return (
     <section
       className="connection-diagnostics"
-      data-result={status === "success" ? "success" : failure >= 0 ? "failure" : "pending"}
+      data-result={
+        status === "success" ? "success" : failure >= 0 ? "failure" : "pending"
+      }
       aria-label="Connection diagnostics"
     >
       <header>

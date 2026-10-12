@@ -106,13 +106,24 @@ test("standalone authorization ignores portal session and context", async ({
   await expect(page.getByLabel("Device code", { exact: true })).toBeVisible();
 });
 
-test('segmented code supports typing, deletion and whole-code paste', async ({page}) => {
- await page.goto('/authorize/device');
- const input=page.getByLabel('Device code',{exact:true});
- await input.focus();await input.pressSequentially('wdjb');
- await expect(input).toHaveValue('WDJB');
- await input.press('Backspace');await expect(input).toHaveValue('WDJ');
- await input.fill('wdjb-mjht');await expect(input).toHaveValue('WDJBMJHT');
- await expect(page.locator('.code-slot.filled')).toHaveCount(8);
- expect((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze()).violations).toEqual([]);
+test("segmented code supports typing, deletion and whole-code paste", async ({
+  page,
+}) => {
+  await page.goto("/authorize/device");
+  const input = page.getByLabel("Device code", { exact: true });
+  await input.focus();
+  await input.pressSequentially("wdjb");
+  await expect(input).toHaveValue("WDJB");
+  await input.press("Backspace");
+  await expect(input).toHaveValue("WDJ");
+  await input.fill("wdjb-mjht");
+  await expect(input).toHaveValue("WDJBMJHT");
+  await expect(page.locator(".code-slot.filled")).toHaveCount(8);
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
 });

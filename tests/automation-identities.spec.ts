@@ -1,125 +1,264 @@
-import {test,expect} from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
-test('page sections preserve the request through approval and authentication',async({page})=>{
- await page.goto('/#pages/automation');
- await page.getByRole('button',{name:'Request identity',exact:true}).click();
- await expect(page.getByRole('dialog')).toHaveCount(0);
- await page.getByLabel('Identity name',{exact:true}).fill('Page automation');
- await page.getByLabel('Purpose',{exact:true}).fill('Read checkout details');
- await page.getByRole('button',{name:'Continue to access'}).click();
- const entry=page.getByRole('group',{name:'Components access 1',exact:true});
- await entry.getByText('Select components…',{exact:true}).click();
- await entry.getByRole('checkbox',{name:/Checkout API/}).check();
- await entry.getByLabel('Components details access 1').selectOption('read');
- await page.getByRole('navigation',{name:'Automation editor sections'}).getByRole('button',{name:'Identity',exact:true}).click();
- await expect(page.getByLabel('Identity name',{exact:true})).toHaveValue('Page automation');
- await page.getByRole('navigation',{name:'Automation editor sections'}).getByRole('button',{name:'Review',exact:true}).click();
- await expect(page.locator('.ai-page-content .ad-summary')).toContainText('Checkout API');
- await page.getByRole('button',{name:'Submit for approval'}).click();
- await expect(page.getByRole('button',{name:'Set up authentication'})).toHaveCount(0);
- await page.getByRole('checkbox',{name:/Preview as administrator/}).check();
- await page.getByRole('button',{name:'Review request',exact:true}).click();
- await page.getByRole('button',{name:'Approve request'}).click();
- await page.getByRole('button',{name:'Set up authentication'}).click();
- await page.getByLabel('Repository',{exact:true}).fill('acme-demo/checkout');
- await page.getByRole('button',{name:'Approved access',exact:true}).click();
- await expect(page.locator('.ai-page-content .ad-summary:visible')).toContainText('View details');
- await page.getByRole('button',{name:'Back to authentication'}).click();
- await expect(page.getByLabel('Repository',{exact:true})).toHaveValue('acme-demo/checkout');
- await page.getByRole('button',{name:'Verify workload'}).click();
- await page.getByRole('button',{name:'Activate identity'}).click();
- await expect(page.getByRole('heading',{name:'Your workflow can now sign in'})).toBeVisible();
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+test("page sections preserve the request through approval and authentication", async ({
+  page,
+}) => {
+  await page.goto("/#pages/automation");
+  await page
+    .getByRole("button", { name: "Request identity", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page
+    .getByLabel("Identity name", { exact: true })
+    .fill("Page automation");
+  await page
+    .getByLabel("Purpose", { exact: true })
+    .fill("Read checkout details");
+  await page.getByRole("button", { name: "Continue to access" }).click();
+  const entry = page.getByRole("group", {
+    name: "Components access 1",
+    exact: true,
+  });
+  await entry.getByText("Select components…", { exact: true }).click();
+  await entry.getByRole("checkbox", { name: /Checkout API/ }).check();
+  await entry.getByLabel("Components details access 1").selectOption("read");
+  await page
+    .getByRole("navigation", { name: "Automation editor sections" })
+    .getByRole("button", { name: "Identity", exact: true })
+    .click();
+  await expect(page.getByLabel("Identity name", { exact: true })).toHaveValue(
+    "Page automation",
+  );
+  await page
+    .getByRole("navigation", { name: "Automation editor sections" })
+    .getByRole("button", { name: "Review", exact: true })
+    .click();
+  await expect(page.locator(".ai-page-content .ad-summary")).toContainText(
+    "Checkout API",
+  );
+  await page.getByRole("button", { name: "Submit for approval" }).click();
+  await expect(
+    page.getByRole("button", { name: "Set up authentication" }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("checkbox", { name: /Preview as administrator/ })
+    .check();
+  await page
+    .getByRole("button", { name: "Review request", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Approve request" }).click();
+  await page.getByRole("button", { name: "Set up authentication" }).click();
+  await page
+    .getByLabel("Repository", { exact: true })
+    .fill("acme-demo/checkout");
+  await page
+    .getByRole("button", { name: "Approved access", exact: true })
+    .click();
+  await expect(
+    page.locator(".ai-page-content .ad-summary:visible"),
+  ).toContainText("View details");
+  await page.getByRole("button", { name: "Back to authentication" }).click();
+  await expect(page.getByLabel("Repository", { exact: true })).toHaveValue(
+    "acme-demo/checkout",
+  );
+  await page.getByRole("button", { name: "Verify workload" }).click();
+  await page.getByRole("button", { name: "Activate identity" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Your workflow can now sign in" }),
+  ).toBeVisible();
 });
-test('leaving a dirty page requires explicit discard',async({page})=>{
- await page.goto('/#pages/automation');
- await page.getByRole('button',{name:'Request identity',exact:true}).click();
- await page.getByLabel('Identity name',{exact:true}).fill('Keep my draft');
- await page.getByRole('button',{name:'Leave editor'}).click();
- await page.getByRole('button',{name:'Keep editing'}).click();
- await expect(page.getByLabel('Identity name',{exact:true})).toHaveValue('Keep my draft');
- await page.getByRole('button',{name:'Leave editor'}).click();
- await page.getByRole('button',{name:'Discard changes'}).click();
- await expect(page.getByRole('button',{name:'Request identity',exact:true})).toBeVisible();
+test("leaving a dirty page requires explicit discard", async ({ page }) => {
+  await page.goto("/#pages/automation");
+  await page
+    .getByRole("button", { name: "Request identity", exact: true })
+    .click();
+  await page.getByLabel("Identity name", { exact: true }).fill("Keep my draft");
+  await page.getByRole("button", { name: "Leave editor" }).click();
+  await page.getByRole("button", { name: "Keep editing" }).click();
+  await expect(page.getByLabel("Identity name", { exact: true })).toHaveValue(
+    "Keep my draft",
+  );
+  await page.getByRole("button", { name: "Leave editor" }).click();
+  await page.getByRole("button", { name: "Discard changes" }).click();
+  await expect(
+    page.getByRole("button", { name: "Request identity", exact: true }),
+  ).toBeVisible();
 });
-test('mobile access page has keyboard accessible sections and no overflow',async({page})=>{
- await page.setViewportSize({width:390,height:844});
- await page.goto('/#pages/automation');
- await page.getByRole('button',{name:'Request identity',exact:true}).click();
- await page.getByRole('button',{name:'Continue to access'}).click();
- expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
- expect((await new AxeBuilder({page}).include('.ai-page-editor').analyze()).violations).toEqual([]);
+test("mobile access page has keyboard accessible sections and no overflow", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/#pages/automation");
+  await page
+    .getByRole("button", { name: "Request identity", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Continue to access" }).click();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBeTruthy();
+  expect(
+    (await new AxeBuilder({ page }).include(".ai-page-editor").analyze())
+      .violations,
+  ).toEqual([]);
 });
-test('category permissions preserve separate resource sets and disclose all-resource access',async({page})=>{
- await page.goto('/#pages/automation');await page.getByRole('button',{name:'Request identity',exact:true}).click();
- await page.getByLabel('Identity name',{exact:true}).fill('Scoped reader');await page.getByLabel('Purpose',{exact:true}).fill('Read checkout and edit inventory');await page.getByRole('button',{name:'Continue to access'}).click();
- const one=page.getByRole('group',{name:'Components access 1',exact:true});
- await one.getByLabel('Components details access 1').selectOption('read');await one.getByText('Select components…',{exact:true}).click();await one.getByRole('checkbox',{name:/Checkout API/}).check();
- await one.getByLabel('Search components access 1').fill('Inventory');await expect(one.getByText('1 selected',{exact:true})).toBeVisible();
- await page.getByRole('button',{name:'Add different components access'}).click();
- const two=page.getByRole('group',{name:'Components access 2',exact:true});await two.getByLabel('Components details access 2').selectOption('write');await two.getByText('Select components…',{exact:true}).click();await two.getByRole('checkbox',{name:/Inventory API/}).check();
- await page.getByRole('navigation',{name:'Automation editor sections'}).getByRole('button',{name:'Review',exact:true}).click();
- const rows=page.locator('.ai-page-form .ad-summary article');await expect(rows.nth(0)).toContainText('Checkout API');await expect(rows.nth(0)).not.toContainText('Edit details');await expect(rows.nth(1)).toContainText('Inventory API');await expect(rows.nth(1)).toContainText('Edit details');
- await page.getByRole('button',{name:'Requested access',exact:true}).click();await two.getByRole('radio',{name:'All components in Checkout service'}).check();await expect(two.getByText(/Includes future matching descendants/)).toBeVisible();
- await two.getByRole('radio',{name:'Only selected components'}).check();await two.getByText('1 selected',{exact:true}).click();await expect(two.getByRole('checkbox',{name:/Inventory API/})).toBeChecked();
+test("category permissions preserve separate resource sets and disclose all-resource access", async ({
+  page,
+}) => {
+  await page.goto("/#pages/automation");
+  await page
+    .getByRole("button", { name: "Request identity", exact: true })
+    .click();
+  await page.getByLabel("Identity name", { exact: true }).fill("Scoped reader");
+  await page
+    .getByLabel("Purpose", { exact: true })
+    .fill("Read checkout and edit inventory");
+  await page.getByRole("button", { name: "Continue to access" }).click();
+  const one = page.getByRole("group", {
+    name: "Components access 1",
+    exact: true,
+  });
+  await one.getByLabel("Components details access 1").selectOption("read");
+  await one.getByText("Select components…", { exact: true }).click();
+  await one.getByRole("checkbox", { name: /Checkout API/ }).check();
+  await one.getByLabel("Search components access 1").fill("Inventory");
+  await expect(one.getByText("1 selected", { exact: true })).toBeVisible();
+  await page
+    .getByRole("button", { name: "Add different components access" })
+    .click();
+  const two = page.getByRole("group", {
+    name: "Components access 2",
+    exact: true,
+  });
+  await two.getByLabel("Components details access 2").selectOption("write");
+  await two.getByText("Select components…", { exact: true }).click();
+  await two.getByRole("checkbox", { name: /Inventory API/ }).check();
+  await page
+    .getByRole("navigation", { name: "Automation editor sections" })
+    .getByRole("button", { name: "Review", exact: true })
+    .click();
+  const rows = page.locator(".ai-page-form .ad-summary article");
+  await expect(rows.nth(0)).toContainText("Checkout API");
+  await expect(rows.nth(0)).not.toContainText("Edit details");
+  await expect(rows.nth(1)).toContainText("Inventory API");
+  await expect(rows.nth(1)).toContainText("Edit details");
+  await page
+    .getByRole("button", { name: "Requested access", exact: true })
+    .click();
+  await two
+    .getByRole("radio", { name: "All components in Checkout service" })
+    .check();
+  await expect(
+    two.getByText(/Includes future matching descendants/),
+  ).toBeVisible();
+  await two.getByRole("radio", { name: "Only selected components" }).check();
+  await two.getByText("1 selected", { exact: true }).click();
+  await expect(
+    two.getByRole("checkbox", { name: /Inventory API/ }),
+  ).toBeChecked();
 });
 
-test('sidebar navigation asks before leaving a dirty automation request and keeps it on Keep editing', async ({ page }) => {
-  await page.goto('/#pages/automation');
-  await page.getByRole('button',{name:'Request identity',exact:true}).click();
-  await page.getByLabel('Identity name',{exact:true}).fill('Sidebar draft');
-  await page.getByRole('navigation',{name:'Primary navigation'}).getByRole('link',{name:'Projects',exact:true}).click();
-  await expect(page.getByRole('alertdialog')).toBeVisible();
-  await page.getByRole('button',{name:'Keep editing'}).click();
-  await expect(page.getByLabel('Identity name',{exact:true})).toHaveValue('Sidebar draft');
+test("sidebar navigation asks before leaving a dirty automation request and keeps it on Keep editing", async ({
+  page,
+}) => {
+  await page.goto("/#pages/automation");
+  await page
+    .getByRole("button", { name: "Request identity", exact: true })
+    .click();
+  await page.getByLabel("Identity name", { exact: true }).fill("Sidebar draft");
+  await page
+    .getByRole("navigation", { name: "Primary navigation" })
+    .getByRole("link", { name: "Projects", exact: true })
+    .click();
+  await expect(page.getByRole("alertdialog")).toBeVisible();
+  await page.getByRole("button", { name: "Keep editing" }).click();
+  await expect(page.getByLabel("Identity name", { exact: true })).toHaveValue(
+    "Sidebar draft",
+  );
 });
 
-test('browser history back asks before leaving a dirty automation request', async ({ page }) => {
-  await page.goto('/#pages/resources');
-  const nav=page.getByRole('navigation',{name:'Primary navigation'});
-  await nav.getByRole('link',{name:'Automation identities',exact:true}).click();
+test("browser history back asks before leaving a dirty automation request", async ({
+  page,
+}) => {
+  await page.goto("/#pages/resources");
+  const nav = page.getByRole("navigation", { name: "Primary navigation" });
+  await nav
+    .getByRole("link", { name: "Automation identities", exact: true })
+    .click();
   await expect(page).toHaveURL(/#pages\/automation$/);
-  await nav.getByRole('link',{name:'Projects',exact:true}).click();
+  await nav.getByRole("link", { name: "Projects", exact: true }).click();
   await expect(page).toHaveURL(/#pages\/resources$/);
   await page.goBack();
   await expect(page).toHaveURL(/#pages\/automation$/);
-  await page.getByRole('button',{name:'Request identity',exact:true}).click();
-  await page.getByLabel('Identity name',{exact:true}).fill('History draft');
+  await page
+    .getByRole("button", { name: "Request identity", exact: true })
+    .click();
+  await page.getByLabel("Identity name", { exact: true }).fill("History draft");
   await page.goBack();
-  await expect(page.getByRole('alertdialog')).toBeVisible();
-  await page.getByRole('button',{name:'Keep editing'}).click();
-  await expect(page.getByLabel('Identity name',{exact:true})).toHaveValue('History draft');
+  await expect(page.getByRole("alertdialog")).toBeVisible();
+  await page.getByRole("button", { name: "Keep editing" }).click();
+  await expect(page.getByLabel("Identity name", { exact: true })).toHaveValue(
+    "History draft",
+  );
 });
 
-test('context switching asks before leaving a dirty automation request', async ({ page }) => {
-  await page.goto('/#pages/automation');
-  await page.getByRole('button',{name:'Request identity',exact:true}).click();
-  await page.getByLabel('Identity name',{exact:true}).fill('Context draft');
-  await page.getByRole('button',{name:/Switch context:/}).click();
-  const switchDialog=page.getByRole('dialog',{name:'Switch context'});
-  await switchDialog.getByRole('button',{name:'Operations'}).click();
-  await switchDialog.getByRole('button',{name:/Production infrastructure/}).click();
-  const confirm=page.getByRole('alertdialog',{name:'Switch context and discard changes?'});
+test("context switching asks before leaving a dirty automation request", async ({
+  page,
+}) => {
+  await page.goto("/#pages/automation");
+  await page
+    .getByRole("button", { name: "Request identity", exact: true })
+    .click();
+  await page.getByLabel("Identity name", { exact: true }).fill("Context draft");
+  await page.getByRole("button", { name: /Switch context:/ }).click();
+  const switchDialog = page.getByRole("dialog", { name: "Switch context" });
+  await switchDialog.getByRole("button", { name: "Operations" }).click();
+  await switchDialog
+    .getByRole("button", { name: /Production infrastructure/ })
+    .click();
+  const confirm = page.getByRole("alertdialog", {
+    name: "Switch context and discard changes?",
+  });
   await expect(confirm).toBeVisible();
-  await confirm.getByRole('button',{name:'Keep editing'}).click();
-  await expect(page.getByLabel('Identity name',{exact:true})).toHaveValue('Context draft');
+  await confirm.getByRole("button", { name: "Keep editing" }).click();
+  await expect(page.getByLabel("Identity name", { exact: true })).toHaveValue(
+    "Context draft",
+  );
 });
 
-test('Cancel on an edited Changes requested revision prompts and Keep editing retains the purpose', async ({ page }) => {
-  await page.goto('/#pages/automation');
-  await page.getByRole('checkbox',{name:/Preview as administrator/}).check();
-  await page.getByRole('button',{name:/Release automation/}).click();
-  await page.getByRole('button',{name:'Review request',exact:true}).click();
-  await page.getByLabel(/Changes needed/).fill('Please narrow this request.');
-  await page.getByRole('button',{name:'Request changes',exact:true}).click();
-  await page.getByRole('button',{name:'Revise request',exact:true}).click();
-  const sections=page.getByRole('navigation',{name:'Automation editor sections'});
+test("Cancel on an edited Changes requested revision prompts and Keep editing retains the purpose", async ({
+  page,
+}) => {
+  await page.goto("/#pages/automation");
+  await page
+    .getByRole("checkbox", { name: /Preview as administrator/ })
+    .check();
+  await page.getByRole("button", { name: /Release automation/ }).click();
+  await page
+    .getByRole("button", { name: "Review request", exact: true })
+    .click();
+  await page.getByLabel(/Changes needed/).fill("Please narrow this request.");
+  await page
+    .getByRole("button", { name: "Request changes", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Revise request", exact: true })
+    .click();
+  const sections = page.getByRole("navigation", {
+    name: "Automation editor sections",
+  });
   await expect(sections).toBeVisible();
-  await sections.getByRole('button',{name:'Identity',exact:true}).click();
-  const purpose=page.locator('.ai-page-editor .ai-page-form textarea').first();
+  await sections.getByRole("button", { name: "Identity", exact: true }).click();
+  const purpose = page
+    .locator(".ai-page-editor .ai-page-form textarea")
+    .first();
   await expect(purpose).toBeVisible();
-  await purpose.fill('Read only the checkout release manifest.');
-  await page.getByRole('button',{name:'Cancel',exact:true}).click();
-  await expect(page.getByRole('heading',{name:'Discard unsaved changes?'})).toBeVisible();
-  await page.getByRole('button',{name:'Keep editing'}).click();
-  await expect(purpose).toHaveValue('Read only the checkout release manifest.');
+  await purpose.fill("Read only the checkout release manifest.");
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Discard unsaved changes?" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Keep editing" }).click();
+  await expect(purpose).toHaveValue("Read only the checkout release manifest.");
 });

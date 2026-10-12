@@ -160,4 +160,8 @@
   }
 }
 /* Keep the active organization/project visible as the page scrolls. */
-.main-shell > .topbar {position:sticky;top:0;z-index:20}
+.main-shell > .topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}

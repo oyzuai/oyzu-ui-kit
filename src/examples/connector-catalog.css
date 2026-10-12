@@ -496,9 +496,21 @@
     padding: 14px;
   }
 }
-@media(min-width:761px){.connector-wizard-modal .full-page-primary{grid-template-rows:80px 1fr auto}}
-.connector-wizard-modal .setup-footer{bottom:0;margin-bottom:-32px}
-@media(max-width:760px){.connector-wizard-modal .setup-footer{bottom:0;margin-bottom:-24px}}
+@media (min-width: 761px) {
+  .connector-wizard-modal .full-page-primary {
+    grid-template-rows: 80px 1fr auto;
+  }
+}
+.connector-wizard-modal .setup-footer {
+  bottom: 0;
+  margin-bottom: -32px;
+}
+@media (max-width: 760px) {
+  .connector-wizard-modal .setup-footer {
+    bottom: 0;
+    margin-bottom: -24px;
+  }
+}
 /* Compact footer: progress is already shown in the step navigation. */
 .connector-wizard-modal .setup-footer {
   padding: 10px 24px;
@@ -513,11 +525,18 @@
   padding: 0 14px;
   font-size: 12px;
 }
-.connector-wizard-modal .setup-footer > span:empty { display: none; }
-@media(max-width:760px){
-  .connector-wizard-modal .setup-footer {padding:8px 20px}
+.connector-wizard-modal .setup-footer > span:empty {
+  display: none;
+}
+@media (max-width: 760px) {
+  .connector-wizard-modal .setup-footer {
+    padding: 8px 20px;
+  }
   .connector-wizard-modal .setup-footer button,
-  .connector-wizard-modal .setup-footer button:last-child {min-height:44px;height:44px}
+  .connector-wizard-modal .setup-footer button:last-child {
+    min-height: 44px;
+    height: 44px;
+  }
 }
 /* Connector identity belongs to the rail, without an extra logo tile. */
 .connector-wizard-modal .connector-selected {
