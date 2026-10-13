@@ -134,6 +134,12 @@ Invitations accept one or up to 20 comma/newline-separated addresses, validate t
 
 `NavigationSidebar` owns responsive presentation, group disclosure, accessible icon-rail labels, and drawer focus. Desktop users can collapse to an icon rail; mobile users get a modal drawer with Escape/outside dismissal and focus restoration. Accepted navigation closes the drawer and focuses the main content; the existing unsaved-change guard can defer navigation without dismissing the menu. Resizing to desktop closes the drawer and focuses the sidebar toggle.
 
+The production positioning regression in [#8](https://github.com/oyzuai/oyzu-ui-kit/issues/8)
+is under investigation: CSS optimization can drop the drawer's identity
+translation reset while retaining generic dialog centering utilities. The
+planned fix keeps the phone drawer at the viewport's top-left corner without
+changing ordinary centered dialogs. Implementation and verification are pending.
+
 Example destinations and grouping live in `src/examples/navigation.ts`. The URL is the active-page source of truth, including browser history. Group toggles never navigate. Navigating to a page reveals its group. `src/examples/sidebar-preferences.ts` stores desktop collapse and group preferences locally; temporary mobile opening is not persisted. Storage failure falls back to in-memory behavior. Workspace, Connections, Personal and UI library are exploratory groupings, not a production information architecture.
 
 ### Sidebar account and session reference
