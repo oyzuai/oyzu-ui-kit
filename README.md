@@ -156,8 +156,11 @@ retains both translation variable resets. Build chunk-size warnings and seven
 high-severity baseline dependency audit findings remain visible; no unrelated
 dependencies were changed. `tests/navigation.spec.ts` passed all three browser
 checks: desktop groups/history, mobile drawer navigation/focus/resize, and mobile
-draft retention. Real consuming-application deployment verification
-is still pending under its disk-capacity gate, so the PR stays draft.
+draft retention. A production consumer also passed real signed-in touch navigation
+at 390×844 and 320×568: drawer origin 0/0, all edges in the viewport, account menu,
+destination selection, dismissal and restored focus. No physical-phone or wider
+landscape qualification is claimed. Hosted checks blocked by the standing
+plan/billing exception are unavailable, not passed.
 
 Example destinations and grouping live in `src/examples/navigation.ts`. The URL is the active-page source of truth, including browser history. Group toggles never navigate. Navigating to a page reveals its group. `src/examples/sidebar-preferences.ts` stores desktop collapse and group preferences locally; temporary mobile opening is not persisted. Storage failure falls back to in-memory behavior. Workspace, Connections, Personal and UI library are exploratory groupings, not a production information architecture.
 
