@@ -134,6 +134,34 @@ Invitations accept one or up to 20 comma/newline-separated addresses, validate t
 
 `NavigationSidebar` owns responsive presentation, group disclosure, accessible icon-rail labels, and drawer focus. Desktop users can collapse to an icon rail; mobile users get a modal drawer with Escape/outside dismissal and focus restoration. Accepted navigation closes the drawer and focuses the main content; the existing unsaved-change guard can defer navigation without dismissing the menu. Resizing to desktop closes the drawer and focuses the sidebar toggle.
 
+The phone drawer resets Tailwind's individual translation variables in its
+specific mobile rule. Production CSS optimization drops identity declarations
+such as `translate: none` and `translate: 0 0`; resetting the variables keeps
+generic dialog centering utilities from moving the drawer outside the viewport
+([#8](https://github.com/oyzuai/oyzu-ui-kit/issues/8)). Ordinary centered dialogs
+keep their existing translation.
+
+`npm run test:unit` includes an optimized-CSS regression in
+`navigation-sidebar.production.test.ts`. It compiles the actual drawer
+stylesheet with Vite/LightningCSS and checks Chromium geometry at 390×844 and
+320×568, alongside an ordinary centered-dialog control. This test requires the
+matching Playwright Chromium installation, as the browser suite does. The
+baseline failed at x = −170; with the variable reset, both drawer origins are
+0/0 and the centered control is unchanged. The ten unit tests and scoped lint
+passed on 2026-10-13. Full type checking initially failed with reused dependencies
+because Storybook types were unavailable. With the correct declared dependencies
+installed in an isolated C: checkout, `tsc -b`, `npm run build` and
+`npm run build-storybook` all passed. The actual minified package stylesheet
+retains both translation variable resets. Build chunk-size warnings and seven
+high-severity baseline dependency audit findings remain visible; no unrelated
+dependencies were changed. `tests/navigation.spec.ts` passed all three browser
+checks: desktop groups/history, mobile drawer navigation/focus/resize, and mobile
+draft retention. A production consumer also passed real signed-in touch navigation
+at 390×844 and 320×568: drawer origin 0/0, all edges in the viewport, account menu,
+destination selection, dismissal and restored focus. No physical-phone or wider
+landscape qualification is claimed. Hosted checks blocked by the standing
+plan/billing exception are unavailable, not passed.
+
 Example destinations and grouping live in `src/examples/navigation.ts`. The URL is the active-page source of truth, including browser history. Group toggles never navigate. Navigating to a page reveals its group. `src/examples/sidebar-preferences.ts` stores desktop collapse and group preferences locally; temporary mobile opening is not persisted. Storage failure falls back to in-memory behavior. Workspace, Connections, Personal and UI library are exploratory groupings, not a production information architecture.
 
 ### Sidebar account and session reference
