@@ -148,9 +148,16 @@ stylesheet with Vite/LightningCSS and checks Chromium geometry at 390×844 and
 matching Playwright Chromium installation, as the browser suite does. The
 baseline failed at x = −170; with the variable reset, both drawer origins are
 0/0 and the centered control is unchanged. The ten unit tests and scoped lint
-passed on 2026-10-13. Full type checking could not pass with the reused
-dependencies because Storybook types were unavailable; full package build and
-component/browser integration verification remain pending. The PR stays draft.
+passed on 2026-10-13. Full type checking initially failed with reused dependencies
+because Storybook types were unavailable. With the correct declared dependencies
+installed in an isolated C: checkout, `tsc -b`, `npm run build` and
+`npm run build-storybook` all passed. The actual minified package stylesheet
+retains both translation variable resets. Build chunk-size warnings and seven
+high-severity baseline dependency audit findings remain visible; no unrelated
+dependencies were changed. `tests/navigation.spec.ts` passed all three browser
+checks: desktop groups/history, mobile drawer navigation/focus/resize, and mobile
+draft retention. Real consuming-application deployment verification
+is still pending under its disk-capacity gate, so the PR stays draft.
 
 Example destinations and grouping live in `src/examples/navigation.ts`. The URL is the active-page source of truth, including browser history. Group toggles never navigate. Navigating to a page reveals its group. `src/examples/sidebar-preferences.ts` stores desktop collapse and group preferences locally; temporary mobile opening is not persisted. Storage failure falls back to in-memory behavior. Workspace, Connections, Personal and UI library are exploratory groupings, not a production information architecture.
 
