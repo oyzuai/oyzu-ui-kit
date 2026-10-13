@@ -20,7 +20,7 @@
     "build-storybook": "storybook build",
     "test": "npm run test:unit && playwright test",
     "format": "prettier --write src .storybook tests *.ts *.json *.md index.html",
-    "test:unit": "node --test src/components/patterns/identity.test.ts src/examples/remote-builds/review-fixes.test.ts"
+    "test:unit": "node --test src/components/patterns/identity.test.ts src/examples/remote-builds/review-fixes.test.ts src/components/patterns/navigation-sidebar.production.test.ts"
   },
   "dependencies": {
     "@codemirror/lang-yaml": "^6.1.3",
