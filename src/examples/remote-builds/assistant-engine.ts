@@ -45,45 +45,103 @@ export type ActionId =
 
 export type Block =
   | { type: "text"; text: string }
-  | { type: "cite"; runId: string; attempt: number; seq: number; label: string; excerpt: string }
+  | {
+      type: "cite";
+      runId: string;
+      attempt: number;
+      seq: number;
+      label: string;
+      excerpt: string;
+    }
   | { type: "command"; command: string; note?: string }
   | { type: "facts"; rows: [string, string][] }
-  | { type: "verdicts"; rows: { name: string; matched: boolean; reason: string }[] }
-  | { type: "diff"; file: string; lines: { kind: "+" | "-" | " "; text: string }[] }
-  | { type: "actions"; actions: { id: ActionId; label: string; primary?: boolean; target?: string }[] };
+  | {
+      type: "verdicts";
+      rows: { name: string; matched: boolean; reason: string }[];
+    }
+  | {
+      type: "diff";
+      file: string;
+      lines: { kind: "+" | "-" | " "; text: string }[];
+    }
+  | {
+      type: "actions";
+      actions: {
+        id: ActionId;
+        label: string;
+        primary?: boolean;
+        target?: string;
+      }[];
+    };
 
 export type Reply = { blocks: Block[]; sources: string[] };
 
 const lineBySubstring = (needle: string) =>
   failedLog.find((entry) => stripAnsiText(entry.text).includes(needle))!;
 
-function cite(entry: LogEntry, label: string, runId = failedRun.id, attempt = 2): Block {
-  return { type: "cite", runId, attempt, seq: entry.seq, label, excerpt: stripAnsiText(entry.text) };
+function cite(
+  entry: LogEntry,
+  label: string,
+  runId = failedRun.id,
+  attempt = 2,
+): Block {
+  return {
+    type: "cite",
+    runId,
+    attempt,
+    seq: entry.seq,
+    label,
+    excerpt: stripAnsiText(entry.text),
+  };
 }
 
-export function suggestionsFor(context: AssistantContext, role: Role): string[] {
+export function suggestionsFor(
+  context: AssistantContext,
+  role: Role,
+): string[] {
   switch (context.kind) {
     case "run":
       if (context.runId === failedRun.id)
-        return ["Why did this fail?", "Is this test flaky?", "What happened to attempt 1?", "Suggest a fix", "How do I reproduce it locally?"];
-      if (context.runId === liveRun.id) return ["When will this finish?", "What is it building?"];
+        return [
+          "Why did this fail?",
+          "Is this test flaky?",
+          "What happened to attempt 1?",
+          "Suggest a fix",
+          "How do I reproduce it locally?",
+        ];
+      if (context.runId === liveRun.id)
+        return ["When will this finish?", "What is it building?"];
       return ["How do I reproduce it locally?"];
     case "delivery":
-      if (context.deliveryId === "dlv-rej") return ["Why are webhooks being rejected?"];
-      if (context.deliveryId === "dlv-7f12") return ["Why did this start nothing?", "Which bindings matched?"];
+      if (context.deliveryId === "dlv-rej")
+        return ["Why are webhooks being rejected?"];
+      if (context.deliveryId === "dlv-7f12")
+        return ["Why did this start nothing?", "Which bindings matched?"];
       return ["Which bindings matched?"];
     case "binding":
-      return ["What did this binding match today?", "Why did PR #483 not build?"];
+      return [
+        "What did this binding match today?",
+        "Why did PR #483 not build?",
+      ];
     case "pool":
       return role === "pool-admin"
-        ? ["Why is mgr-onprem-02 unhealthy?", "Which jobs did this pool lose today?"]
+        ? [
+            "Why is mgr-onprem-02 unhealthy?",
+            "Which jobs did this pool lose today?",
+          ]
         : ["Is the pool healthy?"];
     default:
-      return ["Why did build 9012 fail?", "Why did PR #483 not build?", "Why are webhooks being rejected?", "Is anything wrong with our pools?"];
+      return [
+        "Why did build 9012 fail?",
+        "Why did PR #483 not build?",
+        "Why are webhooks being rejected?",
+        "Is anything wrong with our pools?",
+      ];
   }
 }
 
-const has = (q: string, ...words: string[]) => words.some((word) => q.includes(word));
+const has = (q: string, ...words: string[]) =>
+  words.some((word) => q.includes(word));
 
 export function respond(
   question: string,
@@ -96,26 +154,70 @@ export function respond(
 
   if (line) return explainLine(line);
 
-  if (has(q, "signature", "reject", "legacy", "webhooks being", "webhook secret"))
+  if (
+    has(q, "signature", "reject", "legacy", "webhooks being", "webhook secret")
+  )
     return rejectedWebhooks();
-  if (has(q, "#483", "483", "not build", "didn't", "did not", "start nothing", "no build", "not trigger", "draft"))
+  if (
+    has(
+      q,
+      "#483",
+      "483",
+      "not build",
+      "didn't",
+      "did not",
+      "start nothing",
+      "no build",
+      "not trigger",
+      "draft",
+    )
+  )
     return draftPr();
   if (has(q, "which bindings", "matched"))
-    return context.kind === "delivery" ? deliveryVerdicts(context.deliveryId) : draftPr();
-  if (has(q, "binding match", "this binding")) return bindingToday(context.kind === "binding" ? context.bindingId : "pr-affected");
-  if (has(q, "attempt 1", "executor", "lost", "first attempt", "retried", "timed out"))
+    return context.kind === "delivery"
+      ? deliveryVerdicts(context.deliveryId)
+      : draftPr();
+  if (has(q, "binding match", "this binding"))
+    return bindingToday(
+      context.kind === "binding" ? context.bindingId : "pr-affected",
+    );
+  if (
+    has(
+      q,
+      "attempt 1",
+      "executor",
+      "lost",
+      "first attempt",
+      "retried",
+      "timed out",
+    )
+  )
     return attemptOne(role);
-  if (has(q, "mgr-onprem", "unhealthy", "lose", "lost today", "pool", "manager", "healthy"))
+  if (
+    has(
+      q,
+      "mgr-onprem",
+      "unhealthy",
+      "lose",
+      "lost today",
+      "pool",
+      "manager",
+      "healthy",
+    )
+  )
     return poolHealth(role);
-  if (has(q, "flaky", "flake", "intermittent", "history"))
-    return flaky();
-  if (has(q, "fix", "patch", "change"))
-    return suggestFix();
-  if (has(q, "local", "reproduce", "my machine"))
-    return reproduce(runId);
-  if (has(q, "when", "finish", "how long", "eta", "building") || runId === liveRun.id)
+  if (has(q, "flaky", "flake", "intermittent", "history")) return flaky();
+  if (has(q, "fix", "patch", "change")) return suggestFix();
+  if (has(q, "local", "reproduce", "my machine")) return reproduce(runId);
+  if (
+    has(q, "when", "finish", "how long", "eta", "building") ||
+    runId === liveRun.id
+  )
     return liveStatus();
-  if (has(q, "why", "fail", "broke", "red", "summar", "9012") || runId === failedRun.id)
+  if (
+    has(q, "why", "fail", "broke", "red", "summar", "9012") ||
+    runId === failedRun.id
+  )
     return whyFailed();
   return {
     blocks: [
@@ -129,7 +231,9 @@ export function respond(
 }
 
 function whyFailed(): Reply {
-  const failed = lineBySubstring("refund_retry_respects_idempotency_key ... FAILED");
+  const failed = lineBySubstring(
+    "refund_retry_respects_idempotency_key ... FAILED",
+  );
   const assertion = lineBySubstring("assertion `left == right` failed");
   const note = lineBySubstring("key was regenerated");
   return {
@@ -163,7 +267,11 @@ function whyFailed(): Reply {
         ],
       },
     ],
-    sources: ["Run 9012 log, attempt 2 (612 lines)", "Pull request #482 diff", "Test history for payments-core, last 30 runs"],
+    sources: [
+      "Run 9012 log, attempt 2 (612 lines)",
+      "Pull request #482 diff",
+      "Test history for payments-core, last 30 runs",
+    ],
   };
 }
 
@@ -179,23 +287,43 @@ function suggestFix(): Reply {
         file: "crates/payments-core/src/refund.rs",
         lines: [
           { kind: " ", text: "impl RefundRetry {" },
-          { kind: " ", text: "    pub fn schedule(&self, attempt: u32) -> RetryPlan {" },
+          {
+            kind: " ",
+            text: "    pub fn schedule(&self, attempt: u32) -> RetryPlan {",
+          },
           { kind: "-", text: "        let key = IdempotencyKey::new();" },
-          { kind: "+", text: "        let key = self.original.idempotency_key.clone();" },
-          { kind: " ", text: "        RetryPlan { key, delay: backoff(attempt) }" },
+          {
+            kind: "+",
+            text: "        let key = self.original.idempotency_key.clone();",
+          },
+          {
+            kind: " ",
+            text: "        RetryPlan { key, delay: backoff(attempt) }",
+          },
           { kind: " ", text: "    }" },
         ],
       },
-      { type: "command", command: "oyzu build payments-core --full", note: "Runs lint, compile and test for the changed target on your machine" },
+      {
+        type: "command",
+        command: "oyzu build payments-core --full",
+        note: "Runs lint, compile and test for the changed target on your machine",
+      },
       {
         type: "actions",
         actions: [
-          { id: "apply-fix", label: "Open as suggested change on #482", primary: true },
+          {
+            id: "apply-fix",
+            label: "Open as suggested change on #482",
+            primary: true,
+          },
           { id: "rerun-failed", label: "Rerun after pushing" },
         ],
       },
     ],
-    sources: ["crates/payments-core/src/refund.rs at 9c41e2a", "crates/payments-core/tests/refund_retry.rs:88"],
+    sources: [
+      "crates/payments-core/src/refund.rs at 9c41e2a",
+      "crates/payments-core/tests/refund_retry.rs:88",
+    ],
   };
 }
 
@@ -214,7 +342,10 @@ function flaky(): Reply {
           ["Same failure elsewhere", "None"],
         ],
       },
-      { type: "actions", actions: [{ id: "suggest-fix", label: "Suggest a fix", primary: true }] },
+      {
+        type: "actions",
+        actions: [{ id: "suggest-fix", label: "Suggest a fix", primary: true }],
+      },
     ],
     sources: ["Test results from JUnit reports, last 30 runs of oyzu / build"],
   };
@@ -225,9 +356,18 @@ function reproduce(runId?: string): Reply {
   if (run && run.id !== failedRun.id)
     return {
       blocks: [
-        { type: "text", text: `Every check is one oyzu command. Check out ${run.commit.slice(0, 7)} and run the same command the runner used, or add \`--remote\` to run it on the same pool:` },
-        { type: "command", command: `git checkout ${run.commit.slice(0, 7)} && ${run.command}` },
-        { type: "command", command: `${run.command} --remote --ref ${run.commit.slice(0, 7)}` },
+        {
+          type: "text",
+          text: `Every check is one oyzu command. Check out ${run.commit.slice(0, 7)} and run the same command the runner used, or add \`--remote\` to run it on the same pool:`,
+        },
+        {
+          type: "command",
+          command: `git checkout ${run.commit.slice(0, 7)} && ${run.command}`,
+        },
+        {
+          type: "command",
+          command: `${run.command} --remote --ref ${run.commit.slice(0, 7)}`,
+        },
       ],
       sources: [`Run ${run.number} operation`],
     };
@@ -237,9 +377,18 @@ function reproduce(runId?: string): Reply {
         type: "text",
         text: "Every check is one oyzu command, so the remote run reproduces exactly on your machine. Check out the commit and run the same command the runner used:",
       },
-      { type: "command", command: "git checkout 9c41e2a && oyzu build --affected 7d0b113 --full" },
-      { type: "text", text: "Or run the same thing remotely on the same pool, without a local toolchain:" },
-      { type: "command", command: "oyzu build --affected 7d0b113 --full --remote --ref 9c41e2a" },
+      {
+        type: "command",
+        command: "git checkout 9c41e2a && oyzu build --affected 7d0b113 --full",
+      },
+      {
+        type: "text",
+        text: "Or run the same thing remotely on the same pool, without a local toolchain:",
+      },
+      {
+        type: "command",
+        command: "oyzu build --affected 7d0b113 --full --remote --ref 9c41e2a",
+      },
     ],
     sources: ["Run 9012 operation and merge base"],
   };
@@ -258,15 +407,30 @@ function attemptOne(role: Role): Reply {
         type: "facts",
         rows: [
           ["Manager", "mgr-onprem-02 in Acme on-prem"],
-          ["Pool log", "3 heartbeats failed: 2 timeouts, then HTTP 407 from proxy.corp.acme.example"],
-          ["Likely cause", "The corporate proxy started asking this manager for authentication"],
+          [
+            "Pool log",
+            "3 heartbeats failed: 2 timeouts, then HTTP 407 from proxy.corp.acme.example",
+          ],
+          [
+            "Likely cause",
+            "The corporate proxy started asking this manager for authentication",
+          ],
         ],
       },
       {
         type: "actions",
         actions: [
-          { id: "diagnostics", label: "Runner diagnostics for job-5521", primary: true, target: "job-5521" },
-          { id: "open-pool", label: "Open Acme on-prem", target: "acme-onprem" },
+          {
+            id: "diagnostics",
+            label: "Runner diagnostics for job-5521",
+            primary: true,
+            target: "job-5521",
+          },
+          {
+            id: "open-pool",
+            label: "Open Acme on-prem",
+            target: "acme-onprem",
+          },
         ],
       },
     );
@@ -276,14 +440,20 @@ function attemptOne(role: Role): Reply {
         type: "text",
         text: "Pool details are visible to the pool's admins. I've linked this run in a note to them; you don't need to do anything for this run.",
       },
-      { type: "actions", actions: [{ id: "open-attempt-1", label: "Open attempt 1 log", primary: true }] },
+      {
+        type: "actions",
+        actions: [
+          { id: "open-attempt-1", label: "Open attempt 1 log", primary: true },
+        ],
+      },
     );
   }
   return {
     blocks,
-    sources: role === "pool-admin"
-      ? ["Run 9012 attempts", "Pool logs for job-5521 (admin)"]
-      : ["Run 9012 attempts"],
+    sources:
+      role === "pool-admin"
+        ? ["Run 9012 attempts", "Pool logs for job-5521 (admin)"]
+        : ["Run 9012 attempts"],
   };
 }
 
@@ -308,17 +478,33 @@ function poolHealth(role: Role): Reply {
       {
         type: "facts",
         rows: [
-          ["Jobs lost today", "1 (job-5521, run 9012 attempt 1, retried automatically)"],
+          [
+            "Jobs lost today",
+            "1 (job-5521, run 9012 attempt 1, retried automatically)",
+          ],
           ["Capacity", "1 of 2 managers claiming work; 1 job queued"],
           ["Manager version", "0.4.0 (pool default is 0.4.1)"],
         ],
       },
-      { type: "command", command: "oyzu pool manager drain mgr-onprem-02", note: "Stops new claims while you fix the proxy credentials; running jobs finish" },
+      {
+        type: "command",
+        command: "oyzu pool manager drain mgr-onprem-02",
+        note: "Stops new claims while you fix the proxy credentials; running jobs finish",
+      },
       {
         type: "actions",
         actions: [
-          { id: "drain-manager", label: "Drain mgr-onprem-02", primary: true, target: "mgr-onprem-02" },
-          { id: "diagnostics", label: "Pool logs for mgr-onprem-02", target: "mgr-onprem-02" },
+          {
+            id: "drain-manager",
+            label: "Drain mgr-onprem-02",
+            primary: true,
+            target: "mgr-onprem-02",
+          },
+          {
+            id: "diagnostics",
+            label: "Pool logs for mgr-onprem-02",
+            target: "mgr-onprem-02",
+          },
         ],
       },
     ],
@@ -345,13 +531,25 @@ function draftPr(): Reply {
       {
         type: "actions",
         actions: [
-          { id: "open-delivery", label: "Open delivery record", primary: true, target: delivery.id },
-          { id: "explain", label: "Explain against today's bindings", target: delivery.id },
+          {
+            id: "open-delivery",
+            label: "Open delivery record",
+            primary: true,
+            target: delivery.id,
+          },
+          {
+            id: "explain",
+            label: "Explain against today's bindings",
+            target: delivery.id,
+          },
           { id: "open-binding", label: "Open binding", target: "pr-affected" },
         ],
       },
     ],
-    sources: ["Delivery 1a44be10 (pull_request.opened)", "Binding evaluations for that delivery"],
+    sources: [
+      "Delivery 1a44be10 (pull_request.opened)",
+      "Binding evaluations for that delivery",
+    ],
   };
 }
 
@@ -359,12 +557,20 @@ function deliveryVerdicts(deliveryId: string): Reply {
   const delivery = deliveryById(deliveryId) ?? deliveries[0];
   if (!delivery.evaluations.length)
     return {
-      blocks: [{ type: "text", text: `No bindings were evaluated: ${delivery.stages.find((stage) => stage.status === "fail")?.detail ?? delivery.outcomeLabel}.` }],
+      blocks: [
+        {
+          type: "text",
+          text: `No bindings were evaluated: ${delivery.stages.find((stage) => stage.status === "fail")?.detail ?? delivery.outcomeLabel}.`,
+        },
+      ],
       sources: ["Delivery record"],
     };
   return {
     blocks: [
-      { type: "text", text: `${delivery.evaluations.filter((e) => e.matched).length} of ${delivery.evaluations.length} bindings matched this delivery.` },
+      {
+        type: "text",
+        text: `${delivery.evaluations.filter((e) => e.matched).length} of ${delivery.evaluations.length} bindings matched this delivery.`,
+      },
       {
         type: "verdicts",
         rows: delivery.evaluations.map((evaluation) => ({
@@ -380,16 +586,30 @@ function deliveryVerdicts(deliveryId: string): Reply {
 
 function bindingToday(bindingId: string): Reply {
   const binding = bindingById(bindingId) ?? bindings[0];
-  const seen = deliveries.filter((delivery) => delivery.evaluations.some((e) => e.bindingId === binding.id));
-  const matched = seen.filter((delivery) => delivery.evaluations.find((e) => e.bindingId === binding.id)?.matched);
+  const seen = deliveries.filter((delivery) =>
+    delivery.evaluations.some((e) => e.bindingId === binding.id),
+  );
+  const matched = seen.filter(
+    (delivery) =>
+      delivery.evaluations.find((e) => e.bindingId === binding.id)?.matched,
+  );
   return {
     blocks: [
-      { type: "text", text: `**${binding.name}** saw ${seen.length} deliveries today and matched ${matched.length}.` },
+      {
+        type: "text",
+        text: `**${binding.name}** saw ${seen.length} deliveries today and matched ${matched.length}.`,
+      },
       {
         type: "verdicts",
         rows: seen.map((delivery) => {
-          const evaluation = delivery.evaluations.find((e) => e.bindingId === binding.id)!;
-          return { name: `${delivery.event} · ${delivery.ref}`, matched: evaluation.matched, reason: evaluation.reason };
+          const evaluation = delivery.evaluations.find(
+            (e) => e.bindingId === binding.id,
+          )!;
+          return {
+            name: `${delivery.event} · ${delivery.ref}`,
+            matched: evaluation.matched,
+            reason: evaluation.reason,
+          };
         }),
       },
     ],
@@ -408,7 +628,10 @@ function rejectedWebhooks(): Reply {
         type: "facts",
         rows: [
           ["Endpoint", "/webhooks/github/github-acme-legacy"],
-          ["Result", "Signature mismatch on all 12 (none missing or malformed)"],
+          [
+            "Result",
+            "Signature mismatch on all 12 (none missing or malformed)",
+          ],
           ["Last good delivery", "Yesterday 6:14 PM"],
         ],
       },
@@ -419,12 +642,23 @@ function rejectedWebhooks(): Reply {
       {
         type: "actions",
         actions: [
-          { id: "rotate-secret", label: "Rotate webhook secret", primary: true },
-          { id: "open-delivery", label: "Open rejected deliveries", target: "dlv-rej" },
+          {
+            id: "rotate-secret",
+            label: "Rotate webhook secret",
+            primary: true,
+          },
+          {
+            id: "open-delivery",
+            label: "Open rejected deliveries",
+            target: "dlv-rej",
+          },
         ],
       },
     ],
-    sources: ["Rejected delivery counters for github-acme-legacy", "Sampled rejected deliveries (headers only)"],
+    sources: [
+      "Rejected delivery counters for github-acme-legacy",
+      "Sampled rejected deliveries (headers only)",
+    ],
   };
 }
 
@@ -435,7 +669,17 @@ function liveStatus(): Reply {
         type: "text",
         text: "Run 9014 is building `api-image`: compile first, then the container image. The last 10 runs of this check took 58s to 1m 12s, so expect it in about a minute. It runs separately from the failed build, so it can pass while `oyzu / build` stays red.",
       },
-      { type: "actions", actions: [{ id: "open-run", label: "Watch live log", primary: true, target: liveRun.id }] },
+      {
+        type: "actions",
+        actions: [
+          {
+            id: "open-run",
+            label: "Watch live log",
+            primary: true,
+            target: liveRun.id,
+          },
+        ],
+      },
     ],
     sources: ["Run 9014 live log", "Durations of the last 10 api-image runs"],
   };
@@ -456,9 +700,17 @@ function explainLine(line: LogEntry): Reply {
   if (line.level === "error" && text.includes("panicked"))
     return {
       blocks: [
-        { type: "text", text: "This is where the failing test stopped. Line 88 of the test asserts that a retried refund posts one charge; the next lines show it posted two." },
+        {
+          type: "text",
+          text: "This is where the failing test stopped. Line 88 of the test asserts that a retried refund posts one charge; the next lines show it posted two.",
+        },
         cite(lineBySubstring("assertion `left == right` failed"), "Assertion"),
-        { type: "actions", actions: [{ id: "suggest-fix", label: "Suggest a fix", primary: true }] },
+        {
+          type: "actions",
+          actions: [
+            { id: "suggest-fix", label: "Suggest a fix", primary: true },
+          ],
+        },
       ],
       sources: ["Run 9012 log, attempt 2"],
     };
@@ -466,22 +718,30 @@ function explainLine(line: LogEntry): Reply {
   if (line.level === "warn")
     return {
       blocks: [
-        { type: "text", text: "A lint warning, not a failure: `retry.rs` imports `Instant` but doesn't use it. Lint still passed. Removing the import silences it." },
+        {
+          type: "text",
+          text: "A lint warning, not a failure: `retry.rs` imports `Instant` but doesn't use it. Lint still passed. Removing the import silences it.",
+        },
       ],
       sources: ["Run 9012 log, payments-core/lint"],
     };
   if (text.includes("Merge base"))
     return {
       blocks: [
-        { type: "text", text: "For pull requests the runner builds what changed since the merge base with main, not since main's tip, so other people's merges don't count as affected. 7d0b113 is where feat/refund-retries branched off." },
+        {
+          type: "text",
+          text: "For pull requests the runner builds what changed since the merge base with main, not since main's tip, so other people's merges don't count as affected. 7d0b113 is where feat/refund-retries branched off.",
+        },
       ],
       sources: ["Run 9012 operation"],
     };
   return {
     blocks: [
-      { type: "text", text: `Line ${line.seq} comes from \`${line.scope}\` (${line.stream}). Nothing in it suggests a problem. Ask me about the failure, or pick a red line to explain.` },
+      {
+        type: "text",
+        text: `Line ${line.seq} comes from \`${line.scope}\` (${line.stream}). Nothing in it suggests a problem. Ask me about the failure, or pick a red line to explain.`,
+      },
     ],
     sources: [`Run log line ${line.seq}`],
   };
 }
-

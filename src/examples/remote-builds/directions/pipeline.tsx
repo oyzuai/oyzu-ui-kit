@@ -1,4 +1,11 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Check,
   ChevronDown,
@@ -31,7 +38,11 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 import { Switch } from "../../../components/ui/switch";
-import { Dialog, DialogContent, DialogTitle } from "../../../components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "../../../components/ui/dialog";
 import { AssistantPanel, useAssistant } from "../assistant";
 import type { ActionId, AssistantContext } from "../assistant-engine";
 import { useLiveRun } from "../live";
@@ -56,7 +67,12 @@ import {
 } from "../model";
 import { actionResult, StateChip, usePrototype } from "../shared";
 import { parsePipelineHash } from "../pipeline-hash";
-import { ExecutionPage, StageStrip, TriggerIcon, triggerText } from "./pipeline-views";
+import {
+  ExecutionPage,
+  StageStrip,
+  TriggerIcon,
+  triggerText,
+} from "./pipeline-views";
 import "./pipeline.css";
 
 // Pipeline: a pipeline-execution console. Slim module rail, a dense executions
@@ -65,7 +81,13 @@ import "./pipeline.css";
 
 type Page =
   | { name: "executions" }
-  | { name: "run"; runId: string; attempt?: number; focusSeq?: number; nonce: number }
+  | {
+      name: "run";
+      runId: string;
+      attempt?: number;
+      focusSeq?: number;
+      nonce: number;
+    }
   | { name: "triggers" }
   | { name: "pools"; job?: string }
   | { name: "checks" }
@@ -80,7 +102,8 @@ const modules = [
 ] as const;
 
 function hashFor(page: Page) {
-  if (page.name === "run") return `#pipeline-run-${runs.find((r) => r.id === page.runId)?.number ?? ""}${page.attempt ? `-attempt-${page.attempt}` : ""}${page.focusSeq ? `-L${page.focusSeq}` : ""}`;
+  if (page.name === "run")
+    return `#pipeline-run-${runs.find((r) => r.id === page.runId)?.number ?? ""}${page.attempt ? `-attempt-${page.attempt}` : ""}${page.focusSeq ? `-L${page.focusSeq}` : ""}`;
   if (page.name === "executions") return "#pipeline";
   return `#pipeline-${page.name}`;
 }
@@ -92,7 +115,9 @@ function parseHash(hash: string): Page {
 }
 
 function useMedia(query: string) {
-  const [matches, setMatches] = useState(() => window.matchMedia?.(query).matches ?? false);
+  const [matches, setMatches] = useState(
+    () => window.matchMedia?.(query).matches ?? false,
+  );
   useEffect(() => {
     const media = window.matchMedia(query);
     const update = () => setMatches(media.matches);
@@ -115,11 +140,17 @@ function useLiveElapsed(elapsedMs: number, running: boolean) {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, [running]);
-  return running ? elapsedMs + Math.min(Math.max(0, now - changedAt.current), 2000) : elapsedMs;
+  return running
+    ? elapsedMs + Math.min(Math.max(0, now - changedAt.current), 2000)
+    : elapsedMs;
 }
 
 const poolOfJob = (jobId: string) =>
-  pools.find((pool) => runs.some((run) => run.attempts.some((a) => a.jobId === jobId && a.pool === pool.id)))?.id;
+  pools.find((pool) =>
+    runs.some((run) =>
+      run.attempts.some((a) => a.jobId === jobId && a.pool === pool.id),
+    ),
+  )?.id;
 
 export function Pipeline() {
   const { role } = usePrototype();
@@ -136,9 +167,11 @@ export function Pipeline() {
   const live = useLiveRun();
   const [cancelledAt, setCancelledAt] = useState<number>();
   useEffect(() => {
-    if (cancelledAt !== undefined && live.entries.length < cancelledAt) setCancelledAt(undefined);
+    if (cancelledAt !== undefined && live.entries.length < cancelledAt)
+      setCancelledAt(undefined);
   }, [live.entries.length, cancelledAt]);
-  const cancelled = cancelledAt !== undefined && live.entries.length >= cancelledAt;
+  const cancelled =
+    cancelledAt !== undefined && live.entries.length >= cancelledAt;
   const liveState: RunState = cancelled ? "cancelled" : live.state;
   const liveEntries = useMemo<LogEntry[]>(() => {
     if (!cancelled) return live.entries;
@@ -174,25 +207,51 @@ export function Pipeline() {
           const state = live.groups[g.scope] ?? g.state;
           return {
             ...g,
-            state: cancelled && state !== "succeeded" ? ("skipped" as const) : state,
+            state:
+              cancelled && state !== "succeeded" ? ("skipped" as const) : state,
             durationMs:
-              state === "succeeded" && !g.durationMs ? (g.scope === "api-image/compile" ? 26_800 : 20_700) : g.durationMs,
+              state === "succeeded" && !g.durationMs
+                ? g.scope === "api-image/compile"
+                  ? 26_800
+                  : 20_700
+                : g.durationMs,
           };
         }),
         ...(liveState === "succeeded"
-          ? [{ scope: "runner/finish", target: "runner", task: "finish", state: "succeeded" as const, durationMs: 1_100 }]
+          ? [
+              {
+                scope: "runner/finish",
+                target: "runner",
+                task: "finish",
+                state: "succeeded" as const,
+                durationMs: 1_100,
+              },
+            ]
           : []),
       ],
       outputs:
         liveState === "succeeded"
           ? [
-              { path: "dist/api-image/index.json", kind: "artifact" as const, size: 1_536, digest: "sha256:3e5a…c2d0" },
-              { path: "dist/manifest.json", kind: "manifest" as const, size: 4_096, digest: "sha256:81fa…6d13" },
+              {
+                path: "dist/api-image/index.json",
+                kind: "artifact" as const,
+                size: 1_536,
+                digest: "sha256:3e5a…c2d0",
+              },
+              {
+                path: "dist/manifest.json",
+                kind: "manifest" as const,
+                size: 4_096,
+                digest: "sha256:81fa…6d13",
+              },
             ]
           : [],
     };
   }, [live.elapsedMs, live.groups, liveState, cancelled]);
-  const runFor = useCallback((run: Run) => (run.id === liveRun.id ? liveMerged : run), [liveMerged]);
+  const runFor = useCallback(
+    (run: Run) => (run.id === liveRun.id ? liveMerged : run),
+    [liveMerged],
+  );
 
   // ---- navigation
   const navigate = useCallback((next: Page) => {
@@ -201,14 +260,16 @@ export function Pipeline() {
     if (next.name !== "run") setFocus(undefined);
     try {
       const href = hashFor(next);
-      if (window.location.hash !== href) window.history.pushState(null, "", href);
+      if (window.location.hash !== href)
+        window.history.pushState(null, "", href);
     } catch {
       /* the hash is a convenience only */
     }
   }, []);
   useEffect(() => {
     const onHash = () => {
-      if (window.location.hash.startsWith("#pipeline")) setPage(parseHash(window.location.hash));
+      if (window.location.hash.startsWith("#pipeline"))
+        setPage(parseHash(window.location.hash));
     };
     window.addEventListener("hashchange", onHash);
     window.addEventListener("popstate", onHash);
@@ -219,7 +280,13 @@ export function Pipeline() {
   }, []);
   const openRun = useCallback(
     (runId: string, opts?: { attempt?: number; focusSeq?: number }) =>
-      navigate({ name: "run", runId, attempt: opts?.attempt, focusSeq: opts?.focusSeq, nonce: ++nonce }),
+      navigate({
+        name: "run",
+        runId,
+        attempt: opts?.attempt,
+        focusSeq: opts?.focusSeq,
+        nonce: ++nonce,
+      }),
     [navigate],
   );
 
@@ -232,14 +299,17 @@ export function Pipeline() {
 
   // ---- assistant
   const context = useMemo<AssistantContext>(() => {
-    if (page.name === "run") return { kind: "run", runId: page.runId, attempt: focus?.attempt };
-    if (page.name === "triggers") return { kind: "delivery", deliveryId: "dlv-7f12" };
+    if (page.name === "run")
+      return { kind: "run", runId: page.runId, attempt: focus?.attempt };
+    if (page.name === "triggers")
+      return { kind: "delivery", deliveryId: "dlv-7f12" };
     if (page.name === "pools") return { kind: "pool", poolId: "acme-onprem" };
     return { kind: "home" };
   }, [page, focus?.attempt]);
   const contextLabel =
     page.name === "run"
-      ? (focus?.label ?? `Run #${runs.find((r) => r.id === page.runId)?.number}`)
+      ? (focus?.label ??
+        `Run #${runs.find((r) => r.id === page.runId)?.number}`)
       : page.name === "triggers"
         ? "Trigger deliveries for acme"
         : page.name === "pools"
@@ -256,8 +326,14 @@ export function Pipeline() {
     setDrawer(true);
     if (question) window.setTimeout(() => askRef.current(question), 0);
   }, []);
-  const onSelection = useCallback((attempt: number, label: string) => setFocus({ attempt, label }), []);
-  const openDiagnostics = useCallback((jobId: string) => navigate({ name: "pools", job: jobId }), [navigate]);
+  const onSelection = useCallback(
+    (attempt: number, label: string) => setFocus({ attempt, label }),
+    [],
+  );
+  const openDiagnostics = useCallback(
+    (jobId: string) => navigate({ name: "pools", job: jobId }),
+    [navigate],
+  );
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -274,7 +350,10 @@ export function Pipeline() {
   const onAction = (id: ActionId, target?: string) => {
     switch (id) {
       case "open-logs":
-        openRun(failedRun.id, { attempt: 2, focusSeq: failedLog.find((e) => e.level === "error")?.seq });
+        openRun(failedRun.id, {
+          attempt: 2,
+          focusSeq: failedLog.find((e) => e.level === "error")?.seq,
+        });
         break;
       case "open-attempt-1":
         openRun(failedRun.id, { attempt: 1 });
@@ -284,10 +363,15 @@ export function Pipeline() {
         break;
       case "diagnostics":
         if (role !== "pool-admin") {
-          assistant.note("Runner diagnostics are for pool admins. The pool's admins already see this job's pool logs.");
+          assistant.note(
+            "Runner diagnostics are for pool admins. The pool's admins already see this job's pool logs.",
+          );
           return;
         }
-        navigate({ name: "pools", job: target?.startsWith("job-") ? target : "job-5521" });
+        navigate({
+          name: "pools",
+          job: target?.startsWith("job-") ? target : "job-5521",
+        });
         break;
       case "open-delivery":
       case "open-binding":
@@ -310,7 +394,8 @@ export function Pipeline() {
   };
 
   const active = page.name === "run" ? "executions" : page.name;
-  const currentRun = page.name === "run" ? runs.find((r) => r.id === page.runId) : undefined;
+  const currentRun =
+    page.name === "run" ? runs.find((r) => r.id === page.runId) : undefined;
 
   let content;
   if (page.name === "run" && currentRun) {
@@ -319,7 +404,9 @@ export function Pipeline() {
       <ExecutionPage
         key={`${page.runId}-${page.nonce}`}
         run={run}
-        entriesFor={(attempt) => (run.id === liveRun.id ? liveEntries : logFor(run.id, attempt))}
+        entriesFor={(attempt) =>
+          run.id === liveRun.id ? liveEntries : logFor(run.id, attempt)
+        }
         liveElapsed={liveElapsed}
         initialAttempt={page.attempt}
         focusSeq={page.focusSeq}
@@ -328,7 +415,9 @@ export function Pipeline() {
         canCancel={run.id === liveRun.id}
         onCancel={() => {
           setCancelledAt(live.entries.length);
-          say("Cancelled #9014. The executor stops and the check reports cancelled.");
+          say(
+            "Cancelled #9014. The executor stops and the check reports cancelled.",
+          );
         }}
         onBack={() => navigate({ name: "executions" })}
         onToast={say}
@@ -338,11 +427,26 @@ export function Pipeline() {
         onSelection={onSelection}
       />
     );
-  } else if (page.name === "triggers") content = <TriggersPage onOpenRun={openRun} />;
-  else if (page.name === "pools") content = <PoolsPage job={page.job} onClearJob={() => navigate({ name: "pools" })} />;
+  } else if (page.name === "triggers")
+    content = <TriggersPage onOpenRun={openRun} />;
+  else if (page.name === "pools")
+    content = (
+      <PoolsPage
+        job={page.job}
+        onClearJob={() => navigate({ name: "pools" })}
+      />
+    );
   else if (page.name === "checks") content = <ChecksPage onOpenRun={openRun} />;
   else if (page.name === "settings") content = <SettingsPage />;
-  else content = <ExecutionsPage runFor={runFor} liveElapsed={liveElapsed} onOpen={openRun} onToast={say} />;
+  else
+    content = (
+      <ExecutionsPage
+        runFor={runFor}
+        liveElapsed={liveElapsed}
+        onOpen={openRun}
+        onToast={say}
+      />
+    );
 
   return (
     <div className="pl-root" data-drawer={drawer}>
@@ -363,7 +467,12 @@ export function Pipeline() {
             </button>
           );
         })}
-        <button type="button" className="pl-rail-item pl-rail-ask" aria-pressed={drawer} onClick={() => setDrawer(!drawer)}>
+        <button
+          type="button"
+          className="pl-rail-item pl-rail-ask"
+          aria-pressed={drawer}
+          onClick={() => setDrawer(!drawer)}
+        >
           <Sparkles size={18} aria-hidden="true" />
           <span>Ask</span>
         </button>
@@ -381,7 +490,10 @@ export function Pipeline() {
             aria-describedby={undefined}
             showCloseButton={false}
             onOpenAutoFocus={() => {
-              assistantOpener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+              assistantOpener.current =
+                document.activeElement instanceof HTMLElement
+                  ? document.activeElement
+                  : null;
             }}
             onCloseAutoFocus={(event) => {
               event.preventDefault();
@@ -398,19 +510,30 @@ export function Pipeline() {
             />
           </DialogContent>
         </Dialog>
-      ) : <aside className="pl-drawer" data-open={drawer} inert={!drawer} aria-hidden={!drawer}>
-        <AssistantPanel
-          contextLabel={contextLabel}
-          assistant={assistant}
-          onCite={onCite}
-          onAction={onAction}
-          onClose={() => setDrawer(false)}
-        />
-      </aside>}
+      ) : (
+        <aside
+          className="pl-drawer"
+          data-open={drawer}
+          inert={!drawer}
+          aria-hidden={!drawer}
+        >
+          <AssistantPanel
+            contextLabel={contextLabel}
+            assistant={assistant}
+            onCite={onCite}
+            onAction={onAction}
+            onClose={() => setDrawer(false)}
+          />
+        </aside>
+      )}
       {toast && (
         <p className="pl-toast" role="status">
           <Check size={14} aria-hidden="true" /> {toast}
-          <button type="button" aria-label="Dismiss" onClick={() => setToast(undefined)}>
+          <button
+            type="button"
+            aria-label="Dismiss"
+            onClick={() => setToast(undefined)}
+          >
             <X size={13} />
           </button>
         </p>
@@ -425,7 +548,11 @@ function ProjectPicker() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" className="pl-project" aria-label="Project: acme / payments">
+        <button
+          type="button"
+          className="pl-project"
+          aria-label="Project: acme / payments"
+        >
           <span className="pl-project-badge" aria-hidden="true">
             pa
           </span>
@@ -448,7 +575,15 @@ function ProjectPicker() {
   );
 }
 
-function PageHeader({ crumbs, title, sub }: { crumbs: string[]; title: string; sub?: string }) {
+function PageHeader({
+  crumbs,
+  title,
+  sub,
+}: {
+  crumbs: string[];
+  title: string;
+  sub?: string;
+}) {
   return (
     <header className="pl-head">
       <nav className="pl-crumbs" aria-label="Breadcrumb">
@@ -478,8 +613,10 @@ type StatusFilter = (typeof statusFilters)[number]["id"];
 
 function matchesStatus(run: Run, filter: StatusFilter) {
   if (filter === "all") return true;
-  if (filter === "failed") return run.state === "failed" || run.state === "timed_out";
-  if (filter === "running") return run.state === "running" || run.state === "queued";
+  if (filter === "failed")
+    return run.state === "failed" || run.state === "timed_out";
+  if (filter === "running")
+    return run.state === "running" || run.state === "queued";
   if (filter === "succeeded") return run.state === "succeeded";
   return run.state === "cancelled" || run.state === "skipped";
 }
@@ -504,25 +641,44 @@ function ExecutionsPage({
     (run) =>
       matchesStatus(run, status) &&
       (trigger === "all" || run.trigger === trigger) &&
-      (!q || `${run.number} ${run.title} ${run.ref} ${run.author} ${run.command} ${run.commit.slice(0, 7)}`.toLowerCase().includes(q)),
+      (!q ||
+        `${run.number} ${run.title} ${run.ref} ${run.author} ${run.command} ${run.commit.slice(0, 7)}`
+          .toLowerCase()
+          .includes(q)),
   );
   return (
     <>
-      <PageHeader crumbs={["acme", "payments", "Builds"]} title="Executions" sub="Every oyzu operation the project ran, newest first." />
+      <PageHeader
+        crumbs={["acme", "payments", "Builds"]}
+        title="Executions"
+        sub="Every oyzu operation the project ran, newest first."
+      />
       <div className="pl-filters">
         <div className="pl-chips" role="group" aria-label="Status">
           {statusFilters.map((f) => {
             const count = all.filter((run) => matchesStatus(run, f.id)).length;
             return (
-              <button key={f.id} type="button" aria-pressed={status === f.id} onClick={() => setStatus(f.id)}>
+              <button
+                key={f.id}
+                type="button"
+                aria-pressed={status === f.id}
+                onClick={() => setStatus(f.id)}
+              >
                 {f.label} <span>{count}</span>
               </button>
             );
           })}
         </div>
         <div className="pl-filter-tools">
-          <Select value={trigger} onValueChange={(value) => setTrigger(value as typeof trigger)}>
-            <SelectTrigger size="sm" aria-label="Trigger type" className="pl-select">
+          <Select
+            value={trigger}
+            onValueChange={(value) => setTrigger(value as typeof trigger)}
+          >
+            <SelectTrigger
+              size="sm"
+              aria-label="Trigger type"
+              className="pl-select"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -557,7 +713,9 @@ function ExecutionsPage({
             <span className="sr-only">Actions</span>
           </span>
         </div>
-        {shown.length === 0 && <p className="pl-empty">No executions match these filters.</p>}
+        {shown.length === 0 && (
+          <p className="pl-empty">No executions match these filters.</p>
+        )}
         {shown.map((run) => (
           <div
             key={run.id}
@@ -565,7 +723,8 @@ function ExecutionsPage({
             role="row"
             data-state={run.state}
             onClick={(event) => {
-              if ((event.target as HTMLElement).closest("button, [role=menu]")) return;
+              if ((event.target as HTMLElement).closest("button, [role=menu]"))
+                return;
               onOpen(run.id);
             }}
           >
@@ -573,7 +732,11 @@ function ExecutionsPage({
               <StateChip state={run.state} size="sm" />
             </span>
             <span role="cell" className="pl-td-title">
-              <button type="button" className="pl-row-link" onClick={() => onOpen(run.id)}>
+              <button
+                type="button"
+                className="pl-row-link"
+                onClick={() => onOpen(run.id)}
+              >
                 {run.title}
               </button>
               <small>
@@ -596,30 +759,46 @@ function ExecutionsPage({
               <StageStrip run={run} />
             </span>
             <span role="cell" className="pl-td-duration">
-              {run.state === "running" ? duration(liveElapsed) : duration(run.durationMs)}
+              {run.state === "running"
+                ? duration(liveElapsed)
+                : duration(run.durationMs)}
               <small>{clock(run.createdAt)}</small>
             </span>
             <span role="cell" className="pl-td-menu">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon-sm" aria-label={`Actions for #${run.number}`}>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label={`Actions for #${run.number}`}
+                  >
                     <EllipsisVertical />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="pl-menu">
-                  <DropdownMenuItem onSelect={() => onToast(`Queued a new attempt of #${run.number} on ${run.commit.slice(0, 7)}.`)}>
+                  <DropdownMenuItem
+                    onSelect={() =>
+                      onToast(
+                        `Queued a new attempt of #${run.number} on ${run.commit.slice(0, 7)}.`,
+                      )
+                    }
+                  >
                     <RotateCcw /> Re-run
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onSelect={() => {
-                      navigator.clipboard?.writeText(run.command).catch(() => undefined);
+                      navigator.clipboard
+                        ?.writeText(run.command)
+                        .catch(() => undefined);
                       onToast(`Copied ${run.command}`);
                     }}
                   >
                     <Copy /> Copy command
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={() => onOpen(run.id)}>Open execution</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => onOpen(run.id)}>
+                    Open execution
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </span>
@@ -643,18 +822,33 @@ function bindingKind(filters: string[]) {
 
 function verdict(delivery: Delivery) {
   const matched = delivery.evaluations.filter((e) => e.matched).length;
-  if (delivery.outcome === "rejected") return { tone: "failed" as const, text: "Rejected" };
-  if (delivery.outcome === "unregistered") return { tone: "warning" as const, text: "Not registered" };
-  if (!matched) return { tone: "skipped" as const, text: `0 of ${delivery.evaluations.length} matched` };
-  return { tone: "succeeded" as const, text: `${matched} of ${delivery.evaluations.length} matched` };
+  if (delivery.outcome === "rejected")
+    return { tone: "failed" as const, text: "Rejected" };
+  if (delivery.outcome === "unregistered")
+    return { tone: "warning" as const, text: "Not registered" };
+  if (!matched)
+    return {
+      tone: "skipped" as const,
+      text: `0 of ${delivery.evaluations.length} matched`,
+    };
+  return {
+    tone: "succeeded" as const,
+    text: `${matched} of ${delivery.evaluations.length} matched`,
+  };
 }
 
 function TriggersPage({ onOpenRun }: { onOpenRun: (runId: string) => void }) {
-  const [enabled, setEnabled] = useState<Record<string, boolean>>(() => Object.fromEntries(bindings.map((b) => [b.id, b.enabled])));
+  const [enabled, setEnabled] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(bindings.map((b) => [b.id, b.enabled])),
+  );
   const [open, setOpen] = useState<string>();
   return (
     <>
-      <PageHeader crumbs={["acme", "payments", "Triggers"]} title="Triggers" sub="Which events start which oyzu commands, and what each recent delivery matched." />
+      <PageHeader
+        crumbs={["acme", "payments", "Triggers"]}
+        title="Triggers"
+        sub="Which events start which oyzu commands, and what each recent delivery matched."
+      />
       <section className="pl-card">
         <h2 className="pl-card-title">Trigger bindings</h2>
         <table className="pl-grid">
@@ -688,7 +882,9 @@ function TriggersPage({ onOpenRun }: { onOpenRun: (runId: string) => void }) {
                 <td>
                   <Switch
                     checked={enabled[b.id]}
-                    onCheckedChange={(value) => setEnabled((current) => ({ ...current, [b.id]: value }))}
+                    onCheckedChange={(value) =>
+                      setEnabled((current) => ({ ...current, [b.id]: value }))
+                    }
                     aria-label={`Enable ${b.name}`}
                   />
                 </td>
@@ -714,7 +910,11 @@ function TriggersPage({ onOpenRun }: { onOpenRun: (runId: string) => void }) {
               const expanded = open === d.id;
               return (
                 <Fragment key={d.id}>
-                  <tr className="pl-clickable" aria-expanded={expanded} onClick={() => setOpen(expanded ? undefined : d.id)}>
+                  <tr
+                    className="pl-clickable"
+                    aria-expanded={expanded}
+                    onClick={() => setOpen(expanded ? undefined : d.id)}
+                  >
                     <td>
                       <strong>{clock(d.receivedAt)}</strong>
                       <small>{ago(d.receivedAt)}</small>
@@ -722,7 +922,8 @@ function TriggersPage({ onOpenRun }: { onOpenRun: (runId: string) => void }) {
                     <td>
                       <strong>{d.event}</strong>
                       <small>
-                        {d.repository} · {d.pr ? `#${d.pr.number}` : d.ref} · {d.actor}
+                        {d.repository} · {d.pr ? `#${d.pr.number}` : d.ref} ·{" "}
+                        {d.actor}
                       </small>
                     </td>
                     <td>
@@ -737,20 +938,35 @@ function TriggersPage({ onOpenRun }: { onOpenRun: (runId: string) => void }) {
                           <ul className="pl-verdicts">
                             {d.evaluations.map((e) => (
                               <li key={e.bindingId} data-matched={e.matched}>
-                                <span className="pl-verdict">{e.matched ? "Matched" : "No match"}</span>
-                                <strong>{bindings.find((b) => b.id === e.bindingId)?.name}</strong>
+                                <span className="pl-verdict">
+                                  {e.matched ? "Matched" : "No match"}
+                                </span>
+                                <strong>
+                                  {
+                                    bindings.find((b) => b.id === e.bindingId)
+                                      ?.name
+                                  }
+                                </strong>
                                 <small>{e.reason}</small>
                               </li>
                             ))}
                           </ul>
                         ) : (
-                          <p className="pl-muted">{d.stages.find((s) => s.status === "fail")?.detail ?? "Not evaluated."}</p>
+                          <p className="pl-muted">
+                            {d.stages.find((s) => s.status === "fail")
+                              ?.detail ?? "Not evaluated."}
+                          </p>
                         )}
                         {d.runIds.length > 0 && (
                           <p className="pl-runlinks">
                             Started:{" "}
                             {d.runIds.map((id) => (
-                              <button key={id} type="button" className="pl-link" onClick={() => onOpenRun(id)}>
+                              <button
+                                key={id}
+                                type="button"
+                                className="pl-link"
+                                onClick={() => onOpenRun(id)}
+                              >
                                 #{runs.find((r) => r.id === id)?.number}
                               </button>
                             ))}
@@ -771,7 +987,13 @@ function TriggersPage({ onOpenRun }: { onOpenRun: (runId: string) => void }) {
 
 // ---------------------------------------------------------------- pools
 
-function PoolsPage({ job, onClearJob }: { job?: string; onClearJob: () => void }) {
+function PoolsPage({
+  job,
+  onClearJob,
+}: {
+  job?: string;
+  onClearJob: () => void;
+}) {
   const { role } = usePrototype();
   if (role !== "pool-admin")
     return (
@@ -781,7 +1003,10 @@ function PoolsPage({ job, onClearJob }: { job?: string; onClearJob: () => void }
           <Server size={18} aria-hidden="true" />
           <div>
             <strong>Pools are managed by pool admins</strong>
-            <p>Your runs use Hosted Linux and Acme on-prem. Ask a pool admin if a run seems stuck waiting for a runner.</p>
+            <p>
+              Your runs use Hosted Linux and Acme on-prem. Ask a pool admin if a
+              run seems stuck waiting for a runner.
+            </p>
           </div>
         </div>
       </>
@@ -790,7 +1015,11 @@ function PoolsPage({ job, onClearJob }: { job?: string; onClearJob: () => void }
   const jobPool = job ? poolOfJob(job) : undefined;
   return (
     <>
-      <PageHeader crumbs={["acme", "payments", "Pools"]} title="Pools" sub="Where runs execute. Visible to pool admins only." />
+      <PageHeader
+        crumbs={["acme", "payments", "Pools"]}
+        title="Pools"
+        sub="Where runs execute. Visible to pool admins only."
+      />
       {job && (
         <section className="pl-card">
           <div className="pl-card-row">
@@ -799,7 +1028,10 @@ function PoolsPage({ job, onClearJob }: { job?: string; onClearJob: () => void }
               <X /> Close
             </Button>
           </div>
-          <p className="pl-muted">Pool {pools.find((p) => p.id === jobPool)?.name ?? "unknown"} · manager events for this job</p>
+          <p className="pl-muted">
+            Pool {pools.find((p) => p.id === jobPool)?.name ?? "unknown"} ·
+            manager events for this job
+          </p>
           <ol className="pl-poollog">
             {logs.map((l, index) => (
               <li key={index} data-level={l.level}>
@@ -813,13 +1045,19 @@ function PoolsPage({ job, onClearJob }: { job?: string; onClearJob: () => void }
                 </small>
               </li>
             ))}
-            {logs.length === 0 && <li>No pool log events for this job in the preview.</li>}
+            {logs.length === 0 && (
+              <li>No pool log events for this job in the preview.</li>
+            )}
           </ol>
         </section>
       )}
       <div className="pl-pools">
         {pools.map((pool) => (
-          <section key={pool.id} className="pl-card pl-pool" data-highlight={pool.id === jobPool || undefined}>
+          <section
+            key={pool.id}
+            className="pl-card pl-pool"
+            data-highlight={pool.id === jobPool || undefined}
+          >
             <div className="pl-card-row">
               <div>
                 <h2 className="pl-card-title">{pool.name}</h2>
@@ -829,8 +1067,13 @@ function PoolsPage({ job, onClearJob }: { job?: string; onClearJob: () => void }
               </div>
               <StateChip state={pool.status} size="sm" />
             </div>
-            <div className="pl-meter" aria-label={`${pool.busy} of ${pool.capacity} busy`}>
-              <span style={{ width: `${(pool.busy / pool.capacity) * 100}%` }} />
+            <div
+              className="pl-meter"
+              aria-label={`${pool.busy} of ${pool.capacity} busy`}
+            >
+              <span
+                style={{ width: `${(pool.busy / pool.capacity) * 100}%` }}
+              />
             </div>
             <p className="pl-muted">
               {pool.busy}/{pool.capacity} busy · {pool.queued} queued
@@ -856,12 +1099,20 @@ function PoolsPage({ job, onClearJob }: { job?: string; onClearJob: () => void }
 function ChecksPage({ onOpenRun }: { onOpenRun: (runId: string) => void }) {
   return (
     <>
-      <PageHeader crumbs={["acme", "payments", "Checks"]} title="Checks on 9c41e2a" sub="What pull request #482 shows on GitHub." />
+      <PageHeader
+        crumbs={["acme", "payments", "Checks"]}
+        title="Checks on 9c41e2a"
+        sub="What pull request #482 shows on GitHub."
+      />
       <section className="pl-card">
         <table className="pl-grid">
           <tbody>
             {checks.map((c) => (
-              <tr key={c.name} className={c.runId ? "pl-clickable" : undefined} onClick={() => c.runId && onOpenRun(c.runId)}>
+              <tr
+                key={c.name}
+                className={c.runId ? "pl-clickable" : undefined}
+                onClick={() => c.runId && onOpenRun(c.runId)}
+              >
                 <td>
                   <StateChip state={c.conclusion} size="sm" />
                 </td>
@@ -869,7 +1120,9 @@ function ChecksPage({ onOpenRun }: { onOpenRun: (runId: string) => void }) {
                   <strong>{c.name}</strong>
                   <small>{c.summary}</small>
                 </td>
-                <td className="pl-hide-sm">{c.required ? "Required" : "Optional"}</td>
+                <td className="pl-hide-sm">
+                  {c.required ? "Required" : "Optional"}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -887,7 +1140,9 @@ function SettingsPage() {
         <Settings size={18} aria-hidden="true" />
         <div>
           <strong>Project settings aren't part of this study</strong>
-          <p>The pipeline direction focuses on executions, triggers and pools.</p>
+          <p>
+            The pipeline direction focuses on executions, triggers and pools.
+          </p>
         </div>
       </div>
     </>

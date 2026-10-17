@@ -148,7 +148,9 @@ export function AccessAssignments() {
   const [selected, setSelected] = useState<string | null>(() =>
     new URLSearchParams(window.location.hash.split("?")[1]).get("assignment"),
   );
-  const [creating, setCreating] = useState(() => new URLSearchParams(location.hash.split("?")[1]).has("recipient"));
+  const [creating, setCreating] = useState(() =>
+    new URLSearchParams(location.hash.split("?")[1]).has("recipient"),
+  );
   const [explaining, setExplaining] = useState(false);
   const [confirmRevoke, setConfirmRevoke] = useState(false);
   const [reviewMode, setReviewMode] = useState("success");
@@ -828,7 +830,12 @@ function AssignmentComposer({
   onCreate: (items: Omit<Assignment, "id" | "events">[]) => void;
 }) {
   const { principals, roles, targets } = useCatalog();
-  const [recipients, setRecipients] = useState<string[]>(() => { const id = new URLSearchParams(location.hash.split("?")[1]).get("recipient"); return id && principals.some(p => p.id === id) ? [id] : []; }),
+  const [recipients, setRecipients] = useState<string[]>(() => {
+      const id = new URLSearchParams(location.hash.split("?")[1]).get(
+        "recipient",
+      );
+      return id && principals.some((p) => p.id === id) ? [id] : [];
+    }),
     [role, setRole] = useState(""),
     [target, setTarget] = useState(""),
     [search, setSearch] = useState(""),

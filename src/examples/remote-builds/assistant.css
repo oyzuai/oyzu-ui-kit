@@ -59,7 +59,9 @@ html.dark .as-messages {
   font-size: 13px;
   line-height: 1.55;
 }
-.as-empty svg { color: var(--as-accent); }
+.as-empty svg {
+  color: var(--as-accent);
+}
 
 .as-messages {
   --as-accent: var(--oyzu-deep-blue, #0a1dbb);
@@ -100,7 +102,9 @@ html.dark .as-messages {
   font-size: 13.5px;
   line-height: 1.55;
 }
-.as-text { margin: 0; }
+.as-text {
+  margin: 0;
+}
 .as-text code,
 .as-user code {
   font-family: ui-monospace, Menlo, Consolas, monospace;
@@ -117,7 +121,10 @@ html.dark .as-messages {
   color: var(--muted-foreground);
   font-size: 12.5px;
 }
-.as-dots { display: inline-flex; gap: 3px; }
+.as-dots {
+  display: inline-flex;
+  gap: 3px;
+}
 .as-dots i {
   width: 5px;
   height: 5px;
@@ -125,9 +132,18 @@ html.dark .as-messages {
   background: var(--as-accent);
   animation: as-dot 1s ease-in-out infinite;
 }
-.as-dots i:nth-child(2) { animation-delay: 0.15s; }
-.as-dots i:nth-child(3) { animation-delay: 0.3s; }
-@keyframes as-dot { 50% { opacity: 0.25; transform: translateY(-2px); } }
+.as-dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.as-dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes as-dot {
+  50% {
+    opacity: 0.25;
+    transform: translateY(-2px);
+  }
+}
 
 .as-cite {
   display: grid;
@@ -140,7 +156,9 @@ html.dark .as-messages {
   background: var(--background);
   min-width: 0;
 }
-.as-cite:hover { border-color: var(--as-accent); }
+.as-cite:hover {
+  border-color: var(--as-accent);
+}
 .as-cite span {
   display: flex;
   align-items: center;
@@ -165,15 +183,24 @@ html.dark .as-messages {
   background: var(--composition-ink, #06144d);
   color: #e8edff;
 }
-html.dark .as-command { background: #0b1220; }
+html.dark .as-command {
+  background: #0b1220;
+}
 .as-command code {
   font-family: ui-monospace, Menlo, Consolas, monospace;
   font-size: 12px;
   overflow-x: auto;
   white-space: nowrap;
 }
-.as-command button { color: #a9c8ff; padding: 2px; }
-.as-command small { grid-column: 1 / -1; color: #a9b6d8; font-size: 11px; }
+.as-command button {
+  color: #a9c8ff;
+  padding: 2px;
+}
+.as-command small {
+  grid-column: 1 / -1;
+  color: #a9b6d8;
+  font-size: 11px;
+}
 .as-facts {
   display: grid;
   gap: 1px;
@@ -191,8 +218,13 @@ html.dark .as-command { background: #0b1220; }
   background: var(--background);
   font-size: 12.5px;
 }
-.as-facts dt { color: var(--muted-foreground); }
-.as-facts dd { margin: 0; overflow-wrap: anywhere; }
+.as-facts dt {
+  color: var(--muted-foreground);
+}
+.as-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
 .as-verdicts {
   display: grid;
   gap: 6px;
@@ -206,10 +238,20 @@ html.dark .as-command { background: #0b1220; }
   gap: 8px;
   font-size: 12.5px;
 }
-.as-verdicts li > svg { margin-top: 3px; color: var(--muted-foreground); }
-.as-verdicts li[data-matched="true"] > svg { color: var(--text-success, #196442); }
-.as-verdicts span { display: grid; }
-.as-verdicts small { color: var(--muted-foreground); font-size: 12px; }
+.as-verdicts li > svg {
+  margin-top: 3px;
+  color: var(--muted-foreground);
+}
+.as-verdicts li[data-matched="true"] > svg {
+  color: var(--text-success, #196442);
+}
+.as-verdicts span {
+  display: grid;
+}
+.as-verdicts small {
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
 .as-diff {
   margin: 0;
   border: 1px solid var(--border);
@@ -218,7 +260,11 @@ html.dark .as-command { background: #0b1220; }
 }
 .as-diff figcaption {
   padding: 5px 10px;
-  font: 11.5px ui-monospace, Menlo, Consolas, monospace;
+  font:
+    11.5px ui-monospace,
+    Menlo,
+    Consolas,
+    monospace;
   background: var(--surface-muted, #ecece6);
   color: var(--muted-foreground);
 }
@@ -226,16 +272,43 @@ html.dark .as-command { background: #0b1220; }
   margin: 0;
   padding: 6px 0;
   overflow-x: auto;
-  font: 12px/1.6 ui-monospace, Menlo, Consolas, monospace;
+  font:
+    12px/1.6 ui-monospace,
+    Menlo,
+    Consolas,
+    monospace;
   background: var(--background);
 }
-.as-diff span { display: block; padding: 0 10px; white-space: pre; }
-.as-diff [data-kind="-"] { background: #fdecea; color: #8c1d18; }
-.as-diff [data-kind="+"] { background: #e6f4ea; color: #155c33; }
-html.dark .as-diff [data-kind="-"] { background: #42282a; color: #ffb4ab; }
-html.dark .as-diff [data-kind="+"] { background: #193a2d; color: #91d9b4; }
-.as-actions { display: grid; gap: 8px; }
-.as-action-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.as-diff span {
+  display: block;
+  padding: 0 10px;
+  white-space: pre;
+}
+.as-diff [data-kind="-"] {
+  background: #fdecea;
+  color: #8c1d18;
+}
+.as-diff [data-kind="+"] {
+  background: #e6f4ea;
+  color: #155c33;
+}
+html.dark .as-diff [data-kind="-"] {
+  background: #42282a;
+  color: #ffb4ab;
+}
+html.dark .as-diff [data-kind="+"] {
+  background: #193a2d;
+  color: #91d9b4;
+}
+.as-actions {
+  display: grid;
+  gap: 8px;
+}
+.as-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 .as-confirm {
   display: grid;
   gap: 8px;
@@ -245,8 +318,13 @@ html.dark .as-diff [data-kind="+"] { background: #193a2d; color: #91d9b4; }
   background: var(--as-accent-soft);
   font-size: 12.5px;
 }
-.as-confirm p { margin: 0; }
-.as-confirm div { display: flex; gap: 6px; }
+.as-confirm p {
+  margin: 0;
+}
+.as-confirm div {
+  display: flex;
+  gap: 6px;
+}
 .as-sources button {
   display: inline-flex;
   align-items: center;
@@ -283,7 +361,10 @@ html.dark .as-diff [data-kind="+"] { background: #193a2d; color: #91d9b4; }
   font-size: 12px;
   white-space: nowrap;
 }
-.as-suggestions button:hover { border-color: var(--as-accent, #0a1dbb); color: var(--as-accent, #0a1dbb); }
+.as-suggestions button:hover {
+  border-color: var(--as-accent, #0a1dbb);
+  color: var(--as-accent, #0a1dbb);
+}
 .as-composer form {
   display: flex;
   align-items: flex-end;
@@ -293,7 +374,10 @@ html.dark .as-diff [data-kind="+"] { background: #193a2d; color: #91d9b4; }
   border-radius: var(--radius);
   background: var(--background);
 }
-.as-composer form:focus-within { border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring), transparent 75%); }
+.as-composer form:focus-within {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring), transparent 75%);
+}
 .as-composer textarea {
   flex: 1;
   min-width: 0;
@@ -317,5 +401,7 @@ html.dark .as-diff [data-kind="+"] { background: #193a2d; color: #91d9b4; }
   color: var(--muted-foreground);
 }
 @media (prefers-reduced-motion: reduce) {
-  .as-dots i { animation: none; }
+  .as-dots i {
+    animation: none;
+  }
 }

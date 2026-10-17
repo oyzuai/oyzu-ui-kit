@@ -21,7 +21,10 @@ import {
 
 export type Look = "terminal" | "summary";
 export type PrototypeContextValue = { role: Role; look: Look };
-export const PrototypeContext = createContext<PrototypeContextValue>({ role: "member", look: "summary" });
+export const PrototypeContext = createContext<PrototypeContextValue>({
+  role: "member",
+  look: "summary",
+});
 export const usePrototype = () => useContext(PrototypeContext);
 
 const icons = {
@@ -62,14 +65,31 @@ export function StateChip({
   size?: "sm" | "md";
 }) {
   const Icon = icons[state as keyof typeof icons] ?? CircleDashed;
-  const text =
-    label ??
-    statusWord(state as RunState);
+  const text = label ?? statusWord(state as RunState);
   return (
     <span className={`rb-chip rb-chip-${size}`} data-state={state}>
-      <Icon size={size === "sm" ? 11 : 13} aria-hidden="true" className={state === "running" || state === "in_progress" ? "animate-spin" : undefined} />
+      <Icon
+        size={size === "sm" ? 11 : 13}
+        aria-hidden="true"
+        className={
+          state === "running" || state === "in_progress"
+            ? "animate-spin"
+            : undefined
+        }
+      />
       {text}
-      {label === undefined && <span className="sr-only"> ({state in stateLabel ? stateLabel[state as RunState] : state in checkLabels ? checkLabels[state as CheckConclusion] : state})</span>}
+      {label === undefined && (
+        <span className="sr-only">
+          {" "}
+          (
+          {state in stateLabel
+            ? stateLabel[state as RunState]
+            : state in checkLabels
+              ? checkLabels[state as CheckConclusion]
+              : state}
+          )
+        </span>
+      )}
     </span>
   );
 }

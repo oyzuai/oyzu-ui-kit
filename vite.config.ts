@@ -9,7 +9,9 @@ export default defineConfig({
       // The remote builds design study is a second page beside the playground.
       input: {
         main: fileURLToPath(new URL("./index.html", import.meta.url)),
-        "remote-builds": fileURLToPath(new URL("./remote-builds.html", import.meta.url)),
+        "remote-builds": fileURLToPath(
+          new URL("./remote-builds.html", import.meta.url),
+        ),
       },
     },
   },

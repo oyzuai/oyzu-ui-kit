@@ -1,4 +1,12 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  Fragment,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import {
   ArrowDown,
   CheckCircle2,
@@ -30,7 +38,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../../components/ui/tooltip";
-import { duration, type GroupState, type LogEntry, type LogGroup, type Role, type Run, stripAnsiText } from "./model";
+import {
+  duration,
+  type GroupState,
+  type LogEntry,
+  type LogGroup,
+  type Role,
+  type Run,
+  stripAnsiText,
+} from "./model";
 import { RunDigest } from "./run-digest";
 import { usePrototype } from "./shared";
 import "./log-viewer.css";
@@ -39,15 +55,40 @@ import "./log-viewer.css";
 // target and task, opens on the first error, follows live output, renders ANSI
 // colour and masked values, and links lines by permalink.
 
-export function GroupIcon({ state, size = 14 }: { state: GroupState; size?: number }) {
-  if (state === "succeeded") return <CheckCircle2 size={size} className="lv-ok" aria-label="Succeeded" />;
-  if (state === "failed") return <XCircle size={size} className="lv-bad" aria-label="Failed" />;
-  if (state === "running") return <LoaderCircle size={size} className="lv-run animate-spin" aria-label="Running" />;
-  if (state === "skipped") return <CircleMinus size={size} className="lv-mute" aria-label="Skipped" />;
+export function GroupIcon({
+  state,
+  size = 14,
+}: {
+  state: GroupState;
+  size?: number;
+}) {
+  if (state === "succeeded")
+    return (
+      <CheckCircle2 size={size} className="lv-ok" aria-label="Succeeded" />
+    );
+  if (state === "failed")
+    return <XCircle size={size} className="lv-bad" aria-label="Failed" />;
+  if (state === "running")
+    return (
+      <LoaderCircle
+        size={size}
+        className="lv-run animate-spin"
+        aria-label="Running"
+      />
+    );
+  if (state === "skipped")
+    return <CircleMinus size={size} className="lv-mute" aria-label="Skipped" />;
   return <CircleDashed size={size} className="lv-mute" aria-label="Queued" />;
 }
 
-const sgr: Record<string, string> = { "1": "lv-b", "2": "lv-dim", "31": "lv-red", "32": "lv-green", "33": "lv-yellow", "36": "lv-cyan" };
+const sgr: Record<string, string> = {
+  "1": "lv-b",
+  "2": "lv-dim",
+  "31": "lv-red",
+  "32": "lv-green",
+  "33": "lv-yellow",
+  "36": "lv-cyan",
+};
 
 /** ANSI SGR spans, then masked-value chips and file:line links inside each span. */
 export function LogText({ text, commit }: { text: string; commit?: string }) {
@@ -62,33 +103,42 @@ export function LogText({ text, commit }: { text: string; commit?: string }) {
       return;
     }
     if (!chunk) return;
-    const inner = chunk.split(/(\*\*\*|(?:crates|src)\/[\w\-./]+\.rs:\d+(?::\d+)?)/).map((piece, i) => {
-      if (piece === "***")
-        return (
-          <Tooltip key={i}>
-            <TooltipTrigger asChild>
-              <span className="lv-mask" tabIndex={0} aria-label="Masked secret">
-                <EyeOff size={10} aria-hidden="true" />
-                ***
-              </span>
-            </TooltipTrigger>
-            <TooltipContent>A secret was masked by the runner before this line left the executor</TooltipContent>
-          </Tooltip>
-        );
-      if (i % 2 === 1)
-        return (
-          <a
-            key={i}
-            className="lv-file"
-            href={`https://github.com/acme/payments-api/blob/${commit ?? "main"}/${piece.replace(/:(\d+)(?::\d+)?$/, "#L$1")}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {piece}
-          </a>
-        );
-      return <Fragment key={i}>{piece}</Fragment>;
-    });
+    const inner = chunk
+      .split(/(\*\*\*|(?:crates|src)\/[\w\-./]+\.rs:\d+(?::\d+)?)/)
+      .map((piece, i) => {
+        if (piece === "***")
+          return (
+            <Tooltip key={i}>
+              <TooltipTrigger asChild>
+                <span
+                  className="lv-mask"
+                  tabIndex={0}
+                  aria-label="Masked secret"
+                >
+                  <EyeOff size={10} aria-hidden="true" />
+                  ***
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                A secret was masked by the runner before this line left the
+                executor
+              </TooltipContent>
+            </Tooltip>
+          );
+        if (i % 2 === 1)
+          return (
+            <a
+              key={i}
+              className="lv-file"
+              href={`https://github.com/acme/payments-api/blob/${commit ?? "main"}/${piece.replace(/:(\d+)(?::\d+)?$/, "#L$1")}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {piece}
+            </a>
+          );
+        return <Fragment key={i}>{piece}</Fragment>;
+      });
     parts.push(
       <span key={index} className={classes.join(" ") || undefined}>
         {inner}
@@ -97,7 +147,6 @@ export function LogText({ text, commit }: { text: string; commit?: string }) {
   });
   return <>{parts}</>;
 }
-
 
 function stamp(ms: number) {
   const s = ms / 1000;
@@ -166,18 +215,26 @@ export function LogViewer({
     () =>
       groups
         .map((group) => ({ group, lines: byScope.get(group.scope) ?? [] }))
-        .filter((section) => section.lines.length || section.group.state !== "queued" || live),
+        .filter(
+          (section) =>
+            section.lines.length || section.group.state !== "queued" || live,
+        ),
     [groups, byScope, live],
   );
   const firstError = entries.find((entry) => entry.level === "error");
   const matches = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
-    return entries.filter((entry) => stripAnsiText(entry.text).toLowerCase().includes(q)).map((entry) => entry.seq);
+    return entries
+      .filter((entry) => stripAnsiText(entry.text).toLowerCase().includes(q))
+      .map((entry) => entry.seq);
   }, [entries, query]);
 
   const isOpen = (group: LogGroup) =>
-    open[group.scope] ?? (group.state === "failed" || group.state === "running" || (live && group.state !== "succeeded"));
+    open[group.scope] ??
+    (group.state === "failed" ||
+      group.state === "running" ||
+      (live && group.state !== "succeeded"));
 
   function reveal(seq: number, behavior: ScrollBehavior = "smooth") {
     const entry = entries.find((item) => item.seq === seq);
@@ -186,9 +243,12 @@ export function LogViewer({
     setSelected(seq);
     setFollowing(false);
     window.requestAnimationFrame(() => {
-      const row = scroller.current?.querySelector<HTMLElement>(`[data-seq="${seq}"]`);
+      const row = scroller.current?.querySelector<HTMLElement>(
+        `[data-seq="${seq}"]`,
+      );
       const pane = scroller.current;
-      if (row && pane) pane.scrollTo({ top: row.offsetTop - pane.clientHeight / 3, behavior });
+      if (row && pane)
+        pane.scrollTo({ top: row.offsetTop - pane.clientHeight / 3, behavior });
     });
   }
 
@@ -244,11 +304,15 @@ export function LogViewer({
       }}
     />
   );
-  if (summary && !logOpen) return <TooltipProvider delayDuration={150}>{digest}</TooltipProvider>;
+  if (summary && !logOpen)
+    return <TooltipProvider delayDuration={150}>{digest}</TooltipProvider>;
   return (
     <TooltipProvider delayDuration={150}>
       {digest}
-      <div className={"log-viewer" + (compact || summary ? " is-compact" : "")} style={{ "--lv-height": height } as CSSProperties}>
+      <div
+        className={"log-viewer" + (compact || summary ? " is-compact" : "")}
+        style={{ "--lv-height": height } as CSSProperties}
+      >
         {!compact && !summary && (
           <nav className="lv-rail" aria-label="Targets and tasks">
             <strong>Targets and tasks</strong>
@@ -267,10 +331,14 @@ export function LogViewer({
                 >
                   <GroupIcon state={group.state} />
                   <span className="lv-rail-name">
-                    {group.target === "runner" ? `runner ${group.task}` : group.scope}
+                    {group.target === "runner"
+                      ? `runner ${group.task}`
+                      : group.scope}
                   </span>
                   <span className="lv-rail-meta">
-                    {group.state === "running" ? "live" : duration(group.durationMs)}
+                    {group.state === "running"
+                      ? "live"
+                      : duration(group.durationMs)}
                     <small>{count} lines</small>
                   </span>
                 </button>
@@ -281,14 +349,24 @@ export function LogViewer({
         <div className="lv-main">
           <div className="lv-toolbar">
             {run.attempts.length > 1 && onAttemptChange ? (
-              <Select value={String(attempt)} onValueChange={(value) => onAttemptChange(Number(value))}>
-                <SelectTrigger size="sm" aria-label="Attempt" className="lv-attempt">
+              <Select
+                value={String(attempt)}
+                onValueChange={(value) => onAttemptChange(Number(value))}
+              >
+                <SelectTrigger
+                  size="sm"
+                  aria-label="Attempt"
+                  className="lv-attempt"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   {run.attempts.map((item) => (
                     <SelectItem key={item.n} value={String(item.n)}>
-                      Attempt {item.n} · {item.state === "timed_out" ? "executor lost" : item.state}
+                      Attempt {item.n} ·{" "}
+                      {item.state === "timed_out"
+                        ? "executor lost"
+                        : item.state}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -308,18 +386,25 @@ export function LogViewer({
                   setHit(0);
                 }}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter" && matches.length) setHit((hit + 1) % matches.length);
+                  if (event.key === "Enter" && matches.length)
+                    setHit((hit + 1) % matches.length);
                 }}
               />
               {query && (
                 <small>
-                  {matches.length ? `${Math.min(hit, matches.length - 1) + 1}/${matches.length}` : "0"}
+                  {matches.length
+                    ? `${Math.min(hit, matches.length - 1) + 1}/${matches.length}`
+                    : "0"}
                 </small>
               )}
             </label>
             <div className="lv-tools">
               {firstError && (
-                <Button variant="ghost" size="sm" onClick={() => reveal(firstError.seq)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => reveal(firstError.seq)}
+                >
                   <XCircle /> First error
                 </Button>
               )}
@@ -336,12 +421,20 @@ export function LogViewer({
                 variant="ghost"
                 size="sm"
                 title="Download raw log (text, ANSI or JSON Lines)"
-                onClick={() => setCopied("Raw download starts from the run's archive in the real portal")}
+                onClick={() =>
+                  setCopied(
+                    "Raw download starts from the run's archive in the real portal",
+                  )
+                }
               >
                 <Download /> <span className="lv-hide-sm">Raw</span>
               </Button>
               {role === "pool-admin" && onDiagnostics && attemptInfo && (
-                <Button variant="outline" size="sm" onClick={() => onDiagnostics(attemptInfo.jobId)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onDiagnostics(attemptInfo.jobId)}
+                >
                   <Stethoscope /> Runner diagnostics
                 </Button>
               )}
@@ -349,12 +442,14 @@ export function LogViewer({
           </div>
           {attemptInfo?.logState === "incomplete" && (
             <p className="lv-banner is-warning">
-              <TriangleAlert size={14} aria-hidden="true" /> Incomplete log. {attemptInfo.reason}
+              <TriangleAlert size={14} aria-hidden="true" /> Incomplete log.{" "}
+              {attemptInfo.reason}
             </p>
           )}
           {live && (
             <p className="lv-banner is-live">
-              <span className="lv-pulse" aria-hidden="true" /> Live · {totalLines} lines · following{" "}
+              <span className="lv-pulse" aria-hidden="true" /> Live ·{" "}
+              {totalLines} lines · following{" "}
               {following ? "the tail" : "paused while you read"}
             </p>
           )}
@@ -366,32 +461,50 @@ export function LogViewer({
             onScroll={(event) => {
               if (!live) return;
               const pane = event.currentTarget;
-              const atBottom = pane.scrollHeight - pane.scrollTop - pane.clientHeight < 40;
+              const atBottom =
+                pane.scrollHeight - pane.scrollTop - pane.clientHeight < 40;
               if (atBottom !== following) setFollowing(atBottom);
             }}
           >
             {sections.map(({ group, lines }) => {
               const expanded = isOpen(group);
               return (
-                <section key={group.scope} className="lv-section" data-state={group.state}>
+                <section
+                  key={group.scope}
+                  className="lv-section"
+                  data-state={group.state}
+                >
                   <button
                     type="button"
                     className="lv-section-head"
                     aria-expanded={expanded}
-                    onClick={() => setOpen({ ...open, [group.scope]: !expanded })}
+                    onClick={() =>
+                      setOpen({ ...open, [group.scope]: !expanded })
+                    }
                   >
-                    <ChevronRight size={14} className="lv-chevron" aria-hidden="true" />
+                    <ChevronRight
+                      size={14}
+                      className="lv-chevron"
+                      aria-hidden="true"
+                    />
                     <GroupIcon state={group.state} />
                     <span className="lv-section-name">
-                      {group.target === "runner" ? `runner · ${group.task}` : group.scope}
+                      {group.target === "runner"
+                        ? `runner · ${group.task}`
+                        : group.scope}
                     </span>
                     <span className="lv-section-meta">
-                      {group.state === "running" ? "running" : duration(group.durationMs)} · {lines.length} lines
+                      {group.state === "running"
+                        ? "running"
+                        : duration(group.durationMs)}{" "}
+                      · {lines.length} lines
                     </span>
                   </button>
                   {expanded && (
                     <div className="lv-lines">
-                      {lines.length === 0 && <p className="lv-empty">Waiting for output…</p>}
+                      {lines.length === 0 && (
+                        <p className="lv-empty">Waiting for output…</p>
+                      )}
                       {lines.map((entry) => (
                         <div
                           key={entry.seq}
@@ -412,7 +525,9 @@ export function LogViewer({
                           >
                             {entry.seq}
                           </button>
-                          {times && <span className="lv-time">{stamp(entry.t)}</span>}
+                          {times && (
+                            <span className="lv-time">{stamp(entry.t)}</span>
+                          )}
                           <code className="lv-text">
                             <LogText text={entry.text} commit={run.commit} />
                           </code>
@@ -440,7 +555,10 @@ export function LogViewer({
               size="sm"
               onClick={() => {
                 setFollowing(true);
-                scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
+                scroller.current?.scrollTo({
+                  top: scroller.current.scrollHeight,
+                  behavior: "smooth",
+                });
               }}
             >
               <ArrowDown /> Jump to live
@@ -448,7 +566,21 @@ export function LogViewer({
           )}
           {copied && (
             <p className="lv-toast" role="status">
-              {copyFailed ? <>Couldn’t copy. Select this link and copy it manually: <input aria-label="Log line link" readOnly value={copied} onFocus={(event) => event.currentTarget.select()} /></> : <><Link2 size={13} aria-hidden="true" /> Copied link</>}
+              {copyFailed ? (
+                <>
+                  Couldn’t copy. Select this link and copy it manually:{" "}
+                  <input
+                    aria-label="Log line link"
+                    readOnly
+                    value={copied}
+                    onFocus={(event) => event.currentTarget.select()}
+                  />
+                </>
+              ) : (
+                <>
+                  <Link2 size={13} aria-hidden="true" /> Copied link
+                </>
+              )}
             </p>
           )}
         </div>

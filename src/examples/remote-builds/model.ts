@@ -11,7 +11,8 @@ export type RunState =
   | "skipped"
   | "cancelled"
   | "timed_out";
-export type GroupState = "queued" | "running" | "succeeded" | "failed" | "skipped";
+export type GroupState =
+  "queued" | "running" | "succeeded" | "failed" | "skipped";
 export type Role = "member" | "pool-admin";
 
 export type Operation =
@@ -106,9 +107,18 @@ export type StageKey =
   | "ran"
   | "reported";
 export type StageStatus = "ok" | "fail" | "skip" | "running" | "pending";
-export type Stage = { key: StageKey; label: string; status: StageStatus; detail: string };
+export type Stage = {
+  key: StageKey;
+  label: string;
+  status: StageStatus;
+  detail: string;
+};
 
-export type Evaluation = { bindingId: string; matched: boolean; reason: string };
+export type Evaluation = {
+  bindingId: string;
+  matched: boolean;
+  reason: string;
+};
 
 export type Delivery = {
   id: string;
@@ -207,7 +217,13 @@ export const bindings: Binding[] = [
     scope: "Org · acme",
     repositories: "All repositories in acme",
     filters: ["Push to main"],
-    actions: [{ label: "Build all", command: "oyzu build --full", check: "oyzu / build" }],
+    actions: [
+      {
+        label: "Build all",
+        command: "oyzu build --full",
+        check: "oyzu / build",
+      },
+    ],
     mandatory: true,
     cancelPrevious: false,
     enabled: true,
@@ -219,8 +235,16 @@ export const bindings: Binding[] = [
     repositories: "acme/payments-api",
     filters: ["Pull request", "Paths policy/** or deploy/**"],
     actions: [
-      { label: "Run task policy-check", command: "oyzu run policy-check", check: "oyzu / policy" },
-      { label: "Build api-image", command: "oyzu build api-image --full", check: "oyzu / api-image" },
+      {
+        label: "Run task policy-check",
+        command: "oyzu run policy-check",
+        check: "oyzu / policy",
+      },
+      {
+        label: "Build api-image",
+        command: "oyzu build api-image --full",
+        check: "oyzu / api-image",
+      },
     ],
     mandatory: false,
     cancelPrevious: true,
@@ -232,7 +256,13 @@ export const bindings: Binding[] = [
     scope: "Project · payments",
     repositories: "acme/payments-*",
     filters: ["Tag v*", "Actor in group release-managers"],
-    actions: [{ label: "Build all", command: "oyzu build --full", check: "oyzu / release" }],
+    actions: [
+      {
+        label: "Build all",
+        command: "oyzu build --full",
+        check: "oyzu / release",
+      },
+    ],
     mandatory: false,
     cancelPrevious: false,
     enabled: true,
@@ -243,7 +273,13 @@ export const bindings: Binding[] = [
     scope: "Project · payments",
     repositories: "acme/payments-api",
     filters: ["Schedule 02:00 ET daily", "Branch main"],
-    actions: [{ label: "Build all", command: "oyzu build --all-platforms --full", check: "portal only" }],
+    actions: [
+      {
+        label: "Build all",
+        command: "oyzu build --all-platforms --full",
+        check: "portal only",
+      },
+    ],
     mandatory: false,
     cancelPrevious: false,
     enabled: false,
@@ -253,14 +289,62 @@ export const bindings: Binding[] = [
 // ---------------------------------------------------------------- runs
 
 const failedGroups: LogGroup[] = [
-  { scope: "runner", target: "runner", task: "setup", state: "succeeded", durationMs: 14_200 },
-  { scope: "ledger-client/compile", target: "ledger-client", task: "compile", state: "succeeded", durationMs: 21_800 },
-  { scope: "payments-core/lint", target: "payments-core", task: "lint", state: "succeeded", durationMs: 9_400 },
-  { scope: "payments-core/compile", target: "payments-core", task: "compile", state: "succeeded", durationMs: 48_100 },
-  { scope: "payments-core/test", target: "payments-core", task: "test", state: "failed", durationMs: 71_300 },
-  { scope: "api/compile", target: "api", task: "compile", state: "succeeded", durationMs: 39_900 },
-  { scope: "api/test", target: "api", task: "test", state: "succeeded", durationMs: 52_600 },
-  { scope: "runner/finish", target: "runner", task: "finish", state: "succeeded", durationMs: 3_100 },
+  {
+    scope: "runner",
+    target: "runner",
+    task: "setup",
+    state: "succeeded",
+    durationMs: 14_200,
+  },
+  {
+    scope: "ledger-client/compile",
+    target: "ledger-client",
+    task: "compile",
+    state: "succeeded",
+    durationMs: 21_800,
+  },
+  {
+    scope: "payments-core/lint",
+    target: "payments-core",
+    task: "lint",
+    state: "succeeded",
+    durationMs: 9_400,
+  },
+  {
+    scope: "payments-core/compile",
+    target: "payments-core",
+    task: "compile",
+    state: "succeeded",
+    durationMs: 48_100,
+  },
+  {
+    scope: "payments-core/test",
+    target: "payments-core",
+    task: "test",
+    state: "failed",
+    durationMs: 71_300,
+  },
+  {
+    scope: "api/compile",
+    target: "api",
+    task: "compile",
+    state: "succeeded",
+    durationMs: 39_900,
+  },
+  {
+    scope: "api/test",
+    target: "api",
+    task: "test",
+    state: "succeeded",
+    durationMs: 52_600,
+  },
+  {
+    scope: "runner/finish",
+    target: "runner",
+    task: "finish",
+    state: "succeeded",
+    durationMs: 3_100,
+  },
 ];
 
 export const runs: Run[] = [
@@ -281,7 +365,10 @@ export const runs: Run[] = [
     trigger: "pull_request",
     deliveryId: "dlv-7f3a",
     state: "failed",
-    reason: { code: "EXIT_NONZERO", message: "oyzu exited 1: 1 task failed (payments-core/test)" },
+    reason: {
+      code: "EXIT_NONZERO",
+      message: "oyzu exited 1: 1 task failed (payments-core/test)",
+    },
     attempt: 2,
     attempts: [
       {
@@ -293,7 +380,8 @@ export const runs: Run[] = [
         startedAt: "2026-10-09T15:31:08-04:00",
         durationMs: 184_000,
         logState: "incomplete",
-        reason: "Executor lost: the lease expired after the manager missed 3 heartbeats. 41 log lines were not received.",
+        reason:
+          "Executor lost: the lease expired after the manager missed 3 heartbeats. 41 log lines were not received.",
       },
       {
         n: 2,
@@ -311,9 +399,24 @@ export const runs: Run[] = [
     durationMs: 260_400,
     groups: failedGroups,
     outputs: [
-      { path: "dist/manifest.json", kind: "manifest", size: 6_144, digest: "sha256:4be1…92c0" },
-      { path: "dist/payments-core/reports/junit.xml", kind: "report", size: 18_432, digest: "sha256:a07d…11fe" },
-      { path: "dist/api/reports/junit.xml", kind: "report", size: 12_288, digest: "sha256:5c3b…e804" },
+      {
+        path: "dist/manifest.json",
+        kind: "manifest",
+        size: 6_144,
+        digest: "sha256:4be1…92c0",
+      },
+      {
+        path: "dist/payments-core/reports/junit.xml",
+        kind: "report",
+        size: 18_432,
+        digest: "sha256:a07d…11fe",
+      },
+      {
+        path: "dist/api/reports/junit.xml",
+        kind: "report",
+        size: 12_288,
+        digest: "sha256:5c3b…e804",
+      },
     ],
   },
   {
@@ -350,11 +453,36 @@ export const runs: Run[] = [
     createdAt: "2026-10-09T15:30:51-04:00",
     durationMs: 38_700,
     groups: [
-      { scope: "runner", target: "runner", task: "setup", state: "succeeded", durationMs: 9_800 },
-      { scope: "policy-check", target: "task", task: "policy-check", state: "succeeded", durationMs: 26_200 },
-      { scope: "runner/finish", target: "runner", task: "finish", state: "succeeded", durationMs: 2_700 },
+      {
+        scope: "runner",
+        target: "runner",
+        task: "setup",
+        state: "succeeded",
+        durationMs: 9_800,
+      },
+      {
+        scope: "policy-check",
+        target: "task",
+        task: "policy-check",
+        state: "succeeded",
+        durationMs: 26_200,
+      },
+      {
+        scope: "runner/finish",
+        target: "runner",
+        task: "finish",
+        state: "succeeded",
+        durationMs: 2_700,
+      },
     ],
-    outputs: [{ path: "dist/policy/report.json", kind: "report", size: 3_072, digest: "sha256:9e2f…7a41" }],
+    outputs: [
+      {
+        path: "dist/policy/report.json",
+        kind: "report",
+        size: 3_072,
+        digest: "sha256:9e2f…7a41",
+      },
+    ],
   },
   {
     id: "01jab9r2f6k8m0p2r4t6v8x0z4",
@@ -390,9 +518,27 @@ export const runs: Run[] = [
     createdAt: "2026-10-09T15:30:51-04:00",
     durationMs: 0,
     groups: [
-      { scope: "runner", target: "runner", task: "setup", state: "succeeded", durationMs: 11_400 },
-      { scope: "api-image/compile", target: "api-image", task: "compile", state: "running", durationMs: 0 },
-      { scope: "api-image/image", target: "api-image", task: "image", state: "queued", durationMs: 0 },
+      {
+        scope: "runner",
+        target: "runner",
+        task: "setup",
+        state: "succeeded",
+        durationMs: 11_400,
+      },
+      {
+        scope: "api-image/compile",
+        target: "api-image",
+        task: "compile",
+        state: "running",
+        durationMs: 0,
+      },
+      {
+        scope: "api-image/image",
+        target: "api-image",
+        task: "image",
+        state: "queued",
+        durationMs: 0,
+      },
     ],
     outputs: [],
   },
@@ -429,13 +575,50 @@ export const runs: Run[] = [
     createdAt: "2026-10-09T14:58:01-04:00",
     durationMs: 412_900,
     groups: [
-      { scope: "runner", target: "runner", task: "setup", state: "succeeded", durationMs: 12_100 },
-      { scope: "ledger-client/compile", target: "ledger-client", task: "compile", state: "succeeded", durationMs: 22_400 },
-      { scope: "payments-core/test", target: "payments-core", task: "test", state: "succeeded", durationMs: 69_800 },
-      { scope: "api/test", target: "api", task: "test", state: "succeeded", durationMs: 51_100 },
-      { scope: "api-image/image", target: "api-image", task: "image", state: "succeeded", durationMs: 141_300 },
+      {
+        scope: "runner",
+        target: "runner",
+        task: "setup",
+        state: "succeeded",
+        durationMs: 12_100,
+      },
+      {
+        scope: "ledger-client/compile",
+        target: "ledger-client",
+        task: "compile",
+        state: "succeeded",
+        durationMs: 22_400,
+      },
+      {
+        scope: "payments-core/test",
+        target: "payments-core",
+        task: "test",
+        state: "succeeded",
+        durationMs: 69_800,
+      },
+      {
+        scope: "api/test",
+        target: "api",
+        task: "test",
+        state: "succeeded",
+        durationMs: 51_100,
+      },
+      {
+        scope: "api-image/image",
+        target: "api-image",
+        task: "image",
+        state: "succeeded",
+        durationMs: 141_300,
+      },
     ],
-    outputs: [{ path: "dist/manifest.json", kind: "manifest", size: 8_192, digest: "sha256:c41d…0b9a" }],
+    outputs: [
+      {
+        path: "dist/manifest.json",
+        kind: "manifest",
+        size: 8_192,
+        digest: "sha256:c41d…0b9a",
+      },
+    ],
   },
   {
     id: "01jab9m4x8z0b2d4f6h8k0m2p4",
@@ -454,7 +637,10 @@ export const runs: Run[] = [
     trigger: "pull_request",
     deliveryId: "dlv-7d02",
     state: "skipped",
-    reason: { code: "TASK_NOT_DEFINED", message: "task policy-check is not defined at b81e04c" },
+    reason: {
+      code: "TASK_NOT_DEFINED",
+      message: "task policy-check is not defined at b81e04c",
+    },
     attempt: 0,
     attempts: [],
     oyzuVersion: "0.9.2",
@@ -480,7 +666,10 @@ export const runs: Run[] = [
     trigger: "pull_request",
     deliveryId: "dlv-7c66",
     state: "cancelled",
-    reason: { code: "SUPERSEDED", message: "A newer push to pull request #482 replaced this run" },
+    reason: {
+      code: "SUPERSEDED",
+      message: "A newer push to pull request #482 replaced this run",
+    },
     attempt: 1,
     attempts: [
       {
@@ -584,9 +773,7 @@ export const checks: Check[] = [
 
 // ---------------------------------------------------------------- deliveries
 
-const stages = (
-  rows: [StageKey, StageStatus, string][],
-): Stage[] =>
+const stages = (rows: [StageKey, StageStatus, string][]): Stage[] =>
   rows.map(([key, status, detail]) => ({
     key,
     status,
@@ -605,9 +792,19 @@ export const deliveries: Delivery[] = [
     repository: "acme/payments-api",
     ref: "feat/refund-retries",
     commit: "9c41e2a",
-    pr: { number: 482, title: "Retry refunds with the original idempotency key", draft: false, labels: ["payments", "needs-review"] },
+    pr: {
+      number: 482,
+      title: "Retry refunds with the original idempotency key",
+      draft: false,
+      labels: ["payments", "needs-review"],
+    },
     actor: "dana.okafor",
-    changedPaths: ["crates/payments-core/src/refund.rs", "crates/payments-core/tests/refund_retry.rs", "policy/refunds.rego", "deploy/api/values.yaml"],
+    changedPaths: [
+      "crates/payments-core/src/refund.rs",
+      "crates/payments-core/tests/refund_retry.rs",
+      "policy/refunds.rego",
+      "deploy/api/values.yaml",
+    ],
     outcome: "started",
     outcomeLabel: "Started 3 runs",
     stages: stages([
@@ -621,11 +818,31 @@ export const deliveries: Delivery[] = [
       ["reported", "ok", "5 check runs written (2 skipped targets)"],
     ]),
     evaluations: [
-      { bindingId: "pr-affected", matched: true, reason: "Pull request #482 is ready for review" },
-      { bindingId: "main-build", matched: false, reason: "Listens for push, got pull_request" },
-      { bindingId: "payments-policy", matched: true, reason: "policy/refunds.rego matches policy/**" },
-      { bindingId: "release-tags", matched: false, reason: "Listens for tags, got pull_request" },
-      { bindingId: "nightly", matched: false, reason: "Disabled in project payments" },
+      {
+        bindingId: "pr-affected",
+        matched: true,
+        reason: "Pull request #482 is ready for review",
+      },
+      {
+        bindingId: "main-build",
+        matched: false,
+        reason: "Listens for push, got pull_request",
+      },
+      {
+        bindingId: "payments-policy",
+        matched: true,
+        reason: "policy/refunds.rego matches policy/**",
+      },
+      {
+        bindingId: "release-tags",
+        matched: false,
+        reason: "Listens for tags, got pull_request",
+      },
+      {
+        bindingId: "nightly",
+        matched: false,
+        reason: "Disabled in project payments",
+      },
     ],
     runIds: [runs[0].id, runs[1].id, runs[2].id],
   },
@@ -639,7 +856,12 @@ export const deliveries: Delivery[] = [
     repository: "acme/payments-api",
     ref: "spike/fx-rounding",
     commit: "c3a9e10",
-    pr: { number: 483, title: "Spike: FX rounding modes", draft: true, labels: [] },
+    pr: {
+      number: 483,
+      title: "Spike: FX rounding modes",
+      draft: true,
+      labels: [],
+    },
     actor: "jo.pereira",
     changedPaths: ["crates/fx/src/round.rs"],
     outcome: "no-match",
@@ -655,11 +877,31 @@ export const deliveries: Delivery[] = [
       ["reported", "pending", "No checks written"],
     ]),
     evaluations: [
-      { bindingId: "pr-affected", matched: false, reason: "Pull request #483 is a draft; this binding skips drafts" },
-      { bindingId: "main-build", matched: false, reason: "Listens for push, got pull_request" },
-      { bindingId: "payments-policy", matched: false, reason: "No changed file under policy/** or deploy/**" },
-      { bindingId: "release-tags", matched: false, reason: "Listens for tags, got pull_request" },
-      { bindingId: "nightly", matched: false, reason: "Disabled in project payments" },
+      {
+        bindingId: "pr-affected",
+        matched: false,
+        reason: "Pull request #483 is a draft; this binding skips drafts",
+      },
+      {
+        bindingId: "main-build",
+        matched: false,
+        reason: "Listens for push, got pull_request",
+      },
+      {
+        bindingId: "payments-policy",
+        matched: false,
+        reason: "No changed file under policy/** or deploy/**",
+      },
+      {
+        bindingId: "release-tags",
+        matched: false,
+        reason: "Listens for tags, got pull_request",
+      },
+      {
+        bindingId: "nightly",
+        matched: false,
+        reason: "Disabled in project payments",
+      },
     ],
     runIds: [],
   },
@@ -688,11 +930,27 @@ export const deliveries: Delivery[] = [
       ["reported", "ok", "Check oyzu / build: success"],
     ]),
     evaluations: [
-      { bindingId: "pr-affected", matched: false, reason: "Listens for pull_request, got push" },
+      {
+        bindingId: "pr-affected",
+        matched: false,
+        reason: "Listens for pull_request, got push",
+      },
       { bindingId: "main-build", matched: true, reason: "Push to main" },
-      { bindingId: "payments-policy", matched: false, reason: "Listens for pull_request, got push" },
-      { bindingId: "release-tags", matched: false, reason: "Listens for tags, got push" },
-      { bindingId: "nightly", matched: false, reason: "Disabled in project payments" },
+      {
+        bindingId: "payments-policy",
+        matched: false,
+        reason: "Listens for pull_request, got push",
+      },
+      {
+        bindingId: "release-tags",
+        matched: false,
+        reason: "Listens for tags, got push",
+      },
+      {
+        bindingId: "nightly",
+        matched: false,
+        reason: "Disabled in project payments",
+      },
     ],
     runIds: [runs[3].id],
   },
@@ -739,8 +997,16 @@ export const deliveries: Delivery[] = [
     outcome: "rejected",
     outcomeLabel: "Signature mismatch ×12",
     stages: stages([
-      ["received", "ok", "12 deliveries since 14:02 ET via /webhooks/github/github-acme-legacy"],
-      ["verified", "fail", "Signature mismatch: the webhook secret on GitHub probably differs from this connector's"],
+      [
+        "received",
+        "ok",
+        "12 deliveries since 14:02 ET via /webhooks/github/github-acme-legacy",
+      ],
+      [
+        "verified",
+        "fail",
+        "Signature mismatch: the webhook secret on GitHub probably differs from this connector's",
+      ],
       ["deduplicated", "pending", "Not reached"],
       ["parsed", "pending", "Body not read"],
       ["matched", "pending", "Not evaluated"],
@@ -770,9 +1036,37 @@ export const pools: Pool[] = [
     shipping: true,
     releaseEligible: true,
     managers: [
-      { id: "mgr-hosted-a", host: "use1-a.pool.oyzu.example", version: "0.4.1", adapter: "vm", status: "healthy", heartbeat: "4s ago", activeJobs: 1, keyAgeDays: 12 },
-      { id: "mgr-hosted-b", host: "use1-b.pool.oyzu.example", version: "0.4.1", adapter: "vm", status: "healthy", heartbeat: "2s ago", activeJobs: 1, keyAgeDays: 12 },
-      { id: "mgr-hosted-c", host: "use1-c.pool.oyzu.example", version: "0.4.1", adapter: "vm", status: "healthy", heartbeat: "6s ago", activeJobs: 0, keyAgeDays: 27, note: "Key rotation due in 3 days" },
+      {
+        id: "mgr-hosted-a",
+        host: "use1-a.pool.oyzu.example",
+        version: "0.4.1",
+        adapter: "vm",
+        status: "healthy",
+        heartbeat: "4s ago",
+        activeJobs: 1,
+        keyAgeDays: 12,
+      },
+      {
+        id: "mgr-hosted-b",
+        host: "use1-b.pool.oyzu.example",
+        version: "0.4.1",
+        adapter: "vm",
+        status: "healthy",
+        heartbeat: "2s ago",
+        activeJobs: 1,
+        keyAgeDays: 12,
+      },
+      {
+        id: "mgr-hosted-c",
+        host: "use1-c.pool.oyzu.example",
+        version: "0.4.1",
+        adapter: "vm",
+        status: "healthy",
+        heartbeat: "6s ago",
+        activeJobs: 0,
+        keyAgeDays: 27,
+        note: "Key rotation due in 3 days",
+      },
     ],
   },
   {
@@ -787,8 +1081,27 @@ export const pools: Pool[] = [
     shipping: true,
     releaseEligible: true,
     managers: [
-      { id: "mgr-onprem-01", host: "build-01.corp.acme.example", version: "0.4.1", adapter: "container", status: "healthy", heartbeat: "3s ago", activeJobs: 0, keyAgeDays: 8 },
-      { id: "mgr-onprem-02", host: "build-02.corp.acme.example", version: "0.4.0", adapter: "container", status: "warning", heartbeat: "2m 41s ago", activeJobs: 0, keyAgeDays: 31, note: "Heartbeats late since 15:32 ET; key in rotation overlap" },
+      {
+        id: "mgr-onprem-01",
+        host: "build-01.corp.acme.example",
+        version: "0.4.1",
+        adapter: "container",
+        status: "healthy",
+        heartbeat: "3s ago",
+        activeJobs: 0,
+        keyAgeDays: 8,
+      },
+      {
+        id: "mgr-onprem-02",
+        host: "build-02.corp.acme.example",
+        version: "0.4.0",
+        adapter: "container",
+        status: "warning",
+        heartbeat: "2m 41s ago",
+        activeJobs: 0,
+        keyAgeDays: 31,
+        note: "Heartbeats late since 15:32 ET; key in rotation overlap",
+      },
     ],
   },
   {
@@ -803,28 +1116,149 @@ export const pools: Pool[] = [
     shipping: false,
     releaseEligible: false,
     managers: [
-      { id: "mgr-desktop", host: "desktop.tailnet.example", version: "0.4.1", adapter: "process", status: "paused", heartbeat: "18m ago", activeJobs: 0, keyAgeDays: 2, note: "Machine asleep; pool logs stay on the host" },
+      {
+        id: "mgr-desktop",
+        host: "desktop.tailnet.example",
+        version: "0.4.1",
+        adapter: "process",
+        status: "paused",
+        heartbeat: "18m ago",
+        activeJobs: 0,
+        keyAgeDays: 2,
+        note: "Machine asleep; pool logs stay on the host",
+      },
     ],
   },
 ];
 export const poolById = (id: string) => pools.find((p) => p.id === id);
 
 export const poolLogs: PoolLog[] = [
-  { t: "15:31:02", level: "info", manager: "mgr-onprem-02", msg: "assignment claimed", jobId: "job-5521", fields: { run: "9012", attempt: "1", lease: "90s" } },
-  { t: "15:31:03", level: "info", manager: "mgr-onprem-02", msg: "startup token issued", jobId: "job-5521", fields: { executor: "ctr-8f21", ttl: "5m" } },
-  { t: "15:31:08", level: "info", manager: "mgr-onprem-02", msg: "executor started", jobId: "job-5521", fields: { executor: "ctr-8f21", image: "oyzu-runner:0.4.0" } },
-  { t: "15:31:09", level: "info", manager: "mgr-onprem-02", msg: "runner checked in", jobId: "job-5521", fields: { executor: "ctr-8f21" } },
-  { t: "15:32:31", level: "warn", manager: "mgr-onprem-02", msg: "heartbeat failed", jobId: "job-5521", fields: { status: "timeout", after: "10s", proxy: "proxy.corp.acme.example:3128" } },
-  { t: "15:33:01", level: "warn", manager: "mgr-onprem-02", msg: "heartbeat failed", jobId: "job-5521", fields: { status: "timeout", after: "10s", proxy: "proxy.corp.acme.example:3128" } },
-  { t: "15:33:31", level: "warn", manager: "mgr-onprem-02", msg: "heartbeat failed", jobId: "job-5521", fields: { status: "407", detail: "proxy authentication required" } },
-  { t: "15:34:02", level: "error", manager: "mgr-onprem-02", msg: "lease expired", jobId: "job-5521", fields: { lease: "90s", outcome: "executor lost" } },
-  { t: "15:34:05", level: "info", manager: "mgr-onprem-02", msg: "executor stopped", jobId: "job-5521", fields: { executor: "ctr-8f21", reason: "lease lost" } },
-  { t: "15:34:40", level: "info", manager: "mgr-onprem-02", msg: "key rotation started", fields: { overlap: "active", keys: "2" } },
-  { t: "15:35:01", level: "info", manager: "mgr-onprem-01", msg: "assignment claimed", jobId: "job-5530", fields: { run: "9012", attempt: "2", lease: "90s" } },
-  { t: "15:35:02", level: "info", manager: "mgr-onprem-01", msg: "executor started", jobId: "job-5530", fields: { executor: "ctr-9a04", image: "oyzu-runner:0.4.1" } },
-  { t: "15:39:22", level: "info", manager: "mgr-onprem-01", msg: "runner reported exit", jobId: "job-5530", fields: { exit: "1", logs: "complete", seq: "612" } },
-  { t: "15:39:24", level: "info", manager: "mgr-onprem-01", msg: "executor stopped", jobId: "job-5530", fields: { executor: "ctr-9a04", reason: "job finished" } },
-  { t: "15:41:55", level: "warn", manager: "mgr-onprem-02", msg: "heartbeat failed", fields: { status: "407", detail: "proxy authentication required" } },
+  {
+    t: "15:31:02",
+    level: "info",
+    manager: "mgr-onprem-02",
+    msg: "assignment claimed",
+    jobId: "job-5521",
+    fields: { run: "9012", attempt: "1", lease: "90s" },
+  },
+  {
+    t: "15:31:03",
+    level: "info",
+    manager: "mgr-onprem-02",
+    msg: "startup token issued",
+    jobId: "job-5521",
+    fields: { executor: "ctr-8f21", ttl: "5m" },
+  },
+  {
+    t: "15:31:08",
+    level: "info",
+    manager: "mgr-onprem-02",
+    msg: "executor started",
+    jobId: "job-5521",
+    fields: { executor: "ctr-8f21", image: "oyzu-runner:0.4.0" },
+  },
+  {
+    t: "15:31:09",
+    level: "info",
+    manager: "mgr-onprem-02",
+    msg: "runner checked in",
+    jobId: "job-5521",
+    fields: { executor: "ctr-8f21" },
+  },
+  {
+    t: "15:32:31",
+    level: "warn",
+    manager: "mgr-onprem-02",
+    msg: "heartbeat failed",
+    jobId: "job-5521",
+    fields: {
+      status: "timeout",
+      after: "10s",
+      proxy: "proxy.corp.acme.example:3128",
+    },
+  },
+  {
+    t: "15:33:01",
+    level: "warn",
+    manager: "mgr-onprem-02",
+    msg: "heartbeat failed",
+    jobId: "job-5521",
+    fields: {
+      status: "timeout",
+      after: "10s",
+      proxy: "proxy.corp.acme.example:3128",
+    },
+  },
+  {
+    t: "15:33:31",
+    level: "warn",
+    manager: "mgr-onprem-02",
+    msg: "heartbeat failed",
+    jobId: "job-5521",
+    fields: { status: "407", detail: "proxy authentication required" },
+  },
+  {
+    t: "15:34:02",
+    level: "error",
+    manager: "mgr-onprem-02",
+    msg: "lease expired",
+    jobId: "job-5521",
+    fields: { lease: "90s", outcome: "executor lost" },
+  },
+  {
+    t: "15:34:05",
+    level: "info",
+    manager: "mgr-onprem-02",
+    msg: "executor stopped",
+    jobId: "job-5521",
+    fields: { executor: "ctr-8f21", reason: "lease lost" },
+  },
+  {
+    t: "15:34:40",
+    level: "info",
+    manager: "mgr-onprem-02",
+    msg: "key rotation started",
+    fields: { overlap: "active", keys: "2" },
+  },
+  {
+    t: "15:35:01",
+    level: "info",
+    manager: "mgr-onprem-01",
+    msg: "assignment claimed",
+    jobId: "job-5530",
+    fields: { run: "9012", attempt: "2", lease: "90s" },
+  },
+  {
+    t: "15:35:02",
+    level: "info",
+    manager: "mgr-onprem-01",
+    msg: "executor started",
+    jobId: "job-5530",
+    fields: { executor: "ctr-9a04", image: "oyzu-runner:0.4.1" },
+  },
+  {
+    t: "15:39:22",
+    level: "info",
+    manager: "mgr-onprem-01",
+    msg: "runner reported exit",
+    jobId: "job-5530",
+    fields: { exit: "1", logs: "complete", seq: "612" },
+  },
+  {
+    t: "15:39:24",
+    level: "info",
+    manager: "mgr-onprem-01",
+    msg: "executor stopped",
+    jobId: "job-5530",
+    fields: { executor: "ctr-9a04", reason: "job finished" },
+  },
+  {
+    t: "15:41:55",
+    level: "warn",
+    manager: "mgr-onprem-02",
+    msg: "heartbeat failed",
+    fields: { status: "407", detail: "proxy authentication required" },
+  },
 ];
 
 // ---------------------------------------------------------------- logs
@@ -844,22 +1278,95 @@ function build(lines: Line[]): LogEntry[] {
 
 function setupLines(start: number, pool: string, manager: string): Line[] {
   return [
-    { t: start, scope: "runner", stream: "system", text: `Claimed by ${manager} in pool ${pool}` },
-    { t: start + 400, scope: "runner", stream: "system", text: "Exchanged startup token for a job token" },
-    { t: start + 900, scope: "runner", stream: "system", text: "Source token issued: acme/payments-api, contents read, 60 min", redacted: 1 },
-    { t: start + 1300, scope: "runner", stream: "stdout", text: "git fetch --tags origin 9c41e2a7b3d05f18c6e2a94b07d1e3f5a8c2b610" },
-    { t: start + 6200, scope: "runner", stream: "stdout", text: dim("remote: Enumerating objects: 18422, done.") },
-    { t: start + 9100, scope: "runner", stream: "stdout", text: "HEAD is now at 9c41e2a Retry refunds with the original idempotency key" },
-    { t: start + 9300, scope: "runner", stream: "system", text: "Merge base with main is 7d0b113 (used for --affected)" },
-    { t: start + 9600, scope: "runner", stream: "stdout", text: "Using credentials https://x-access-token:***@github.com/acme/payments-api", redacted: 1 },
-    { t: start + 10_100, scope: "runner", stream: "system", text: "oyzu 0.9.2 selected (project pin)" },
-    { t: start + 10_400, scope: "runner", stream: "system", text: "$ oyzu build --affected 7d0b113 --full --json" },
-    { t: start + 12_900, scope: "runner", stream: "stdout", text: `Selected ${bold("4 targets")}: ledger-client, payments-core, api ${dim("(changed)")}; web-console, ledger-sim ${dim("(not affected)")}` },
+    {
+      t: start,
+      scope: "runner",
+      stream: "system",
+      text: `Claimed by ${manager} in pool ${pool}`,
+    },
+    {
+      t: start + 400,
+      scope: "runner",
+      stream: "system",
+      text: "Exchanged startup token for a job token",
+    },
+    {
+      t: start + 900,
+      scope: "runner",
+      stream: "system",
+      text: "Source token issued: acme/payments-api, contents read, 60 min",
+      redacted: 1,
+    },
+    {
+      t: start + 1300,
+      scope: "runner",
+      stream: "stdout",
+      text: "git fetch --tags origin 9c41e2a7b3d05f18c6e2a94b07d1e3f5a8c2b610",
+    },
+    {
+      t: start + 6200,
+      scope: "runner",
+      stream: "stdout",
+      text: dim("remote: Enumerating objects: 18422, done."),
+    },
+    {
+      t: start + 9100,
+      scope: "runner",
+      stream: "stdout",
+      text: "HEAD is now at 9c41e2a Retry refunds with the original idempotency key",
+    },
+    {
+      t: start + 9300,
+      scope: "runner",
+      stream: "system",
+      text: "Merge base with main is 7d0b113 (used for --affected)",
+    },
+    {
+      t: start + 9600,
+      scope: "runner",
+      stream: "stdout",
+      text: "Using credentials https://x-access-token:***@github.com/acme/payments-api",
+      redacted: 1,
+    },
+    {
+      t: start + 10_100,
+      scope: "runner",
+      stream: "system",
+      text: "oyzu 0.9.2 selected (project pin)",
+    },
+    {
+      t: start + 10_400,
+      scope: "runner",
+      stream: "system",
+      text: "$ oyzu build --affected 7d0b113 --full --json",
+    },
+    {
+      t: start + 12_900,
+      scope: "runner",
+      stream: "stdout",
+      text: `Selected ${bold("4 targets")}: ledger-client, payments-core, api ${dim("(changed)")}; web-console, ledger-sim ${dim("(not affected)")}`,
+    },
   ];
 }
 
-function testFiller(start: number, count: number, scope: string, prefix: string): Line[] {
-  const names = ["capture", "authorize", "settle", "void", "ledger_post", "fx_convert", "webhook_sign", "partial_refund", "chargeback", "payout"];
+function testFiller(
+  start: number,
+  count: number,
+  scope: string,
+  prefix: string,
+): Line[] {
+  const names = [
+    "capture",
+    "authorize",
+    "settle",
+    "void",
+    "ledger_post",
+    "fx_convert",
+    "webhook_sign",
+    "partial_refund",
+    "chargeback",
+    "payout",
+  ];
   return Array.from({ length: count }, (_, index) => ({
     t: start + index * 180,
     scope,
@@ -870,102 +1377,407 @@ function testFiller(start: number, count: number, scope: string, prefix: string)
 
 export const failedLog: LogEntry[] = build([
   ...setupLines(0, "acme-onprem", "mgr-onprem-01"),
-  { t: 14_200, scope: "ledger-client/compile", stream: "system", text: "Task ledger-client/compile started" },
-  { t: 14_800, scope: "ledger-client/compile", stream: "stderr", text: `${green("   Compiling")} ledger-client v0.14.0 (crates/ledger-client)` },
-  { t: 34_900, scope: "ledger-client/compile", stream: "stderr", text: `${green("    Finished")} release [optimized] target(s) in 20.1s` },
-  { t: 36_000, scope: "ledger-client/compile", stream: "system", text: "Task ledger-client/compile succeeded in 21.8s" },
-  { t: 36_100, scope: "payments-core/lint", stream: "system", text: "Task payments-core/lint started" },
-  { t: 36_300, scope: "payments-core/lint", stream: "stderr", text: `${yellow("warning")}: unused import: \`std::time::Instant\` --> crates/payments-core/src/retry.rs:4:5`, level: "warn" },
-  { t: 45_500, scope: "payments-core/lint", stream: "system", text: "Task payments-core/lint succeeded in 9.4s (1 warning)" },
-  { t: 45_600, scope: "payments-core/compile", stream: "system", text: "Task payments-core/compile started" },
-  { t: 46_200, scope: "payments-core/compile", stream: "stderr", text: `${green("   Compiling")} payments-core v2.3.0 (crates/payments-core)` },
-  { t: 93_400, scope: "payments-core/compile", stream: "stderr", text: `${green("    Finished")} release [optimized] target(s) in 47.2s` },
-  { t: 93_700, scope: "payments-core/compile", stream: "system", text: "Task payments-core/compile succeeded in 48.1s" },
-  { t: 93_800, scope: "payments-core/test", stream: "system", text: "Task payments-core/test started" },
-  { t: 94_100, scope: "payments-core/test", stream: "stdout", text: "running 64 tests" },
-  { t: 94_200, scope: "payments-core/test", stream: "stdout", text: `Connecting to test ledger with LEDGER_API_KEY=***`, redacted: 1 },
+  {
+    t: 14_200,
+    scope: "ledger-client/compile",
+    stream: "system",
+    text: "Task ledger-client/compile started",
+  },
+  {
+    t: 14_800,
+    scope: "ledger-client/compile",
+    stream: "stderr",
+    text: `${green("   Compiling")} ledger-client v0.14.0 (crates/ledger-client)`,
+  },
+  {
+    t: 34_900,
+    scope: "ledger-client/compile",
+    stream: "stderr",
+    text: `${green("    Finished")} release [optimized] target(s) in 20.1s`,
+  },
+  {
+    t: 36_000,
+    scope: "ledger-client/compile",
+    stream: "system",
+    text: "Task ledger-client/compile succeeded in 21.8s",
+  },
+  {
+    t: 36_100,
+    scope: "payments-core/lint",
+    stream: "system",
+    text: "Task payments-core/lint started",
+  },
+  {
+    t: 36_300,
+    scope: "payments-core/lint",
+    stream: "stderr",
+    text: `${yellow("warning")}: unused import: \`std::time::Instant\` --> crates/payments-core/src/retry.rs:4:5`,
+    level: "warn",
+  },
+  {
+    t: 45_500,
+    scope: "payments-core/lint",
+    stream: "system",
+    text: "Task payments-core/lint succeeded in 9.4s (1 warning)",
+  },
+  {
+    t: 45_600,
+    scope: "payments-core/compile",
+    stream: "system",
+    text: "Task payments-core/compile started",
+  },
+  {
+    t: 46_200,
+    scope: "payments-core/compile",
+    stream: "stderr",
+    text: `${green("   Compiling")} payments-core v2.3.0 (crates/payments-core)`,
+  },
+  {
+    t: 93_400,
+    scope: "payments-core/compile",
+    stream: "stderr",
+    text: `${green("    Finished")} release [optimized] target(s) in 47.2s`,
+  },
+  {
+    t: 93_700,
+    scope: "payments-core/compile",
+    stream: "system",
+    text: "Task payments-core/compile succeeded in 48.1s",
+  },
+  {
+    t: 93_800,
+    scope: "payments-core/test",
+    stream: "system",
+    text: "Task payments-core/test started",
+  },
+  {
+    t: 94_100,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: "running 64 tests",
+  },
+  {
+    t: 94_200,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: `Connecting to test ledger with LEDGER_API_KEY=***`,
+    redacted: 1,
+  },
   ...testFiller(94_400, 38, "payments-core/test", "refund"),
-  { t: 101_400, scope: "payments-core/test", stream: "stdout", text: `test refund::retry::refund_retry_respects_idempotency_key ... ${red("FAILED")}`, level: "error" },
+  {
+    t: 101_400,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: `test refund::retry::refund_retry_respects_idempotency_key ... ${red("FAILED")}`,
+    level: "error",
+  },
   ...testFiller(101_600, 25, "payments-core/test", "ledger"),
   { t: 160_000, scope: "payments-core/test", stream: "stdout", text: "" },
-  { t: 160_010, scope: "payments-core/test", stream: "stdout", text: "failures:" },
-  { t: 160_020, scope: "payments-core/test", stream: "stdout", text: "---- refund::retry::refund_retry_respects_idempotency_key stdout ----" },
-  { t: 160_030, scope: "payments-core/test", stream: "stdout", text: `thread 'refund::retry::refund_retry_respects_idempotency_key' panicked at crates/payments-core/tests/refund_retry.rs:88:5:`, level: "error" },
-  { t: 160_040, scope: "payments-core/test", stream: "stdout", text: red("assertion `left == right` failed: retry must reuse the original idempotency key"), level: "error" },
-  { t: 160_050, scope: "payments-core/test", stream: "stdout", text: `  left: ${bold("2")} charges posted` },
-  { t: 160_060, scope: "payments-core/test", stream: "stdout", text: `  right: ${bold("1")} charge posted` },
-  { t: 160_070, scope: "payments-core/test", stream: "stdout", text: dim("note: key was regenerated in RefundRetry::schedule at crates/payments-core/src/refund.rs:212:21") },
+  {
+    t: 160_010,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: "failures:",
+  },
+  {
+    t: 160_020,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: "---- refund::retry::refund_retry_respects_idempotency_key stdout ----",
+  },
+  {
+    t: 160_030,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: `thread 'refund::retry::refund_retry_respects_idempotency_key' panicked at crates/payments-core/tests/refund_retry.rs:88:5:`,
+    level: "error",
+  },
+  {
+    t: 160_040,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: red(
+      "assertion `left == right` failed: retry must reuse the original idempotency key",
+    ),
+    level: "error",
+  },
+  {
+    t: 160_050,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: `  left: ${bold("2")} charges posted`,
+  },
+  {
+    t: 160_060,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: `  right: ${bold("1")} charge posted`,
+  },
+  {
+    t: 160_070,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: dim(
+      "note: key was regenerated in RefundRetry::schedule at crates/payments-core/src/refund.rs:212:21",
+    ),
+  },
   { t: 160_080, scope: "payments-core/test", stream: "stdout", text: "" },
-  { t: 160_090, scope: "payments-core/test", stream: "stdout", text: `test result: ${red("FAILED")}. 63 passed; 1 failed; 0 ignored; finished in 66.02s`, level: "error" },
-  { t: 165_100, scope: "payments-core/test", stream: "system", text: "Task payments-core/test failed in 71.3s (exit 101)", level: "error" },
-  { t: 165_200, scope: "api/compile", stream: "system", text: "Task api/compile started" },
-  { t: 165_600, scope: "api/compile", stream: "stderr", text: `${green("   Compiling")} payments-api v2.3.0 (crates/api)` },
-  { t: 204_900, scope: "api/compile", stream: "stderr", text: `${green("    Finished")} release [optimized] target(s) in 39.2s` },
-  { t: 205_100, scope: "api/compile", stream: "system", text: "Task api/compile succeeded in 39.9s" },
-  { t: 205_200, scope: "api/test", stream: "system", text: "Task api/test started" },
+  {
+    t: 160_090,
+    scope: "payments-core/test",
+    stream: "stdout",
+    text: `test result: ${red("FAILED")}. 63 passed; 1 failed; 0 ignored; finished in 66.02s`,
+    level: "error",
+  },
+  {
+    t: 165_100,
+    scope: "payments-core/test",
+    stream: "system",
+    text: "Task payments-core/test failed in 71.3s (exit 101)",
+    level: "error",
+  },
+  {
+    t: 165_200,
+    scope: "api/compile",
+    stream: "system",
+    text: "Task api/compile started",
+  },
+  {
+    t: 165_600,
+    scope: "api/compile",
+    stream: "stderr",
+    text: `${green("   Compiling")} payments-api v2.3.0 (crates/api)`,
+  },
+  {
+    t: 204_900,
+    scope: "api/compile",
+    stream: "stderr",
+    text: `${green("    Finished")} release [optimized] target(s) in 39.2s`,
+  },
+  {
+    t: 205_100,
+    scope: "api/compile",
+    stream: "system",
+    text: "Task api/compile succeeded in 39.9s",
+  },
+  {
+    t: 205_200,
+    scope: "api/test",
+    stream: "system",
+    text: "Task api/test started",
+  },
   { t: 205_300, scope: "api/test", stream: "stdout", text: "running 41 tests" },
   ...testFiller(205_500, 41, "api/test", "api"),
-  { t: 257_000, scope: "api/test", stream: "stdout", text: `test result: ${green("ok")}. 41 passed; 0 failed; 0 ignored; finished in 50.98s` },
-  { t: 257_800, scope: "api/test", stream: "system", text: "Task api/test succeeded in 52.6s" },
-  { t: 257_900, scope: "runner/finish", stream: "system", text: "oyzu exited 1 (1 task failed)", level: "error" },
-  { t: 258_400, scope: "runner/finish", stream: "system", text: "Masked outputs/logs/events.jsonl (2 values)" },
-  { t: 260_200, scope: "runner/finish", stream: "system", text: "Uploaded 3 outputs; log complete at sequence 612" },
+  {
+    t: 257_000,
+    scope: "api/test",
+    stream: "stdout",
+    text: `test result: ${green("ok")}. 41 passed; 0 failed; 0 ignored; finished in 50.98s`,
+  },
+  {
+    t: 257_800,
+    scope: "api/test",
+    stream: "system",
+    text: "Task api/test succeeded in 52.6s",
+  },
+  {
+    t: 257_900,
+    scope: "runner/finish",
+    stream: "system",
+    text: "oyzu exited 1 (1 task failed)",
+    level: "error",
+  },
+  {
+    t: 258_400,
+    scope: "runner/finish",
+    stream: "system",
+    text: "Masked outputs/logs/events.jsonl (2 values)",
+  },
+  {
+    t: 260_200,
+    scope: "runner/finish",
+    stream: "system",
+    text: "Uploaded 3 outputs; log complete at sequence 612",
+  },
 ]);
 
 export const failedFirstAttemptLog: LogEntry[] = build([
   ...setupLines(0, "acme-onprem", "mgr-onprem-02"),
-  { t: 14_000, scope: "ledger-client/compile", stream: "system", text: "Task ledger-client/compile started" },
-  { t: 14_600, scope: "ledger-client/compile", stream: "stderr", text: `${green("   Compiling")} ledger-client v0.14.0 (crates/ledger-client)` },
-  { t: 61_000, scope: "runner", stream: "system", text: "41 entries were not received: the executor stopped responding at 15:32:31 ET", level: "warn" },
-  { t: 184_000, scope: "runner", stream: "system", text: "Attempt closed as incomplete: executor lost (lease expired). The run was retried as attempt 2.", level: "error" },
+  {
+    t: 14_000,
+    scope: "ledger-client/compile",
+    stream: "system",
+    text: "Task ledger-client/compile started",
+  },
+  {
+    t: 14_600,
+    scope: "ledger-client/compile",
+    stream: "stderr",
+    text: `${green("   Compiling")} ledger-client v0.14.0 (crates/ledger-client)`,
+  },
+  {
+    t: 61_000,
+    scope: "runner",
+    stream: "system",
+    text: "41 entries were not received: the executor stopped responding at 15:32:31 ET",
+    level: "warn",
+  },
+  {
+    t: 184_000,
+    scope: "runner",
+    stream: "system",
+    text: "Attempt closed as incomplete: executor lost (lease expired). The run was retried as attempt 2.",
+    level: "error",
+  },
 ]);
 
 export const passedPolicyLog: LogEntry[] = build([
-  { t: 0, scope: "runner", stream: "system", text: "Claimed by mgr-hosted-a in pool hosted-linux" },
-  { t: 9_800, scope: "runner", stream: "system", text: "$ oyzu run policy-check --json" },
-  { t: 10_000, scope: "policy-check", stream: "system", text: "Task policy-check started" },
+  {
+    t: 0,
+    scope: "runner",
+    stream: "system",
+    text: "Claimed by mgr-hosted-a in pool hosted-linux",
+  },
+  {
+    t: 9_800,
+    scope: "runner",
+    stream: "system",
+    text: "$ oyzu run policy-check --json",
+  },
+  {
+    t: 10_000,
+    scope: "policy-check",
+    stream: "system",
+    text: "Task policy-check started",
+  },
   ...Array.from({ length: 12 }, (_, index) => ({
     t: 11_000 + index * 2000,
     scope: "policy-check",
     stream: "stdout" as const,
     text: `${green("PASS")} policy/${["refunds", "payouts", "pii", "regions", "images", "secrets", "network", "ledger", "fx", "limits", "audit", "retention"][index]}.rego`,
   })),
-  { t: 36_000, scope: "policy-check", stream: "system", text: "Task policy-check succeeded in 26.2s" },
-  { t: 38_700, scope: "runner/finish", stream: "system", text: "oyzu exited 0" },
+  {
+    t: 36_000,
+    scope: "policy-check",
+    stream: "system",
+    text: "Task policy-check succeeded in 26.2s",
+  },
+  {
+    t: 38_700,
+    scope: "runner/finish",
+    stream: "system",
+    text: "oyzu exited 0",
+  },
 ]);
 
 /** Lines the live api-image run will emit, one every few hundred ms. */
 export const liveScript: Line[] = [
-  { t: 11_400, scope: "api-image/compile", stream: "system", text: "Task api-image/compile started" },
+  {
+    t: 11_400,
+    scope: "api-image/compile",
+    stream: "system",
+    text: "Task api-image/compile started",
+  },
   ...[
-    "serde v1.0.214", "tokio v1.41.0", "hyper v1.5.0", "rustls v0.23.16", "sqlx-core v0.8.2",
-    "tower-http v0.6.1", "tracing v0.1.40", "ledger-client v0.14.0", "payments-core v2.3.0", "payments-api v2.3.0",
+    "serde v1.0.214",
+    "tokio v1.41.0",
+    "hyper v1.5.0",
+    "rustls v0.23.16",
+    "sqlx-core v0.8.2",
+    "tower-http v0.6.1",
+    "tracing v0.1.40",
+    "ledger-client v0.14.0",
+    "payments-core v2.3.0",
+    "payments-api v2.3.0",
   ].map((crate, index) => ({
     t: 12_000 + index * 2400,
     scope: "api-image/compile",
     stream: "stderr" as const,
     text: `${green("   Compiling")} ${crate}`,
   })),
-  { t: 38_000, scope: "api-image/compile", stream: "stderr", text: `${green("    Finished")} release [optimized] target(s) in 26.0s` },
-  { t: 38_200, scope: "api-image/compile", stream: "system", text: "Task api-image/compile succeeded in 26.8s" },
-  { t: 38_300, scope: "api-image/image", stream: "system", text: "Task api-image/image started" },
-  ...["FROM distroless/cc:nonroot@sha256:6c1f…", "COPY dist/api/payments-api /app/payments-api", "LABEL org.opencontainers.image.revision=9c41e2a", "Layer 1/3 sha256:1b2c… 18.4 MiB", "Layer 2/3 sha256:77de… 41.0 MiB", "Layer 3/3 sha256:a90f… 2.1 KiB", "Image index sha256:3e5a…c2d0"].map(
-    (text, index) => ({ t: 40_000 + index * 2600, scope: "api-image/image", stream: "stdout" as const, text }),
-  ),
-  { t: 59_000, scope: "api-image/image", stream: "system", text: "Task api-image/image succeeded in 20.7s" },
-  { t: 59_400, scope: "runner/finish", stream: "system", text: "oyzu exited 0" },
-  { t: 60_100, scope: "runner/finish", stream: "system", text: "Uploaded 2 outputs; log complete" },
+  {
+    t: 38_000,
+    scope: "api-image/compile",
+    stream: "stderr",
+    text: `${green("    Finished")} release [optimized] target(s) in 26.0s`,
+  },
+  {
+    t: 38_200,
+    scope: "api-image/compile",
+    stream: "system",
+    text: "Task api-image/compile succeeded in 26.8s",
+  },
+  {
+    t: 38_300,
+    scope: "api-image/image",
+    stream: "system",
+    text: "Task api-image/image started",
+  },
+  ...[
+    "FROM distroless/cc:nonroot@sha256:6c1f…",
+    "COPY dist/api/payments-api /app/payments-api",
+    "LABEL org.opencontainers.image.revision=9c41e2a",
+    "Layer 1/3 sha256:1b2c… 18.4 MiB",
+    "Layer 2/3 sha256:77de… 41.0 MiB",
+    "Layer 3/3 sha256:a90f… 2.1 KiB",
+    "Image index sha256:3e5a…c2d0",
+  ].map((text, index) => ({
+    t: 40_000 + index * 2600,
+    scope: "api-image/image",
+    stream: "stdout" as const,
+    text,
+  })),
+  {
+    t: 59_000,
+    scope: "api-image/image",
+    stream: "system",
+    text: "Task api-image/image succeeded in 20.7s",
+  },
+  {
+    t: 59_400,
+    scope: "runner/finish",
+    stream: "system",
+    text: "oyzu exited 0",
+  },
+  {
+    t: 60_100,
+    scope: "runner/finish",
+    stream: "system",
+    text: "Uploaded 2 outputs; log complete",
+  },
 ];
 
 export const liveInitialLog: LogEntry[] = build([
-  { t: 0, scope: "runner", stream: "system", text: "Claimed by mgr-hosted-b in pool hosted-linux" },
-  { t: 900, scope: "runner", stream: "system", text: "Source token issued: acme/payments-api, contents read, 60 min", redacted: 1 },
-  { t: 9_000, scope: "runner", stream: "stdout", text: "HEAD is now at 9c41e2a Retry refunds with the original idempotency key" },
-  { t: 10_900, scope: "runner", stream: "system", text: "$ oyzu build api-image --full --json" },
+  {
+    t: 0,
+    scope: "runner",
+    stream: "system",
+    text: "Claimed by mgr-hosted-b in pool hosted-linux",
+  },
+  {
+    t: 900,
+    scope: "runner",
+    stream: "system",
+    text: "Source token issued: acme/payments-api, contents read, 60 min",
+    redacted: 1,
+  },
+  {
+    t: 9_000,
+    scope: "runner",
+    stream: "stdout",
+    text: "HEAD is now at 9c41e2a Retry refunds with the original idempotency key",
+  },
+  {
+    t: 10_900,
+    scope: "runner",
+    stream: "system",
+    text: "$ oyzu build api-image --full --json",
+  },
 ]);
 
 export function logFor(runId: string, attempt: number): LogEntry[] {
-  if (runId === failedRun.id) return attempt === 1 ? failedFirstAttemptLog : failedLog;
+  if (runId === failedRun.id)
+    return attempt === 1 ? failedFirstAttemptLog : failedLog;
   if (runId === runs[1].id) return passedPolicyLog;
   return [];
 }
@@ -1013,7 +1825,9 @@ export const stateLabel: Record<RunState, string> = {
 };
 
 /** Maps run and check states onto the kit's StatusBadge tones. */
-export function tone(state: RunState | GroupState | CheckConclusion | ManagerStatus) {
+export function tone(
+  state: RunState | GroupState | CheckConclusion | ManagerStatus,
+) {
   switch (state) {
     case "succeeded":
     case "success":
@@ -1035,6 +1849,16 @@ export function tone(state: RunState | GroupState | CheckConclusion | ManagerSta
   }
 }
 
-export function statusWord(state: RunState | GroupState | CheckConclusion | ManagerStatus) {
-  return ({ healthy: "Healthy", pending: "Pending", paused: "Paused", warning: "Needs attention", failed: "Failed" } as const)[tone(state)];
+export function statusWord(
+  state: RunState | GroupState | CheckConclusion | ManagerStatus,
+) {
+  return (
+    {
+      healthy: "Healthy",
+      pending: "Pending",
+      paused: "Paused",
+      warning: "Needs attention",
+      failed: "Failed",
+    } as const
+  )[tone(state)];
 }

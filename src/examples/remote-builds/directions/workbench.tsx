@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import {
   ArrowRight,
   CircleStop,
@@ -16,13 +23,21 @@ import {
   Webhook,
   Workflow,
 } from "lucide-react";
-import { NavigationSidebar, type SidebarGroup } from "../../../components/patterns/navigation-sidebar";
+import {
+  NavigationSidebar,
+  type SidebarGroup,
+} from "../../../components/patterns/navigation-sidebar";
 import { CopyIdentifier } from "../../../components/patterns/copy-identifier";
 import { EmptyState } from "../../../components/patterns/empty-state";
 import { FeedbackBanner } from "../../../components/patterns/feedback-banner";
 import { SearchField } from "../../../components/patterns/search-field";
 import { Button } from "../../../components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "../../../components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
 import {
   Select,
@@ -102,19 +117,38 @@ const navGroups: SidebarGroup[] = [
     label: "Builds",
     items: [
       { id: "runs", label: "Runs", href: "#workbench-runs", icon: Play },
-      { id: "checks", label: "Checks", href: "#workbench-checks", icon: ListChecks },
-      { id: "triggers", label: "Triggers", href: "#workbench-triggers", icon: Webhook },
+      {
+        id: "checks",
+        label: "Checks",
+        href: "#workbench-checks",
+        icon: ListChecks,
+      },
+      {
+        id: "triggers",
+        label: "Triggers",
+        href: "#workbench-triggers",
+        icon: Webhook,
+      },
     ],
   },
   {
     id: "infrastructure",
     label: "Infrastructure",
-    items: [{ id: "pools", label: "Pools", href: "#workbench-pools", icon: Server }],
+    items: [
+      { id: "pools", label: "Pools", href: "#workbench-pools", icon: Server },
+    ],
   },
   {
     id: "configuration",
     label: "Configuration",
-    items: [{ id: "bindings", label: "Trigger bindings", href: "#workbench-bindings", icon: Workflow }],
+    items: [
+      {
+        id: "bindings",
+        label: "Trigger bindings",
+        href: "#workbench-bindings",
+        icon: Workflow,
+      },
+    ],
   },
 ];
 
@@ -127,7 +161,9 @@ function hrefFor(page: WbPage): string {
     case "delivery":
       return `#workbench-delivery-${page.deliveryId}`;
     case "bindings":
-      return page.bindingId ? `#workbench-binding-${page.bindingId}` : "#workbench-bindings";
+      return page.bindingId
+        ? `#workbench-binding-${page.bindingId}`
+        : "#workbench-bindings";
     case "pool":
       return `#workbench-pool-${page.poolId}`;
     default:
@@ -152,8 +188,10 @@ function parseHash(hash: string): WbPage | undefined {
     const run = runs.find((item) => String(item.number) === rest.slice(4));
     return run ? { name: "run", runId: run.id } : { name: "runs" };
   }
-  if (rest.startsWith("delivery-")) return { name: "delivery", deliveryId: rest.slice(9) };
-  if (rest.startsWith("binding-")) return { name: "bindings", bindingId: rest.slice(8) };
+  if (rest.startsWith("delivery-"))
+    return { name: "delivery", deliveryId: rest.slice(9) };
+  if (rest.startsWith("binding-"))
+    return { name: "bindings", bindingId: rest.slice(8) };
   if (rest.startsWith("pool-")) return { name: "pool", poolId: rest.slice(5) };
   return undefined;
 }
@@ -208,7 +246,9 @@ function itemLabel(page: WbPage): string | undefined {
 }
 
 function useMedia(query: string) {
-  const [matches, setMatches] = useState(() => window.matchMedia?.(query).matches ?? false);
+  const [matches, setMatches] = useState(
+    () => window.matchMedia?.(query).matches ?? false,
+  );
   useEffect(() => {
     const media = window.matchMedia(query);
     const update = () => setMatches(media.matches);
@@ -220,19 +260,30 @@ function useMedia(query: string) {
 }
 
 const poolOfJob = (jobId: string) =>
-  runs.flatMap((run) => run.attempts).find((attempt) => attempt.jobId === jobId)?.pool ?? "acme-onprem";
+  runs.flatMap((run) => run.attempts).find((attempt) => attempt.jobId === jobId)
+    ?.pool ?? "acme-onprem";
 const poolOfManager = (managerId: string) =>
-  pools.find((pool) => pool.managers.some((m) => m.id === managerId))?.id ?? "acme-onprem";
+  pools.find((pool) => pool.managers.some((m) => m.id === managerId))?.id ??
+  "acme-onprem";
 
-const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+const isMac =
+  typeof navigator !== "undefined" &&
+  /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
 // ---------------------------------------------------------------- shell
 
 export function Workbench() {
   const { role } = usePrototype();
-  const [page, setPage] = useState<WbPage>(() => parseHash(window.location.hash) ?? { name: "runs" });
+  const [page, setPage] = useState<WbPage>(
+    () => parseHash(window.location.hash) ?? { name: "runs" },
+  );
   const [runView, setRunView] = useState<RunView>({ nonce: 0 });
-  const [poolView, setPoolView] = useState<PoolView>({ tab: "managers", job: "", manager: "all", level: "all" });
+  const [poolView, setPoolView] = useState<PoolView>({
+    tab: "managers",
+    job: "",
+    manager: "all",
+    level: "all",
+  });
   const [collapsed, setCollapsed] = useState(false);
   const [closedGroups, setClosedGroups] = useState<string[]>([]);
   const [assistantOpen, setAssistantOpen] = useState(false);
@@ -252,9 +303,11 @@ export function Workbench() {
   // ---- live run 9014, with an optional cancel from the portal
   const live = useLiveRun();
   useEffect(() => {
-    if (cancelledAt !== undefined && live.entries.length < cancelledAt) setCancelledAt(undefined);
+    if (cancelledAt !== undefined && live.entries.length < cancelledAt)
+      setCancelledAt(undefined);
   }, [live.entries.length, cancelledAt]);
-  const cancelled = cancelledAt !== undefined && live.entries.length >= cancelledAt;
+  const cancelled =
+    cancelledAt !== undefined && live.entries.length >= cancelledAt;
   const liveState: RunState = cancelled ? "cancelled" : live.state;
   const liveEntries = useMemo<LogEntry[]>(() => {
     if (!cancelled) return live.entries;
@@ -289,32 +342,63 @@ export function Workbench() {
         const state = live.groups[g.scope] ?? g.state;
         return {
           ...g,
-          state: cancelled && state !== "succeeded" ? ("skipped" as const) : state,
+          state:
+            cancelled && state !== "succeeded" ? ("skipped" as const) : state,
           durationMs:
-            state === "succeeded" && !g.durationMs ? (g.scope === "api-image/compile" ? 26_800 : 20_700) : g.durationMs,
+            state === "succeeded" && !g.durationMs
+              ? g.scope === "api-image/compile"
+                ? 26_800
+                : 20_700
+              : g.durationMs,
         };
       }),
       outputs:
         liveState === "succeeded"
           ? [
-              { path: "dist/api-image/index.json", kind: "artifact" as const, size: 1_536, digest: "sha256:3e5a…c2d0" },
-              { path: "dist/manifest.json", kind: "manifest" as const, size: 4_096, digest: "sha256:81fa…6d13" },
+              {
+                path: "dist/api-image/index.json",
+                kind: "artifact" as const,
+                size: 1_536,
+                digest: "sha256:3e5a…c2d0",
+              },
+              {
+                path: "dist/manifest.json",
+                kind: "manifest" as const,
+                size: 4_096,
+                digest: "sha256:81fa…6d13",
+              },
             ]
           : [],
     };
   }, [live.elapsedMs, live.groups, liveState, cancelled]);
-  const runFor = useCallback((run: Run) => (run.id === liveRun.id ? liveMerged : run), [liveMerged]);
+  const runFor = useCallback(
+    (run: Run) => (run.id === liveRun.id ? liveMerged : run),
+    [liveMerged],
+  );
 
   // ---- navigation
   const navigate = useCallback(
-    (next: WbPage, opts?: { run?: Partial<RunView>; pool?: PoolView; push?: boolean }) => {
+    (
+      next: WbPage,
+      opts?: { run?: Partial<RunView>; pool?: PoolView; push?: boolean },
+    ) => {
       setPage(next);
-      if (next.name === "run") setRunView((current) => ({ nonce: current.nonce + 1, ...opts?.run }));
-      if (next.name === "pool") setPoolView(opts?.pool ?? { tab: "managers", job: "", manager: "all", level: "all" });
+      if (next.name === "run")
+        setRunView((current) => ({ nonce: current.nonce + 1, ...opts?.run }));
+      if (next.name === "pool")
+        setPoolView(
+          opts?.pool ?? {
+            tab: "managers",
+            job: "",
+            manager: "all",
+            level: "all",
+          },
+        );
       if (opts?.push === false) return;
       const href = hrefFor(next);
       try {
-        if (window.location.hash !== href) window.history.pushState(null, "", href);
+        if (window.location.hash !== href)
+          window.history.pushState(null, "", href);
       } catch {
         /* the hash is a convenience only */
       }
@@ -331,14 +415,22 @@ export function Workbench() {
   }, [navigate]);
   const go = useCallback((next: WbPage) => navigate(next), [navigate]);
   const openRun = useCallback(
-    (runId: string, view?: Partial<RunView>) => navigate({ name: "run", runId }, { run: view }),
+    (runId: string, view?: Partial<RunView>) =>
+      navigate({ name: "run", runId }, { run: view }),
     [navigate],
   );
   const openPoolLogs = useCallback(
     (poolId: string, filter: { job?: string; manager?: string }) =>
       navigate(
         { name: "pool", poolId },
-        { pool: { tab: "logs", job: filter.job ?? "", manager: filter.manager ?? "all", level: "all" } },
+        {
+          pool: {
+            tab: "logs",
+            job: filter.job ?? "",
+            manager: filter.manager ?? "all",
+            level: "all",
+          },
+        },
       ),
     [navigate],
   );
@@ -346,12 +438,16 @@ export function Workbench() {
   const pageKey = page.name === "bindings" ? "bindings" : hrefFor(page);
   useEffect(() => {
     mainRef.current?.scrollTo?.({ top: 0 });
-    if (window.matchMedia?.("(max-width: 760px)").matches) window.scrollTo({ top: 0 });
+    if (window.matchMedia?.("(max-width: 760px)").matches)
+      window.scrollTo({ top: 0 });
   }, [pageKey]);
 
   // ---- assistant, following the page
-  const currentRun = page.name === "run" ? runs.find((run) => run.id === page.runId) : undefined;
-  const currentAttempt = currentRun ? (runView.attempt ?? currentRun.attempt) : undefined;
+  const currentRun =
+    page.name === "run" ? runs.find((run) => run.id === page.runId) : undefined;
+  const currentAttempt = currentRun
+    ? (runView.attempt ?? currentRun.attempt)
+    : undefined;
   const context = useMemo<AssistantContext>(() => {
     switch (page.name) {
       case "run":
@@ -359,7 +455,9 @@ export function Workbench() {
       case "delivery":
         return { kind: "delivery", deliveryId: page.deliveryId };
       case "bindings":
-        return page.bindingId ? { kind: "binding", bindingId: page.bindingId } : { kind: "home" };
+        return page.bindingId
+          ? { kind: "binding", bindingId: page.bindingId }
+          : { kind: "home" };
       case "pool":
         return { kind: "pool", poolId: page.poolId };
       case "pools":
@@ -377,7 +475,9 @@ export function Workbench() {
         return `Delivery ${page.deliveryId}${d ? ` · ${d.event}` : ""}`;
       }
       case "bindings":
-        return page.bindingId ? `Binding: ${bindingById(page.bindingId)?.name ?? page.bindingId}` : "Trigger bindings in acme";
+        return page.bindingId
+          ? `Binding: ${bindingById(page.bindingId)?.name ?? page.bindingId}`
+          : "Trigger bindings in acme";
       case "pool":
         return `Pool: ${poolById(page.poolId)?.name ?? page.poolId}`;
       case "pools":
@@ -411,7 +511,9 @@ export function Workbench() {
         return;
       }
       const target = event.target as HTMLElement | null;
-      const typing = target?.closest("input, textarea, select, [contenteditable='true']");
+      const typing = target?.closest(
+        "input, textarea, select, [contenteditable='true']",
+      );
       if (event.key === "/" && !typing && !event.metaKey && !event.ctrlKey) {
         event.preventDefault();
         setSearchOpen(true);
@@ -424,9 +526,13 @@ export function Workbench() {
 
   const revealLog = () =>
     window.requestAnimationFrame(() =>
-      document
-        .querySelector(".wb-root .log-viewer")
-        ?.scrollIntoView({ block: "start", behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }),
+      document.querySelector(".wb-root .log-viewer")?.scrollIntoView({
+        block: "start",
+        behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)")
+          .matches
+          ? "auto"
+          : "smooth",
+      }),
     );
 
   const onCite = (runId: string, attempt: number, seq: number) => {
@@ -435,14 +541,22 @@ export function Workbench() {
     revealLog();
   };
 
-  const drain = useCallback((managerId: string) => setDrained((current) => [...new Set([...current, managerId])]), []);
+  const drain = useCallback(
+    (managerId: string) =>
+      setDrained((current) => [...new Set([...current, managerId])]),
+    [],
+  );
 
   const onAction = (id: ActionId, target?: string) => {
     let navigated = true;
     switch (id) {
       case "open-logs": {
         const first = failedLog.find((entry) => entry.level === "error");
-        openRun(failedRun.id, { tab: "logs", attempt: 2, focusSeq: first?.seq });
+        openRun(failedRun.id, {
+          tab: "logs",
+          attempt: 2,
+          focusSeq: first?.seq,
+        });
         revealLog();
         break;
       }
@@ -456,10 +570,16 @@ export function Workbench() {
         break;
       case "diagnostics":
         if (role !== "pool-admin") {
-          assistant.note("Runner diagnostics are for pool admins. The pool's admins already see this job's pool logs.");
+          assistant.note(
+            "Runner diagnostics are for pool admins. The pool's admins already see this job's pool logs.",
+          );
           navigated = false;
-        } else if (target?.startsWith("job-")) openPoolLogs(poolOfJob(target), { job: target });
-        else openPoolLogs(poolOfManager(target ?? "mgr-onprem-02"), { manager: target ?? "mgr-onprem-02" });
+        } else if (target?.startsWith("job-"))
+          openPoolLogs(poolOfJob(target), { job: target });
+        else
+          openPoolLogs(poolOfManager(target ?? "mgr-onprem-02"), {
+            manager: target ?? "mgr-onprem-02",
+          });
         break;
       case "open-delivery":
         navigate({ name: "delivery", deliveryId: target ?? "dlv-7f12" });
@@ -502,9 +622,11 @@ export function Workbench() {
     liveState,
     liveElapsed,
     enabled,
-    setBindingEnabled: (id, value) => setEnabled((current) => ({ ...current, [id]: value })),
+    setBindingEnabled: (id, value) =>
+      setEnabled((current) => ({ ...current, [id]: value })),
     shipping,
-    setShipping: (id, value) => setShippingMap((current) => ({ ...current, [id]: value })),
+    setShipping: (id, value) =>
+      setShippingMap((current) => ({ ...current, [id]: value })),
     drained,
     drain,
   };
@@ -534,7 +656,9 @@ export function Workbench() {
           liveEntries={liveEntries}
           onAskLine={askLine}
           onCancelLive={() => setCancelledAt(live.entries.length)}
-          logHeight={isPhone ? "68dvh" : "clamp(340px, calc(100dvh - 420px), 680px)"}
+          logHeight={
+            isPhone ? "68dvh" : "clamp(340px, calc(100dvh - 420px), 680px)"
+          }
         />
       );
       break;
@@ -554,7 +678,9 @@ export function Workbench() {
       content = <PoolsPage />;
       break;
     case "pool":
-      content = <PoolDetail poolId={page.poolId} view={poolView} onView={setPoolView} />;
+      content = (
+        <PoolDetail poolId={page.poolId} view={poolView} onView={setPoolView} />
+      );
       break;
   }
 
@@ -577,7 +703,10 @@ export function Workbench() {
           onCollapsedChange={setCollapsed}
           onGroupsChange={setClosedGroups}
           contextWidget={(compact) => (
-            <div className="navigation-workspace wb-workspace" title="acme / payments">
+            <div
+              className="navigation-workspace wb-workspace"
+              title="acme / payments"
+            >
               <span aria-hidden="true">PA</span>
               {!compact && (
                 <div>
@@ -588,12 +717,21 @@ export function Workbench() {
             </div>
           )}
           accountWidget={(compact) => (
-            <div className="wb-account" title={role === "pool-admin" ? "Micah, pool admin" : "Micah, project member"}>
+            <div
+              className="wb-account"
+              title={
+                role === "pool-admin"
+                  ? "Micah, pool admin"
+                  : "Micah, project member"
+              }
+            >
               <span aria-hidden="true">MI</span>
               {!compact && (
                 <div>
                   <strong>Micah</strong>
-                  <small>{role === "pool-admin" ? "Pool admin" : "Project member"}</small>
+                  <small>
+                    {role === "pool-admin" ? "Pool admin" : "Project member"}
+                  </small>
                 </div>
               )}
             </div>
@@ -607,7 +745,10 @@ export function Workbench() {
                 <li className="wb-crumb-org">payments</li>
                 <li>
                   {item ? (
-                    <button type="button" onClick={() => go(sectionPage[page.name])}>
+                    <button
+                      type="button"
+                      onClick={() => go(sectionPage[page.name])}
+                    >
                       {sectionLabel[page.name]}
                     </button>
                   ) : (
@@ -638,7 +779,10 @@ export function Workbench() {
               aria-expanded={searchOpen}
               onClick={() => {
                 setSearchOpen(!searchOpen);
-                if (!searchOpen) window.requestAnimationFrame(() => searchRef.current?.focus());
+                if (!searchOpen)
+                  window.requestAnimationFrame(() =>
+                    searchRef.current?.focus(),
+                  );
               }}
             >
               <Search />
@@ -660,14 +804,18 @@ export function Workbench() {
                 {content}
               </div>
             </main>
-            {assistantOpen && !isPhone && <aside className="wb-dock">{panel}</aside>}
+            {assistantOpen && !isPhone && (
+              <aside className="wb-dock">{panel}</aside>
+            )}
           </div>
         </div>
         {isPhone && (
           <Dialog open={assistantOpen} onOpenChange={setAssistantOpen}>
             <DialogContent className="wb-sheet" showCloseButton={false}>
               <DialogTitle className="sr-only">Ask Oyzu</DialogTitle>
-              <DialogDescription className="sr-only">Troubleshooting assistant about {contextLabel}</DialogDescription>
+              <DialogDescription className="sr-only">
+                Troubleshooting assistant about {contextLabel}
+              </DialogDescription>
               {panel}
             </DialogContent>
           </Dialog>
@@ -690,12 +838,20 @@ function useLiveElapsed(elapsedMs: number, running: boolean) {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, [running]);
-  return running ? elapsedMs + Math.min(Math.max(0, now - changedAt.current), 2000) : elapsedMs;
+  return running
+    ? elapsedMs + Math.min(Math.max(0, now - changedAt.current), 2000)
+    : elapsedMs;
 }
 
 // ---------------------------------------------------------------- global search
 
-type Hit = { key: string; kind: string; label: string; meta: string; page: WbPage };
+type Hit = {
+  key: string;
+  kind: string;
+  label: string;
+  meta: string;
+  page: WbPage;
+};
 
 function searchAll(query: string): Hit[] {
   const q = query.trim().toLowerCase();
@@ -735,7 +891,13 @@ function searchAll(query: string): Hit[] {
     })),
   ]
     .filter((hit) => hit.text.toLowerCase().includes(q))
-    .map(({ key, kind, label, meta, page }) => ({ key, kind, label, meta, page }));
+    .map(({ key, kind, label, meta, page }) => ({
+      key,
+      kind,
+      label,
+      meta,
+      page,
+    }));
   return hits.slice(0, 8);
 }
 
@@ -775,7 +937,9 @@ function GlobalSearch({
           }
           if (event.key === "ArrowDown") {
             event.preventDefault();
-            event.currentTarget.parentElement?.querySelector<HTMLButtonElement>(".wb-gsearch-list button")?.focus();
+            event.currentTarget.parentElement
+              ?.querySelector<HTMLButtonElement>(".wb-gsearch-list button")
+              ?.focus();
           }
         }}
       />
@@ -784,7 +948,11 @@ function GlobalSearch({
       </kbd>
       {open && (
         <ul className="wb-gsearch-list" aria-label="Search results">
-          {hits.length === 0 && <li className="wb-gsearch-empty">Nothing matches “{query.trim()}”.</li>}
+          {hits.length === 0 && (
+            <li className="wb-gsearch-empty">
+              Nothing matches “{query.trim()}”.
+            </li>
+          )}
           {hits.map((hit) => (
             <li key={hit.kind + hit.key}>
               <button
@@ -797,11 +965,17 @@ function GlobalSearch({
                   const li = event.currentTarget.parentElement;
                   if (event.key === "ArrowDown") {
                     event.preventDefault();
-                    (li?.nextElementSibling?.querySelector("button") as HTMLButtonElement | null)?.focus();
+                    (
+                      li?.nextElementSibling?.querySelector(
+                        "button",
+                      ) as HTMLButtonElement | null
+                    )?.focus();
                   }
                   if (event.key === "ArrowUp") {
                     event.preventDefault();
-                    const prev = li?.previousElementSibling?.querySelector("button") as HTMLButtonElement | null;
+                    const prev = li?.previousElementSibling?.querySelector(
+                      "button",
+                    ) as HTMLButtonElement | null;
                     if (prev) prev.focus();
                     else inputRef.current?.focus();
                   }
@@ -829,7 +1003,12 @@ const triggerLabel: Record<Run["trigger"], string> = {
   manual: "Manual",
   schedule: "Schedule",
 };
-const triggerIcon = { pull_request: GitPullRequest, push: GitCommitHorizontal, manual: Hand, schedule: Timer } as const;
+const triggerIcon = {
+  pull_request: GitPullRequest,
+  push: GitCommitHorizontal,
+  manual: Hand,
+  schedule: Timer,
+} as const;
 
 const stateFilters: [string, string][] = [
   ["all", "All states"],
@@ -841,8 +1020,10 @@ const stateFilters: [string, string][] = [
 
 function matchesState(run: Run, filter: string) {
   if (filter === "all") return true;
-  if (filter === "other") return run.state === "skipped" || run.state === "cancelled";
-  if (filter === "failed") return run.state === "failed" || run.state === "timed_out";
+  if (filter === "other")
+    return run.state === "skipped" || run.state === "cancelled";
+  if (filter === "failed")
+    return run.state === "failed" || run.state === "timed_out";
   return run.state === filter;
 }
 
@@ -863,7 +1044,8 @@ function RunsPage() {
           .toLowerCase()
           .includes(q)),
   );
-  const count = (filter: string) => all.filter((run) => matchesState(run, filter)).length;
+  const count = (filter: string) =>
+    all.filter((run) => matchesState(run, filter)).length;
   const stats: [string, string, number][] = [
     ["failed", "Failed", count("failed")],
     ["running", "Running", count("running")],
@@ -893,9 +1075,18 @@ function RunsPage() {
         ))}
       </div>
       <div className="wb-toolbar">
-        <SearchField value={query} onChange={setQuery} label="Search runs" placeholder="Search by number, title, branch or commit…" />
+        <SearchField
+          value={query}
+          onChange={setQuery}
+          label="Search runs"
+          placeholder="Search by number, title, branch or commit…"
+        />
         <Select value={state} onValueChange={setState}>
-          <SelectTrigger size="sm" aria-label="Filter by state" className="wb-select">
+          <SelectTrigger
+            size="sm"
+            aria-label="Filter by state"
+            className="wb-select"
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -907,7 +1098,11 @@ function RunsPage() {
           </SelectContent>
         </Select>
         <Select value={trigger} onValueChange={setTrigger}>
-          <SelectTrigger size="sm" aria-label="Filter by trigger" className="wb-select">
+          <SelectTrigger
+            size="sm"
+            aria-label="Filter by trigger"
+            className="wb-select"
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -958,7 +1153,12 @@ function RunsPage() {
                 const TriggerIcon = triggerIcon[run.trigger];
                 const isLive = run.state === "running";
                 return (
-                  <TableRow key={run.id} className="wb-row" data-live={isLive || undefined} onClick={() => openRun(run.id)}>
+                  <TableRow
+                    key={run.id}
+                    className="wb-row"
+                    data-live={isLive || undefined}
+                    onClick={() => openRun(run.id)}
+                  >
                     <TableCell data-label="State">
                       <StateChip state={run.state} size="sm" />
                     </TableCell>
@@ -971,7 +1171,8 @@ function RunsPage() {
                           openRun(run.id);
                         }}
                       >
-                        <span className="wb-run-number">{run.number}</span> {run.title}
+                        <span className="wb-run-number">{run.number}</span>{" "}
+                        {run.title}
                       </button>
                       <small className="wb-muted">
                         {run.author} · <Mono>{run.commit.slice(0, 7)}</Mono>
@@ -988,12 +1189,16 @@ function RunsPage() {
                     </TableCell>
                     <TableCell data-label="Trigger">
                       <span className="wb-trigger">
-                        <TriggerIcon size={12} aria-hidden="true" /> {triggerLabel[run.trigger]}
+                        <TriggerIcon size={12} aria-hidden="true" />{" "}
+                        {triggerLabel[run.trigger]}
                       </span>
                     </TableCell>
                     <TableCell data-label="Duration" className="wb-num">
                       {isLive ? (
-                        <span className="wb-live-timer" aria-label={`Running for ${duration(liveElapsed)}`}>
+                        <span
+                          className="wb-live-timer"
+                          aria-label={`Running for ${duration(liveElapsed)}`}
+                        >
                           <span className="wb-pulse" aria-hidden="true" />
                           {duration(liveElapsed)}
                         </span>
@@ -1002,7 +1207,9 @@ function RunsPage() {
                       )}
                     </TableCell>
                     <TableCell data-label="Started">
-                      <span className="wb-cell-main">{clock(run.createdAt)}</span>
+                      <span className="wb-cell-main">
+                        {clock(run.createdAt)}
+                      </span>
                       <small className="wb-muted">{ago(run.createdAt)}</small>
                     </TableCell>
                   </TableRow>
@@ -1022,24 +1229,35 @@ function operationText(run: Run) {
   const op = run.operation;
   if (op.kind === "run") return `Run task ${op.task}`;
   if (op.targets?.length) return `Build ${op.targets.join(", ")}`;
-  if (op.affectedBase) return `Build every target affected since merge base ${op.affectedBase}`;
+  if (op.affectedBase)
+    return `Build every target affected since merge base ${op.affectedBase}`;
   return "Build all targets";
 }
 
-function attemptGroups(run: Run, attempt: number, entries: readonly LogEntry[]): LogGroup[] {
+function attemptGroups(
+  run: Run,
+  attempt: number,
+  entries: readonly LogEntry[],
+): LogGroup[] {
   if (attempt === run.attempt) return run.groups;
   // An earlier, lost attempt: only the groups it reached, closed where it stopped.
   return run.groups
     .filter((group) => entries.some((entry) => entry.scope === group.scope))
     .map((group) => ({
       ...group,
-      state: group.scope === "runner" ? ("failed" as const) : ("skipped" as const),
-      durationMs: group.scope === "runner" ? run.attempts[attempt - 1]?.durationMs ?? 0 : 0,
+      state:
+        group.scope === "runner" ? ("failed" as const) : ("skipped" as const),
+      durationMs:
+        group.scope === "runner"
+          ? (run.attempts[attempt - 1]?.durationMs ?? 0)
+          : 0,
     }));
 }
 
 function fmtBytes(size: number) {
-  return size >= 1024 ? `${(size / 1024).toFixed(size >= 10_240 ? 0 : 1)} KB` : `${size} B`;
+  return size >= 1024
+    ? `${(size / 1024).toFixed(size >= 10_240 ? 0 : 1)} KB`
+    : `${size} B`;
 }
 
 function RunDetail({
@@ -1059,7 +1277,15 @@ function RunDetail({
   onCancelLive: () => void;
   logHeight: string;
 }) {
-  const { role, go, runFor, liveElapsed, askAbout, openAssistant, openPoolLogs } = useWb();
+  const {
+    role,
+    go,
+    runFor,
+    liveElapsed,
+    askAbout,
+    openAssistant,
+    openPoolLogs,
+  } = useWb();
   const [confirm, setConfirm] = useState<"rerun" | "cancel">();
   const [done, setDone] = useState<string>();
   const base = runs.find((item) => item.id === runId);
@@ -1069,7 +1295,11 @@ function RunDetail({
         title="Run not found"
         description="Runs are kept for 30 days."
         action={
-          <Button size="sm" variant="outline" onClick={() => go({ name: "runs" })}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => go({ name: "runs" })}
+          >
             All runs
           </Button>
         }
@@ -1080,7 +1310,8 @@ function RunDetail({
   const running = run.state === "running";
   const attempt = view.attempt ?? run.attempt;
   const attemptInfo = run.attempts.find((a) => a.n === attempt);
-  const tab: RunTab = view.tab ?? (run.state === "failed" || isLiveRun ? "logs" : "summary");
+  const tab: RunTab =
+    view.tab ?? (run.state === "failed" || isLiveRun ? "logs" : "summary");
   const entries = isLiveRun ? liveEntries : logFor(run.id, attempt);
   const groups = isLiveRun ? run.groups : attemptGroups(run, attempt, entries);
   const delivery = run.deliveryId ? deliveryById(run.deliveryId) : undefined;
@@ -1092,7 +1323,9 @@ function RunDetail({
   return (
     <>
       <PageHead
-        back={<BackLink label="All runs" onClick={() => go({ name: "runs" })} />}
+        back={
+          <BackLink label="All runs" onClick={() => go({ name: "runs" })} />
+        }
         eyebrow={
           <>
             Run {run.number} · {run.check}
@@ -1111,7 +1344,8 @@ function RunDetail({
               <GitBranch size={13} aria-hidden="true" /> {run.ref}
             </span>
             <span className="wb-meta-item">
-              <GitCommitHorizontal size={13} aria-hidden="true" /> <Mono>{short}</Mono>
+              <GitCommitHorizontal size={13} aria-hidden="true" />{" "}
+              <Mono>{short}</Mono>
             </span>
             <span className="wb-meta-item">by {run.author}</span>
             <span className="wb-meta-item">
@@ -1135,15 +1369,29 @@ function RunDetail({
             <Button
               size="sm"
               variant="ghost"
-              onClick={() => (run.state === "failed" ? askAbout("Why did this fail?") : openAssistant())}
+              onClick={() =>
+                run.state === "failed"
+                  ? askAbout("Why did this fail?")
+                  : openAssistant()
+              }
             >
-              <Sparkles /> {run.state === "failed" ? "Ask why it failed" : "Ask Oyzu"}
+              <Sparkles />{" "}
+              {run.state === "failed" ? "Ask why it failed" : "Ask Oyzu"}
             </Button>
-            <Button size="sm" variant="outline" onClick={() => setConfirm("rerun")} disabled={running}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setConfirm("rerun")}
+              disabled={running}
+            >
               <RotateCcw /> Rerun
             </Button>
             {running && (
-              <Button size="sm" variant="destructive" onClick={() => setConfirm("cancel")}>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => setConfirm("cancel")}
+              >
                 <CircleStop /> Cancel
               </Button>
             )}
@@ -1163,8 +1411,9 @@ function RunDetail({
             );
           }}
         >
-          Rerun {run.check} for <Mono>{short}</Mono>? It creates attempt {run.attempts.length + 1} with the same command and
-          commit{run.pr ? `, and the check on #${run.pr} goes back to queued` : ""}.
+          Rerun {run.check} for <Mono>{short}</Mono>? It creates attempt{" "}
+          {run.attempts.length + 1} with the same command and commit
+          {run.pr ? `, and the check on #${run.pr} goes back to queued` : ""}.
         </ConfirmStrip>
       )}
       {confirm === "cancel" && (
@@ -1175,10 +1424,13 @@ function RunDetail({
           onConfirm={() => {
             setConfirm(undefined);
             onCancelLive();
-            setDone(`Cancelled run ${run.number}. The executor stopped and ${run.check} reports cancelled on #${run.pr}.`);
+            setDone(
+              `Cancelled run ${run.number}. The executor stopped and ${run.check} reports cancelled on #${run.pr}.`,
+            );
           }}
         >
-          Cancel run {run.number}? The executor stops now, outputs aren't uploaded, and {run.check} reports cancelled.
+          Cancel run {run.number}? The executor stops now, outputs aren't
+          uploaded, and {run.check} reports cancelled.
         </ConfirmStrip>
       )}
       {done && <Done text={done} onDismiss={() => setDone(undefined)} />}
@@ -1189,7 +1441,19 @@ function RunDetail({
           action={
             run.id === failedRun.id ? (
               <div className="wb-banner-actions">
-                <Button size="sm" variant="outline" onClick={() => onView({ ...view, tab: "logs", attempt: 2, focusSeq: undefined, nonce: view.nonce + 1 })}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    onView({
+                      ...view,
+                      tab: "logs",
+                      attempt: 2,
+                      focusSeq: undefined,
+                      nonce: view.nonce + 1,
+                    })
+                  }
+                >
                   Open first error
                 </Button>
               </div>
@@ -1197,8 +1461,12 @@ function RunDetail({
           }
         >
           Reason code <Mono>{run.reason.code}</Mono>
-          {run.reason.code === "SUPERSEDED" ? ". Pull request runs cancel when a newer push arrives; main never cancels." : ""}
-          {run.reason.code === "TASK_NOT_DEFINED" ? ". The binding asked for a task this commit doesn't define, so nothing ran." : ""}
+          {run.reason.code === "SUPERSEDED"
+            ? ". Pull request runs cancel when a newer push arrives; main never cancels."
+            : ""}
+          {run.reason.code === "TASK_NOT_DEFINED"
+            ? ". The binding asked for a task this commit doesn't define, so nothing ran."
+            : ""}
         </FeedbackBanner>
       )}
 
@@ -1221,7 +1489,8 @@ function RunDetail({
               "Pool",
               attemptInfo ? (
                 <>
-                  {poolById(attemptInfo.pool)?.name ?? attemptInfo.pool} <span className="wb-muted">· {attemptInfo.manager}</span>
+                  {poolById(attemptInfo.pool)?.name ?? attemptInfo.pool}{" "}
+                  <span className="wb-muted">· {attemptInfo.manager}</span>
                 </>
               ) : (
                 <span className="wb-muted">Never assigned</span>
@@ -1230,7 +1499,13 @@ function RunDetail({
             [
               "Trigger",
               binding ? (
-                <LinkButton onClick={() => go({ name: "bindings", bindingId: binding.id })}>{binding.name}</LinkButton>
+                <LinkButton
+                  onClick={() =>
+                    go({ name: "bindings", bindingId: binding.id })
+                  }
+                >
+                  {binding.name}
+                </LinkButton>
               ) : (
                 "Manual, from the CLI"
               ),
@@ -1239,7 +1514,13 @@ function RunDetail({
               "Delivery",
               run.deliveryId ? (
                 delivery ? (
-                  <LinkButton onClick={() => go({ name: "delivery", deliveryId: delivery.id })}>{delivery.id}</LinkButton>
+                  <LinkButton
+                    onClick={() =>
+                      go({ name: "delivery", deliveryId: delivery.id })
+                    }
+                  >
+                    {delivery.id}
+                  </LinkButton>
                 ) : (
                   <Mono>{run.deliveryId}</Mono>
                 )
@@ -1259,18 +1540,37 @@ function RunDetail({
               <button
                 type="button"
                 aria-pressed={a.n === attempt}
-                onClick={() => onView({ ...view, attempt: a.n, tab: "logs", focusSeq: undefined })}
+                onClick={() =>
+                  onView({
+                    ...view,
+                    attempt: a.n,
+                    tab: "logs",
+                    focusSeq: undefined,
+                  })
+                }
               >
                 <span className="wb-attempt-head">
                   <strong>Attempt {a.n}</strong>
-                  <StateChip state={a.state} size="sm" label={a.state === "timed_out" ? "Executor lost" : undefined} />
+                  <StateChip
+                    state={a.state}
+                    size="sm"
+                    label={
+                      a.state === "timed_out" ? "Executor lost" : undefined
+                    }
+                  />
                 </span>
                 <small>
                   {a.manager} · <Mono>{a.jobId}</Mono>
                 </small>
                 <small>
-                  {clock(a.startedAt)} · {a.state === "running" ? "running" : duration(a.durationMs)}
-                  {lost(a.reason) && <span className="wb-warn-text"> · {lost(a.reason)} lines not received</span>}
+                  {clock(a.startedAt)} ·{" "}
+                  {a.state === "running" ? "running" : duration(a.durationMs)}
+                  {lost(a.reason) && (
+                    <span className="wb-warn-text">
+                      {" "}
+                      · {lost(a.reason)} lines not received
+                    </span>
+                  )}
                 </small>
               </button>
               {index < run.attempts.length - 1 && (
@@ -1290,8 +1590,16 @@ function RunDetail({
         onChange={setTab}
         tabs={[
           { id: "logs", label: "Logs" },
-          { id: "summary", label: "Summary", count: run.groups.length || undefined },
-          { id: "outputs", label: "Outputs", count: run.outputs.length || undefined },
+          {
+            id: "summary",
+            label: "Summary",
+            count: run.groups.length || undefined,
+          },
+          {
+            id: "outputs",
+            label: "Outputs",
+            count: run.outputs.length || undefined,
+          },
           { id: "trigger", label: "Trigger" },
         ]}
       />
@@ -1300,14 +1608,22 @@ function RunDetail({
         {tab === "logs" &&
           (entries.length === 0 ? (
             <EmptyState
-              title={run.state === "skipped" ? "Nothing ran, so there's no log" : "Log not included in this preview"}
+              title={
+                run.state === "skipped"
+                  ? "Nothing ran, so there's no log"
+                  : "Log not included in this preview"
+              }
               description={
                 run.state === "skipped"
                   ? `The run was skipped before a runner was assigned: ${run.reason?.message ?? "no reason recorded"}.`
                   : "This preview carries logs for runs 9012, 9013 and 9014. Copy the command above to reproduce this run locally."
               }
               action={
-                <Button size="sm" variant="outline" onClick={() => setTab("summary")}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setTab("summary")}
+                >
                   View summary
                 </Button>
               }
@@ -1319,10 +1635,14 @@ function RunDetail({
               entries={entries}
               groups={groups}
               attempt={attempt}
-              onAttemptChange={(n) => onView({ ...view, attempt: n, focusSeq: undefined })}
+              onAttemptChange={(n) =>
+                onView({ ...view, attempt: n, focusSeq: undefined })
+              }
               live={running}
               role={role}
-              onDiagnostics={(jobId) => openPoolLogs(poolOfJob(jobId), { job: jobId })}
+              onDiagnostics={(jobId) =>
+                openPoolLogs(poolOfJob(jobId), { job: jobId })
+              }
               onAsk={onAskLine}
               focusSeq={view.focusSeq}
               height={logHeight}
@@ -1332,7 +1652,9 @@ function RunDetail({
         {tab === "outputs" &&
           (run.outputs.length === 0 ? (
             <EmptyState
-              title={running ? "Outputs appear when the run finishes" : "No outputs"}
+              title={
+                running ? "Outputs appear when the run finishes" : "No outputs"
+              }
               description={
                 running
                   ? "The runner uploads outputs and their digests after the last task."
@@ -1421,7 +1743,9 @@ function RunSummary({ run }: { run: Run }) {
                     </span>
                   </TableCell>
                   <TableCell data-label="Duration" className="wb-num">
-                    {group.state === "running" ? "running" : duration(group.durationMs)}
+                    {group.state === "running"
+                      ? "running"
+                      : duration(group.durationMs)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -1430,9 +1754,12 @@ function RunSummary({ run }: { run: Run }) {
         )}
         {run.operation.kind === "build" && run.operation.affectedBase && (
           <p className="wb-note">
-            Not selected: <strong>web-console</strong> and <strong>ledger-sim</strong> weren't affected by this change. Their
+            Not selected: <strong>web-console</strong> and{" "}
+            <strong>ledger-sim</strong> weren't affected by this change. Their
             required checks report as skipped.{" "}
-            <LinkButton onClick={() => go({ name: "checks" })}>See checks for {run.commit.slice(0, 7)}</LinkButton>
+            <LinkButton onClick={() => go({ name: "checks" })}>
+              See checks for {run.commit.slice(0, 7)}
+            </LinkButton>
           </p>
         )}
       </section>
@@ -1445,7 +1772,12 @@ function RunSummary({ run }: { run: Run }) {
             ["Created", clock(run.createdAt)],
             ["First attempt started", first ? clock(first.startedAt) : "—"],
             ["Attempts", String(run.attempts.length)],
-            ["Final attempt", last ? `${last.state === "running" ? "running" : duration(last.durationMs)} on ${last.manager}` : "—"],
+            [
+              "Final attempt",
+              last
+                ? `${last.state === "running" ? "running" : duration(last.durationMs)} on ${last.manager}`
+                : "—",
+            ],
           ]}
         />
       </section>
@@ -1457,14 +1789,16 @@ function RunTrigger({ run }: { run: Run }) {
   const { go } = useWb();
   const delivery = run.deliveryId ? deliveryById(run.deliveryId) : undefined;
   const binding = run.bindingId ? bindingById(run.bindingId) : undefined;
-  const action = binding?.actions.find((a) => a.check === run.check) ?? binding?.actions[0];
+  const action =
+    binding?.actions.find((a) => a.check === run.check) ?? binding?.actions[0];
   if (run.trigger === "manual")
     return (
       <div className="wb-panel">
         <h3>Started manually</h3>
         <p className="wb-note">
-          {run.author} ran <Mono>{run.command} --remote</Mono> from a terminal. Manual runs report to the portal only; they
-          don't write a GitHub check.
+          {run.author} ran <Mono>{run.command} --remote</Mono> from a terminal.
+          Manual runs report to the portal only; they don't write a GitHub
+          check.
         </p>
       </div>
     );
@@ -1480,8 +1814,16 @@ function RunTrigger({ run }: { run: Run }) {
             </div>
             <Facts
               rows={[
-                ["Received", `${clock(delivery.receivedAt)} via ${delivery.connector}`],
-                ["Pull request", delivery.pr ? `#${delivery.pr.number} ${delivery.pr.title}` : "—"],
+                [
+                  "Received",
+                  `${clock(delivery.receivedAt)} via ${delivery.connector}`,
+                ],
+                [
+                  "Pull request",
+                  delivery.pr
+                    ? `#${delivery.pr.number} ${delivery.pr.title}`
+                    : "—",
+                ],
                 ["Actor", delivery.actor],
                 [
                   "Correlation",
@@ -1492,13 +1834,18 @@ function RunTrigger({ run }: { run: Run }) {
                 ],
               ]}
             />
-            <Button size="sm" variant="outline" onClick={() => go({ name: "delivery", deliveryId: delivery.id })}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => go({ name: "delivery", deliveryId: delivery.id })}
+            >
               Open delivery {delivery.id} <ArrowRight />
             </Button>
           </>
         ) : (
           <p className="wb-note">
-            Delivery <Mono>{run.deliveryId}</Mono> started this run. Its record is older than today's trigger history.
+            Delivery <Mono>{run.deliveryId}</Mono> started this run. Its record
+            is older than today's trigger history.
           </p>
         )}
       </section>
@@ -1522,11 +1869,23 @@ function RunTrigger({ run }: { run: Run }) {
                   "—"
                 ),
               ],
-              ["Mandatory", binding.mandatory ? "Yes, projects can't turn it off" : "No"],
-              ["Cancel previous", binding.cancelPrevious ? "Yes, new pushes cancel unfinished runs" : "No"],
+              [
+                "Mandatory",
+                binding.mandatory ? "Yes, projects can't turn it off" : "No",
+              ],
+              [
+                "Cancel previous",
+                binding.cancelPrevious
+                  ? "Yes, new pushes cancel unfinished runs"
+                  : "No",
+              ],
             ]}
           />
-          <Button size="sm" variant="outline" onClick={() => go({ name: "bindings", bindingId: binding.id })}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => go({ name: "bindings", bindingId: binding.id })}
+          >
             Open binding <ArrowRight />
           </Button>
         </section>

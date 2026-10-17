@@ -134,36 +134,100 @@ html.dark [data-slot="alert-dialog-content"] {
   --muted-foreground: #c0ccd4;
   background-color: var(--background);
   border-color: #52616d;
-  box-shadow: 0 24px 80px #0005, 0 0 0 1px #ffffff0c;
+  box-shadow:
+    0 24px 80px #0005,
+    0 0 0 1px #ffffff0c;
 }
-html.dark .connector-wizard-modal .setup-footer { background: #303e49; }
-html.dark .connection-diagnostics[data-result="success"] header { background: #264839; color: #a5e2bf; }
-html.dark .connection-diagnostics[data-result="failure"] header { background: #543435; color: #ffc0ba; }
+html.dark .connector-wizard-modal .setup-footer {
+  background: #303e49;
+}
+html.dark .connection-diagnostics[data-result="success"] header {
+  background: #264839;
+  color: #a5e2bf;
+}
+html.dark .connection-diagnostics[data-result="failure"] header {
+  background: #543435;
+  color: #ffc0ba;
+}
 
 /* Wizard: a quiet, continuous surface with a subtly lifted navigation rail. */
 html.dark .connector-wizard-modal[data-slot="dialog-content"] {
- --background: #292b30; --surface-base: #292b30; --surface-panel: #23252a;
- --surface-muted: #33363c; --border: #44474f; --line-subtle: #44474f;
- --input: #676d77; --line-strong: #676d77; --text-muted: #bfc3cc;
- border: 1px solid #50535c; border-radius: 10px;
- box-shadow: 0 32px 100px #0007;
+  --background: #292b30;
+  --surface-base: #292b30;
+  --surface-panel: #23252a;
+  --surface-muted: #33363c;
+  --border: #44474f;
+  --line-subtle: #44474f;
+  --input: #676d77;
+  --line-strong: #676d77;
+  --text-muted: #bfc3cc;
+  border: 1px solid #50535c;
+  border-radius: 10px;
+  box-shadow: 0 32px 100px #0007;
 }
 html.dark .connector-wizard-modal .full-page-heading {
- background: #222938; padding-top: 22px; padding-bottom: 20px;
- border-bottom: 1px solid #44474f;
+  background: #222938;
+  padding-top: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #44474f;
 }
-html.dark .connector-wizard-modal .full-page-heading h1 { font-size: 27px; margin-top: 8px; margin-bottom: 8px; }
-html.dark .connector-wizard-modal .full-page-heading::after { opacity: .25; }
-html.dark .connector-wizard-modal .full-page-heading .eyebrow { color: #b7c1d5; letter-spacing: .13em; }
-html.dark .connector-wizard-modal .setup-footer { background: #292b30; border-color: #44474f; }
-html.dark .connector-wizard-modal .setup-progress li { color: #c1c5ce; }
-html.dark .connector-wizard-modal .setup-progress li > span { background: transparent; border-color: #707581; color: #bfc3cc; }
-html.dark .connector-wizard-modal .setup-progress li[aria-current] { color: #e8edff; }
-html.dark .connector-wizard-modal .setup-progress li[aria-current] > span { background: #4566ee; border-color: #6d87ff; color: white; box-shadow: none; }
-html.dark .connector-wizard-modal .connector-selected img { background: #f4f5f7; padding: 5px; border-radius: 7px; height: 34px; width: 34px; }
-html.dark .connector-wizard-modal .setup-step h2 { font-size: 21px; font-weight: 550; }
-html.dark .connector-wizard-modal input:focus { outline-color: #7892ff; }
+html.dark .connector-wizard-modal .full-page-heading h1 {
+  font-size: 27px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+html.dark .connector-wizard-modal .full-page-heading::after {
+  opacity: 0.25;
+}
+html.dark .connector-wizard-modal .full-page-heading .eyebrow {
+  color: #b7c1d5;
+  letter-spacing: 0.13em;
+}
+html.dark .connector-wizard-modal .setup-footer {
+  background: #292b30;
+  border-color: #44474f;
+}
+html.dark .connector-wizard-modal .setup-progress li {
+  color: #c1c5ce;
+}
+html.dark .connector-wizard-modal .setup-progress li > span {
+  background: transparent;
+  border-color: #707581;
+  color: #bfc3cc;
+}
+html.dark .connector-wizard-modal .setup-progress li[aria-current] {
+  color: #e8edff;
+}
+html.dark .connector-wizard-modal .setup-progress li[aria-current] > span {
+  background: #4566ee;
+  border-color: #6d87ff;
+  color: white;
+  box-shadow: none;
+}
+html.dark .connector-wizard-modal .connector-selected img {
+  background: #f4f5f7;
+  padding: 5px;
+  border-radius: 7px;
+  height: 34px;
+  width: 34px;
+}
+html.dark .connector-wizard-modal .setup-step h2 {
+  font-size: 21px;
+  font-weight: 550;
+}
+html.dark .connector-wizard-modal input:focus {
+  outline-color: #7892ff;
+}
 @media (min-width: 761px) {
- html.dark .connector-wizard-modal .full-page { background: linear-gradient(to right, #33363c 0, #33363c 240px, #292b30 240px); }
- html.dark .connector-wizard-modal .full-page-body { background: transparent; }
+  html.dark .connector-wizard-modal .full-page {
+    background: linear-gradient(
+      to right,
+      #33363c 0,
+      #33363c 240px,
+      #292b30 240px
+    );
+  }
+  html.dark .connector-wizard-modal .full-page-body {
+    background: transparent;
+  }
 }

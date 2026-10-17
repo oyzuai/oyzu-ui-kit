@@ -1,4 +1,11 @@
-import { Fragment, useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import {
   ArrowRight,
   Ban,
@@ -27,11 +34,20 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "../../../components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "../../../components/ui/dialog";
 import { TooltipProvider } from "../../../components/ui/tooltip";
 import { CopyIdentifier } from "../../../components/patterns/copy-identifier";
 import { EmptyState } from "../../../components/patterns/empty-state";
-import { AssistantComposer, AssistantMessages, useAssistant } from "../assistant";
+import {
+  AssistantComposer,
+  AssistantMessages,
+  useAssistant,
+} from "../assistant";
 import type { AssistantContext } from "../assistant-engine";
 import { useLiveRun } from "../live";
 import { GroupIcon, LogViewer } from "../log-viewer";
@@ -185,8 +201,16 @@ const explains: Record<string, Explain> = {
         {
           type: "actions",
           actions: [
-            { id: "register-repo", label: "Ask to register acme/ledger-tools", primary: true },
-            { id: "open-delivery", label: "Open delivery record", target: "dlv-7e40" },
+            {
+              id: "register-repo",
+              label: "Ask to register acme/ledger-tools",
+              primary: true,
+            },
+            {
+              id: "open-delivery",
+              label: "Open delivery record",
+              target: "dlv-7e40",
+            },
           ],
         },
       ],
@@ -216,7 +240,17 @@ const explains: Record<string, Explain> = {
           type: "text",
           text: "The task was added to main after this branch was cut. Rebasing #480 on main picks it up.",
         },
-        { type: "actions", actions: [{ id: "open-binding", label: "Open the rule", primary: true, target: "payments-policy" }] },
+        {
+          type: "actions",
+          actions: [
+            {
+              id: "open-binding",
+              label: "Open the rule",
+              primary: true,
+              target: "payments-policy",
+            },
+          ],
+        },
       ],
       sources: ["Run 9004 record", "Task list at b81e04c"],
     },
@@ -232,23 +266,45 @@ const explains: Record<string, Explain> = {
           type: "text",
           text: "**Superseded, not failed.** dana.okafor pushed 9c41e2a to #482 while run 9001 was still building e5c9a1b. The pull request rule cancels unfinished runs for older pushes, so 9001 stopped after 1m 36s and run 9012 took over.",
         },
-        { type: "actions", actions: [{ id: "open-run", label: "Open run 9012", primary: true, target: runs[0].id }] },
+        {
+          type: "actions",
+          actions: [
+            {
+              id: "open-run",
+              label: "Open run 9012",
+              primary: true,
+              target: runs[0].id,
+            },
+          ],
+        },
       ],
-      sources: ["Run 9001 record", "Delivery dlv-7f3a (started 9012, cancelled 9001)"],
+      sources: [
+        "Run 9001 record",
+        "Delivery dlv-7f3a (started 9012, cancelled 9001)",
+      ],
     },
   },
 };
 
 function liveSummary(live: LiveState) {
-  if (live.state !== "running") return `Built api-image in ${duration(LIVE_END)}`;
-  if (live.groups["api-image/image"] === "running") return "Building the container image";
+  if (live.state !== "running")
+    return `Built api-image in ${duration(LIVE_END)}`;
+  if (live.groups["api-image/image"] === "running")
+    return "Building the container image";
   return "Compiling api-image";
 }
 
 function buildChanges(live: LiveState): Change[] {
   const done = live.state !== "running";
-  const progress = Math.min(1, Math.max(0.02, (live.elapsedMs - LIVE_START) / (LIVE_END - LIVE_START)));
-  const dlv = (id: string, focus: StageFocus): GoTarget => ({ to: "delivery", id, focus });
+  const progress = Math.min(
+    1,
+    Math.max(0.02, (live.elapsedMs - LIVE_START) / (LIVE_END - LIVE_START)),
+  );
+  const dlv = (id: string, focus: StageFocus): GoTarget => ({
+    to: "delivery",
+    id,
+    focus,
+  });
   return [
     {
       id: "pr-482",
@@ -262,9 +318,30 @@ function buildChanges(live: LiveState): Change[] {
       attention: true,
       running: !done,
       steps: [
-        { key: "delivery", label: "Delivery", value: "PR synchronize", sub: "3:30 PM ET", tone: "ok", target: dlv("dlv-7f3a", "received") },
-        { key: "verified", label: "Verified", value: "Signature valid", sub: "HMAC SHA-256", tone: "ok", target: dlv("dlv-7f3a", "verified") },
-        { key: "matched", label: "Matched", value: "2 of 5 rules", sub: "3 actions", tone: "ok", target: dlv("dlv-7f3a", "matched") },
+        {
+          key: "delivery",
+          label: "Delivery",
+          value: "PR synchronize",
+          sub: "3:30 PM ET",
+          tone: "ok",
+          target: dlv("dlv-7f3a", "received"),
+        },
+        {
+          key: "verified",
+          label: "Verified",
+          value: "Signature valid",
+          sub: "HMAC SHA-256",
+          tone: "ok",
+          target: dlv("dlv-7f3a", "verified"),
+        },
+        {
+          key: "matched",
+          label: "Matched",
+          value: "2 of 5 rules",
+          sub: "3 actions",
+          tone: "ok",
+          target: dlv("dlv-7f3a", "matched"),
+        },
       ],
       lanes: [
         {
@@ -297,10 +374,15 @@ function buildChanges(live: LiveState): Change[] {
           runNumber: 9014,
           tone: done ? "ok" : "running",
           summary: liveSummary(live),
-          meta: done ? duration(LIVE_END) : `live · ${duration(live.elapsedMs)}`,
+          meta: done
+            ? duration(LIVE_END)
+            : `live · ${duration(live.elapsedMs)}`,
           live: !done,
           progress,
-          check: { tone: done ? "ok" : "running", label: done ? "Success" : "In progress" },
+          check: {
+            tone: done ? "ok" : "running",
+            label: done ? "Success" : "In progress",
+          },
         },
         {
           id: "web-console",
@@ -340,7 +422,14 @@ function buildChanges(live: LiveState): Change[] {
       attention: true,
       running: false,
       steps: [
-        { key: "delivery", label: "Delivery", value: "12 pushes", sub: "since 2:02 PM ET", tone: "ok", target: dlv("dlv-rej", "received") },
+        {
+          key: "delivery",
+          label: "Delivery",
+          value: "12 pushes",
+          sub: "since 2:02 PM ET",
+          tone: "ok",
+          target: dlv("dlv-rej", "received"),
+        },
         {
           key: "verified",
           label: "Verified",
@@ -350,7 +439,13 @@ function buildChanges(live: LiveState): Change[] {
           target: dlv("dlv-rej", "verified"),
           explain: explains.rejected,
         },
-        { key: "matched", label: "Matched", value: "Not evaluated", tone: "pending", target: dlv("dlv-rej", "matched") },
+        {
+          key: "matched",
+          label: "Matched",
+          value: "Not evaluated",
+          tone: "pending",
+          target: dlv("dlv-rej", "matched"),
+        },
       ],
       lanes: [],
       empty: "Body not read, so no runs started and no checks were written",
@@ -368,8 +463,22 @@ function buildChanges(live: LiveState): Change[] {
       attention: false,
       running: false,
       steps: [
-        { key: "delivery", label: "Delivery", value: "PR opened", sub: "3:18 PM ET", tone: "ok", target: dlv("dlv-7f12", "received") },
-        { key: "verified", label: "Verified", value: "Signature valid", sub: "HMAC SHA-256", tone: "ok", target: dlv("dlv-7f12", "verified") },
+        {
+          key: "delivery",
+          label: "Delivery",
+          value: "PR opened",
+          sub: "3:18 PM ET",
+          tone: "ok",
+          target: dlv("dlv-7f12", "received"),
+        },
+        {
+          key: "verified",
+          label: "Verified",
+          value: "Signature valid",
+          sub: "HMAC SHA-256",
+          tone: "ok",
+          target: dlv("dlv-7f12", "verified"),
+        },
         {
           key: "matched",
           label: "Matched",
@@ -381,7 +490,8 @@ function buildChanges(live: LiveState): Change[] {
         },
       ],
       lanes: [],
-      empty: "No runs, no checks. Marking it ready for review starts oyzu / build",
+      empty:
+        "No runs, no checks. Marking it ready for review starts oyzu / build",
     },
     {
       id: "main",
@@ -395,9 +505,30 @@ function buildChanges(live: LiveState): Change[] {
       attention: false,
       running: false,
       steps: [
-        { key: "delivery", label: "Delivery", value: "Push to main", sub: "2:58 PM ET", tone: "ok", target: dlv("dlv-7e91", "received") },
-        { key: "verified", label: "Verified", value: "Signature valid", sub: "HMAC SHA-256", tone: "ok", target: dlv("dlv-7e91", "verified") },
-        { key: "matched", label: "Matched", value: "1 of 5 rules", sub: "Full build on main", tone: "ok", target: dlv("dlv-7e91", "matched") },
+        {
+          key: "delivery",
+          label: "Delivery",
+          value: "Push to main",
+          sub: "2:58 PM ET",
+          tone: "ok",
+          target: dlv("dlv-7e91", "received"),
+        },
+        {
+          key: "verified",
+          label: "Verified",
+          value: "Signature valid",
+          sub: "HMAC SHA-256",
+          tone: "ok",
+          target: dlv("dlv-7e91", "verified"),
+        },
+        {
+          key: "matched",
+          label: "Matched",
+          value: "1 of 5 rules",
+          sub: "Full build on main",
+          tone: "ok",
+          target: dlv("dlv-7e91", "matched"),
+        },
       ],
       lanes: [
         {
@@ -427,8 +558,22 @@ function buildChanges(live: LiveState): Change[] {
       attention: true,
       running: false,
       steps: [
-        { key: "delivery", label: "Delivery", value: "PR synchronize", sub: "2:41 PM ET", tone: "ok", target: dlv("dlv-7e40", "received") },
-        { key: "verified", label: "Verified", value: "Signature valid", sub: "HMAC SHA-256", tone: "ok", target: dlv("dlv-7e40", "verified") },
+        {
+          key: "delivery",
+          label: "Delivery",
+          value: "PR synchronize",
+          sub: "2:41 PM ET",
+          tone: "ok",
+          target: dlv("dlv-7e40", "received"),
+        },
+        {
+          key: "verified",
+          label: "Verified",
+          value: "Signature valid",
+          sub: "HMAC SHA-256",
+          tone: "ok",
+          target: dlv("dlv-7e40", "verified"),
+        },
         {
           key: "matched",
           label: "Matched",
@@ -454,9 +599,27 @@ function buildChanges(live: LiveState): Change[] {
       attention: false,
       running: false,
       steps: [
-        { key: "delivery", label: "Delivery", value: "PR synchronize", sub: "1:12 PM ET", tone: "ok" },
-        { key: "verified", label: "Verified", value: "Signature valid", tone: "ok" },
-        { key: "matched", label: "Matched", value: "1 rule", sub: "Policy and image", tone: "ok", target: { to: "binding", id: "payments-policy" } },
+        {
+          key: "delivery",
+          label: "Delivery",
+          value: "PR synchronize",
+          sub: "1:12 PM ET",
+          tone: "ok",
+        },
+        {
+          key: "verified",
+          label: "Verified",
+          value: "Signature valid",
+          tone: "ok",
+        },
+        {
+          key: "matched",
+          label: "Matched",
+          value: "1 rule",
+          sub: "Policy and image",
+          tone: "ok",
+          target: { to: "binding", id: "payments-policy" },
+        },
       ],
       lanes: [
         {
@@ -483,7 +646,15 @@ function buildChanges(live: LiveState): Change[] {
       status: { state: "succeeded", label: "Passed" },
       attention: false,
       running: false,
-      steps: [{ key: "cli", label: "Started from", value: "oyzu CLI", sub: "no webhook", tone: "ok" }],
+      steps: [
+        {
+          key: "cli",
+          label: "Started from",
+          value: "oyzu CLI",
+          sub: "no webhook",
+          tone: "ok",
+        },
+      ],
       lanes: [
         {
           id: "8998",
@@ -549,7 +720,11 @@ function TraceDiagram({
   go: Go;
 }) {
   const checksTarget = (lane: Lane): GoTarget | undefined =>
-    change.checksCommit ? { to: "checks", commit: change.checksCommit } : lane.runId ? { to: "run", runId: lane.runId } : undefined;
+    change.checksCommit
+      ? { to: "checks", commit: change.checksCommit }
+      : lane.runId
+        ? { to: "run", runId: lane.runId }
+        : undefined;
   return (
     <div className="tr-trace">
       <ol className="tr-spine" aria-label="Path of this change">
@@ -576,10 +751,18 @@ function TraceDiagram({
                 <StepNode step={step} />
               )}
               {step.explain && (
-                <ExplainChip explain={step.explain} open={openExplain === step.explain.id} onToggle={() => toggle(step.explain!.id)} />
+                <ExplainChip
+                  explain={step.explain}
+                  open={openExplain === step.explain.id}
+                  onToggle={() => toggle(step.explain!.id)}
+                />
               )}
             </div>
-            <span className="tr-edge" data-tone={step.tone === "ok" ? "ok" : "stop"} aria-hidden="true" />
+            <span
+              className="tr-edge"
+              data-tone={step.tone === "ok" ? "ok" : "stop"}
+              aria-hidden="true"
+            />
           </li>
         ))}
       </ol>
@@ -587,7 +770,11 @@ function TraceDiagram({
         <div className="tr-runs-head">
           <span className="tr-node-label">Runs</span>
           {change.checksCommit ? (
-            <button type="button" className="tr-node-label tr-linkish" onClick={() => go({ to: "checks", commit: change.checksCommit! })}>
+            <button
+              type="button"
+              className="tr-node-label tr-linkish"
+              onClick={() => go({ to: "checks", commit: change.checksCommit! })}
+            >
               Checks
             </button>
           ) : (
@@ -611,13 +798,17 @@ function TraceDiagram({
                 <Pip tone={lane.tone} />
                 <span className="tr-run-name">
                   {lane.name}
-                  {lane.runNumber && <span className="tr-run-num">#{lane.runNumber}</span>}
+                  {lane.runNumber && (
+                    <span className="tr-run-num">#{lane.runNumber}</span>
+                  )}
                 </span>
                 <span className="tr-run-sum">{lane.summary}</span>
                 {lane.meta && <span className="tr-run-meta">{lane.meta}</span>}
                 {lane.progress !== undefined && lane.live && (
                   <span className="tr-progress" aria-hidden="true">
-                    <i style={{ width: `${Math.round(lane.progress * 100)}%` }} />
+                    <i
+                      style={{ width: `${Math.round(lane.progress * 100)}%` }}
+                    />
                   </span>
                 )}
               </>
@@ -650,10 +841,19 @@ function TraceDiagram({
                     {(lane.explain || lane.retry) && (
                       <div className="tr-lane-chips">
                         {lane.explain && (
-                          <ExplainChip explain={lane.explain} open={openExplain === lane.explain.id} onToggle={() => toggle(lane.explain!.id)} />
+                          <ExplainChip
+                            explain={lane.explain}
+                            open={openExplain === lane.explain.id}
+                            onToggle={() => toggle(lane.explain!.id)}
+                          />
                         )}
                         {lane.retry && (
-                          <ExplainChip quiet explain={lane.retry} open={openExplain === lane.retry.id} onToggle={() => toggle(lane.retry!.id)} />
+                          <ExplainChip
+                            quiet
+                            explain={lane.retry}
+                            open={openExplain === lane.retry.id}
+                            onToggle={() => toggle(lane.retry!.id)}
+                          />
                         )}
                       </div>
                     )}
@@ -667,7 +867,13 @@ function TraceDiagram({
                       onClick={() => go(capTarget)}
                       aria-label={`Check ${lane.name}: ${lane.check.label}${lane.required ? ", required" : ""}`}
                     >
-                      <Icon size={13} aria-hidden="true" className={lane.check.tone === "running" ? "tr-spin" : undefined} />
+                      <Icon
+                        size={13}
+                        aria-hidden="true"
+                        className={
+                          lane.check.tone === "running" ? "tr-spin" : undefined
+                        }
+                      />
                       <span>{lane.check.label}</span>
                       {lane.required && <small>required</small>}
                     </button>
@@ -710,9 +916,11 @@ function ChangeCard({
   ].filter(Boolean) as Explain[];
   const current = all.find((item) => item.id === openExplain);
   useEffect(() => {
-    if (focusN) ref.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+    if (focusN)
+      ref.current?.scrollIntoView({ block: "start", behavior: "smooth" });
   }, [focusN]);
-  const toggle = (id: string) => setOpenExplain(openExplain === id ? undefined : id);
+  const toggle = (id: string) =>
+    setOpenExplain(openExplain === id ? undefined : id);
   return (
     <article
       ref={ref}
@@ -729,7 +937,10 @@ function ChangeCard({
           <h2 className="tr-h2" id={`tr-card-${change.id}`}>
             <span className="tr-prefix">{change.prefix}</span> {change.title}
             {change.tag && (
-              <span className="tr-tag" data-tone={change.tag === "draft" ? undefined : "warn"}>
+              <span
+                className="tr-tag"
+                data-tone={change.tag === "draft" ? undefined : "warn"}
+              >
                 {change.tag}
               </span>
             )}
@@ -738,21 +949,44 @@ function ChangeCard({
             {change.meta.map((item, index) => (
               <Fragment key={item}>
                 {index > 0 && <span aria-hidden="true">·</span>}
-                <span className={/^[0-9a-f]{7}$/.test(item) || item.includes("/") || item === "main" ? "tr-mono" : undefined}>
+                <span
+                  className={
+                    /^[0-9a-f]{7}$/.test(item) ||
+                    item.includes("/") ||
+                    item === "main"
+                      ? "tr-mono"
+                      : undefined
+                  }
+                >
                   {item}
                 </span>
               </Fragment>
             ))}
             <span aria-hidden="true">·</span>
-            <span data-live={change.when === "running now" || undefined}>{change.when}</span>
+            <span data-live={change.when === "running now" || undefined}>
+              {change.when}
+            </span>
           </p>
         </div>
-        <StateChip state={change.status.state} label={change.status.label} size="sm" />
+        <StateChip
+          state={change.status.state}
+          label={change.status.label}
+          size="sm"
+        />
       </header>
-      <TraceDiagram change={change} openExplain={openExplain} toggle={toggle} go={go} />
+      <TraceDiagram
+        change={change}
+        openExplain={openExplain}
+        toggle={toggle}
+        go={go}
+      />
       {change.footnote && (
         <div className="tr-footnote">
-          <button type="button" className="tr-linkish" onClick={() => go({ to: "run", runId: change.footnote!.runId })}>
+          <button
+            type="button"
+            className="tr-linkish"
+            onClick={() => go({ to: "run", runId: change.footnote!.runId })}
+          >
             <Ban size={13} aria-hidden="true" />
             {change.footnote.text}
           </button>
@@ -765,7 +999,14 @@ function ChangeCard({
         </div>
       )}
       {current && (
-        <ExplainCard key={current.id} explain={current} role={role} go={go} drain={drain} onClose={() => setOpenExplain(undefined)} />
+        <ExplainCard
+          key={current.id}
+          explain={current}
+          role={role}
+          go={go}
+          drain={drain}
+          onClose={() => setOpenExplain(undefined)}
+        />
       )}
     </article>
   );
@@ -793,8 +1034,14 @@ function ChangesView({
     attention: changes.filter((c) => c.attention).length,
     running: changes.filter((c) => c.running).length,
   };
-  const shown = changes.filter((c) => (filter === "all" ? true : filter === "attention" ? c.attention : c.running));
-  const labels: Record<Filter, string> = { all: "All", attention: "Needs attention", running: "Running" };
+  const shown = changes.filter((c) =>
+    filter === "all" ? true : filter === "attention" ? c.attention : c.running,
+  );
+  const labels: Record<Filter, string> = {
+    all: "All",
+    attention: "Needs attention",
+    running: "Running",
+  };
   const groups: { id: Change["group"]; label: string }[] = [
     { id: "now", label: "Last 2 hours" },
     { id: "earlier", label: "Earlier today" },
@@ -804,12 +1051,22 @@ function ChangesView({
       <header className="tr-head">
         <span className="tr-eyebrow">acme · payments</span>
         <h1 className="tr-h1">Changes</h1>
-        <p>Every push and pull request, traced from GitHub's webhook to the checks it reported. Select any step to open its record.</p>
+        <p>
+          Every push and pull request, traced from GitHub's webhook to the
+          checks it reported. Select any step to open its record.
+        </p>
         <div className="tr-head-row">
           <div className="tr-filter" role="group" aria-label="Filter changes">
             {(Object.keys(labels) as Filter[]).map((key) => (
-              <button key={key} type="button" aria-pressed={filter === key} onClick={() => setFilter(key)}>
-                {key === "running" && counts.running > 0 && <span className="tr-livedot" aria-hidden="true" />}
+              <button
+                key={key}
+                type="button"
+                aria-pressed={filter === key}
+                onClick={() => setFilter(key)}
+              >
+                {key === "running" && counts.running > 0 && (
+                  <span className="tr-livedot" aria-hidden="true" />
+                )}
                 {labels[key]}
                 <span className="tr-count">{counts[key]}</span>
               </button>
@@ -827,14 +1084,22 @@ function ChangesView({
       {shown.length === 0 && (
         <EmptyState
           filtered
-          title={filter === "running" ? "Nothing is running" : "Nothing needs attention"}
+          title={
+            filter === "running"
+              ? "Nothing is running"
+              : "Nothing needs attention"
+          }
           description={
             filter === "running"
               ? "The api-image run on PR #482 finished. Use Replay live run in the study bar to watch it again."
               : "Every change today either passed or was skipped on purpose."
           }
           action={
-            <Button size="sm" variant="outline" onClick={() => setFilter("all")}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setFilter("all")}
+            >
               Show all changes
             </Button>
           }
@@ -903,17 +1168,33 @@ function AskSection({
   sectionRef?: RefObject<HTMLElement | null>;
 }) {
   return (
-    <section ref={sectionRef} className="tr-dsection tr-dask" aria-label={title}>
+    <section
+      ref={sectionRef}
+      className="tr-dsection tr-dask"
+      aria-label={title}
+    >
       <h3 className="tr-dlabel">
         <Sparkles size={13} aria-hidden="true" /> {title}
       </h3>
       <AssistantMessages
         messages={assistant.messages}
-        onCite={onCite ?? ((runId, attempt, seq) => go({ to: "run", runId, attempt, seq }))}
+        onCite={
+          onCite ??
+          ((runId, attempt, seq) => go({ to: "run", runId, attempt, seq }))
+        }
         onAction={actionHandler(go, assistant.note, undefined, assistant.ask)}
-        empty={<p className="tr-muted">Answers cite the lines and records they read. Pick a question or select Ask on any log line.</p>}
+        empty={
+          <p className="tr-muted">
+            Answers cite the lines and records they read. Pick a question or
+            select Ask on any log line.
+          </p>
+        }
       />
-      <AssistantComposer onSend={(text) => assistant.ask(text)} suggestions={assistant.suggestions} placeholder="Ask about this…" />
+      <AssistantComposer
+        onSend={(text) => assistant.ask(text)}
+        suggestions={assistant.suggestions}
+        placeholder="Ask about this…"
+      />
     </section>
   );
 }
@@ -945,7 +1226,9 @@ function RunRecord({
   const logRef = useRef<HTMLDivElement>(null);
   const state: RunState = isLive ? live.state : run.state;
   const entries = isLive ? live.entries : logFor(run.id, attempt);
-  const groups = isLive ? run.groups.map((g) => ({ ...g, state: live.groups[g.scope] ?? g.state })) : run.groups;
+  const groups = isLive
+    ? run.groups.map((g) => ({ ...g, state: live.groups[g.scope] ?? g.state }))
+    : run.groups;
   const info = run.attempts.find((a) => a.n === attempt);
   const binding = run.bindingId ? bindingById(run.bindingId) : undefined;
   const commit7 = run.commit.slice(0, 7);
@@ -955,7 +1238,13 @@ function RunRecord({
   };
   /** Citations to this run stay in this drawer so the conversation is kept. */
   const cite = (citedRun: string, citedAttempt: number, citedSeq: number) => {
-    if (citedRun !== run.id) return go({ to: "run", runId: citedRun, attempt: citedAttempt, seq: citedSeq });
+    if (citedRun !== run.id)
+      return go({
+        to: "run",
+        runId: citedRun,
+        attempt: citedAttempt,
+        seq: citedSeq,
+      });
     setAttempt(citedAttempt);
     setFocusSeq(undefined);
     window.requestAnimationFrame(() => setFocusSeq(citedSeq));
@@ -1006,11 +1295,24 @@ function RunRecord({
                   ? `Rerun ${run.check} for ${commit7}? It creates attempt 3 of the same check; the commit and command don't change.`
                   : `Rerun ${run.check === "manual" ? "this manual run" : run.check} for ${commit7}? It creates a new attempt; the commit and command don't change.`
               }
-              done={(run.id === failedRun.id ? actionResult("rerun-failed") : actionResult("rerun")) ?? "Queued."}
+              done={
+                (run.id === failedRun.id
+                  ? actionResult("rerun-failed")
+                  : actionResult("rerun")) ?? "Queued."
+              }
               confirmLabel="Rerun"
             />
           ) : null}
-          <Button size="sm" variant="ghost" onClick={() => askRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() =>
+              askRef.current?.scrollIntoView({
+                block: "start",
+                behavior: "smooth",
+              })
+            }
+          >
             <Sparkles /> Ask about this run
           </Button>
         </div>
@@ -1018,7 +1320,10 @@ function RunRecord({
       <div className="tr-dbody">
         <section className="tr-dsection" aria-label="Command">
           <CommandLine label="Command" command={run.command} />
-          <CommandLine label="Same run, remote" command={`${run.command} --remote --ref ${commit7}`} />
+          <CommandLine
+            label="Same run, remote"
+            command={`${run.command} --remote --ref ${commit7}`}
+          />
         </section>
         {run.reason && (
           <p className="tr-reason" data-tone={runTone(run.state)}>
@@ -1030,7 +1335,11 @@ function RunRecord({
             <dt>Trigger</dt>
             <dd>
               {run.deliveryId ? (
-                <button type="button" className="tr-linkish" onClick={() => go({ to: "delivery", id: run.deliveryId! })}>
+                <button
+                  type="button"
+                  className="tr-linkish"
+                  onClick={() => go({ to: "delivery", id: run.deliveryId! })}
+                >
                   {run.trigger.replace("_", " ")} · {run.deliveryId}
                 </button>
               ) : (
@@ -1042,7 +1351,11 @@ function RunRecord({
             <dt>Rule</dt>
             <dd>
               {binding ? (
-                <button type="button" className="tr-linkish" onClick={() => go({ to: "binding", id: binding.id })}>
+                <button
+                  type="button"
+                  className="tr-linkish"
+                  onClick={() => go({ to: "binding", id: binding.id })}
+                >
                   {binding.name}
                 </button>
               ) : (
@@ -1052,7 +1365,13 @@ function RunRecord({
           </div>
           <div>
             <dt>Duration</dt>
-            <dd>{isLive ? (state === "running" ? `${duration(live.elapsedMs)} so far` : duration(LIVE_END)) : duration(run.durationMs)}</dd>
+            <dd>
+              {isLive
+                ? state === "running"
+                  ? `${duration(live.elapsedMs)} so far`
+                  : duration(LIVE_END)
+                : duration(run.durationMs)}
+            </dd>
           </div>
           <div>
             <dt>oyzu</dt>
@@ -1067,13 +1386,25 @@ function RunRecord({
                 const itemState = isLive ? state : item.state;
                 return (
                   <li key={item.n}>
-                    <button type="button" aria-pressed={item.n === attempt} data-tone={runTone(itemState)} onClick={() => switchAttempt(item.n)}>
+                    <button
+                      type="button"
+                      aria-pressed={item.n === attempt}
+                      data-tone={runTone(itemState)}
+                      onClick={() => switchAttempt(item.n)}
+                    >
                       <Pip tone={runTone(itemState)} />
                       <span>
                         <strong>Attempt {item.n}</strong>
                         <small>
-                          {item.state === "timed_out" ? "Executor lost" : stateLabel[itemState]} · {item.manager} ·{" "}
-                          {isLive ? (state === "running" ? "running" : duration(LIVE_END)) : duration(item.durationMs)}
+                          {item.state === "timed_out"
+                            ? "Executor lost"
+                            : stateLabel[itemState]}{" "}
+                          · {item.manager} ·{" "}
+                          {isLive
+                            ? state === "running"
+                              ? "running"
+                              : duration(LIVE_END)
+                            : duration(item.durationMs)}
                         </small>
                       </span>
                     </button>
@@ -1086,11 +1417,17 @@ function RunRecord({
                 <TriangleAlert size={14} aria-hidden="true" />
                 <p>{info.reason}</p>
                 {role === "pool-admin" ? (
-                  <Button size="sm" variant="outline" onClick={() => go({ to: "pool", job: info.jobId })}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => go({ to: "pool", job: info.jobId })}
+                  >
                     <Stethoscope /> Runner diagnostics
                   </Button>
                 ) : (
-                  <small>The pool's admins can see why; nothing to do for this run.</small>
+                  <small>
+                    The pool's admins can see why; nothing to do for this run.
+                  </small>
                 )}
               </div>
             )}
@@ -1111,7 +1448,14 @@ function RunRecord({
               onDiagnostics={(jobId) => go({ to: "pool", job: jobId })}
               onAsk={(entry) => {
                 assistant.ask(`Explain line ${entry.seq}`, entry);
-                window.setTimeout(() => askRef.current?.scrollIntoView({ block: "start", behavior: "smooth" }), 50);
+                window.setTimeout(
+                  () =>
+                    askRef.current?.scrollIntoView({
+                      block: "start",
+                      behavior: "smooth",
+                    }),
+                  50,
+                );
               }}
               focusSeq={focusSeq}
               compact={phone}
@@ -1124,7 +1468,11 @@ function RunRecord({
                   {groups.map((group) => (
                     <li key={group.scope}>
                       <GroupIcon state={group.state} size={13} />
-                      <span className="tr-mono">{group.target === "runner" ? `runner · ${group.task}` : group.scope}</span>
+                      <span className="tr-mono">
+                        {group.target === "runner"
+                          ? `runner · ${group.task}`
+                          : group.scope}
+                      </span>
                       <small>{duration(group.durationMs)}</small>
                     </li>
                   ))}
@@ -1139,12 +1487,17 @@ function RunRecord({
               </p>
               {run.state !== "skipped" && (
                 <div className="tr-actions">
-                  <Button size="sm" variant="outline" onClick={() => setArchived(true)}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setArchived(true)}
+                  >
                     <Download /> Download raw log
                   </Button>
                   {archived && (
                     <p className="tr-done" role="status">
-                      <CircleCheck size={13} aria-hidden="true" /> In the portal this downloads the archived log as text or JSON Lines.
+                      <CircleCheck size={13} aria-hidden="true" /> In the portal
+                      this downloads the archived log as text or JSON Lines.
                     </p>
                   )}
                 </div>
@@ -1168,23 +1521,36 @@ function RunRecord({
             </ul>
           </section>
         )}
-        <AskSection title={`Ask about run ${run.number}`} assistant={assistant} go={go} onCite={cite} sectionRef={askRef} />
+        <AskSection
+          title={`Ask about run ${run.number}`}
+          assistant={assistant}
+          go={go}
+          onCite={cite}
+          sectionRef={askRef}
+        />
       </div>
     </>
   );
 }
 
 const replayDone: Record<string, string> = {
-  "dlv-7f3a": "Replayed as dlv-7f3a-r1, linked to this delivery. The same 2 rules matched and new runs started for 9c41e2a.",
-  "dlv-7f12": "Replayed as dlv-7f12-r1, linked to this delivery. Still no match: #483 is still a draft.",
-  "dlv-7e91": "Replayed as dlv-7e91-r1, linked to this delivery. Main never cancels, so a new run started alongside 9009.",
-  "dlv-7e40": "Replayed as dlv-7e40-r1. It still stops at Parsed until acme/ledger-tools is registered.",
+  "dlv-7f3a":
+    "Replayed as dlv-7f3a-r1, linked to this delivery. The same 2 rules matched and new runs started for 9c41e2a.",
+  "dlv-7f12":
+    "Replayed as dlv-7f12-r1, linked to this delivery. Still no match: #483 is still a draft.",
+  "dlv-7e91":
+    "Replayed as dlv-7e91-r1, linked to this delivery. Main never cancels, so a new run started alongside 9009.",
+  "dlv-7e40":
+    "Replayed as dlv-7e40-r1. It still stops at Parsed until acme/ledger-tools is registered.",
 };
 const explainDone: Record<string, string> = {
-  "dlv-7f3a": "Dry run against today's rules: same result, 2 of 5 match. Nothing was started.",
+  "dlv-7f3a":
+    "Dry run against today's rules: same result, 2 of 5 match. Nothing was started.",
   "dlv-7f12": actionResult("explain") ?? "",
-  "dlv-7e91": "Dry run against today's rules: same result, 1 of 5 matches. Nothing was started.",
-  "dlv-7e40": "Dry run: it still stops at Parsed because acme/ledger-tools isn't registered.",
+  "dlv-7e91":
+    "Dry run against today's rules: same result, 1 of 5 matches. Nothing was started.",
+  "dlv-7e40":
+    "Dry run: it still stops at Parsed because acme/ledger-tools isn't registered.",
 };
 
 function DeliveryRecord({
@@ -1199,14 +1565,29 @@ function DeliveryRecord({
   role: ReturnType<typeof usePrototype>["role"];
 }) {
   const delivery = deliveryById(id)!;
-  const assistant = useAssistant({ kind: "delivery", deliveryId: delivery.id }, role);
+  const assistant = useAssistant(
+    { kind: "delivery", deliveryId: delivery.id },
+    role,
+  );
   const stagesRef = useRef<HTMLElement>(null);
   const verdictRef = useRef<HTMLElement>(null);
   useEffect(() => {
-    const node = focus === "matched" ? verdictRef.current : focus === "verified" ? stagesRef.current : undefined;
+    const node =
+      focus === "matched"
+        ? verdictRef.current
+        : focus === "verified"
+          ? stagesRef.current
+          : undefined;
     node?.scrollIntoView({ block: "start" });
   }, [focus]);
-  const focusedStage = focus === "received" ? "received" : focus === "verified" ? "verified" : focus === "matched" ? "matched" : undefined;
+  const focusedStage =
+    focus === "received"
+      ? "received"
+      : focus === "verified"
+        ? "verified"
+        : focus === "matched"
+          ? "matched"
+          : undefined;
   const rejected = delivery.outcome === "rejected";
   return (
     <>
@@ -1217,18 +1598,29 @@ function DeliveryRecord({
         <DialogTitle className="tr-dtitle">
           {rejected ? "12 rejected deliveries" : delivery.event}
           <StateChip
-            state={delivery.outcome === "started" ? "succeeded" : rejected ? "failed" : delivery.outcome === "unregistered" ? "warning" : "skipped"}
+            state={
+              delivery.outcome === "started"
+                ? "succeeded"
+                : rejected
+                  ? "failed"
+                  : delivery.outcome === "unregistered"
+                    ? "warning"
+                    : "skipped"
+            }
             label={delivery.outcomeLabel}
           />
         </DialogTitle>
         <DialogDescription className="tr-dsub">
           {delivery.repository}
-          {delivery.pr ? ` · PR #${delivery.pr.number} ${delivery.pr.title}${delivery.pr.draft ? " (draft)" : ""}` : ` · ${delivery.ref}`}
+          {delivery.pr
+            ? ` · PR #${delivery.pr.number} ${delivery.pr.title}${delivery.pr.draft ? " (draft)" : ""}`
+            : ` · ${delivery.ref}`}
         </DialogDescription>
         <p className="tr-dmeta">
           <span className="tr-mono">{delivery.id}</span>
           <span aria-hidden="true">·</span>
-          <span>correlation</span> <span className="tr-mono">{delivery.correlationId}</span>
+          <span>correlation</span>{" "}
+          <span className="tr-mono">{delivery.correlationId}</span>
           <CopyIdentifier value={delivery.correlationId} />
           {!rejected && (
             <>
@@ -1248,7 +1640,9 @@ function DeliveryRecord({
                 confirmLabel="Rotate secret"
               />
             ) : (
-              <p className="tr-muted">Connector admins can rotate this webhook secret.</p>
+              <p className="tr-muted">
+                Connector admins can rotate this webhook secret.
+              </p>
             )
           ) : (
             <>
@@ -1265,14 +1659,21 @@ function DeliveryRecord({
                 label="Replay"
                 icon={<RotateCcw />}
                 prompt={`Replay ${delivery.id}? It's processed again as a new delivery linked to this one, and can start runs and update checks.`}
-                done={replayDone[delivery.id] ?? actionResult("replay") ?? "Replayed."}
+                done={
+                  replayDone[delivery.id] ??
+                  actionResult("replay") ??
+                  "Replayed."
+                }
                 confirmLabel="Replay"
               />
               <ConfirmInline
                 label="Explain against today's rules"
                 icon={<Sparkles />}
                 prompt="Dry-run this delivery against today's rules? Nothing starts and no checks change; you get the verdicts."
-                done={explainDone[delivery.id] ?? "Same result as the original delivery."}
+                done={
+                  explainDone[delivery.id] ??
+                  "Same result as the original delivery."
+                }
                 confirmLabel="Run dry run"
               />
             </>
@@ -1287,7 +1688,11 @@ function DeliveryRecord({
               <li
                 key={stage.key}
                 data-tone={stageTone(stage.status)}
-                data-focus={focusedStage === stage.key || (focus === "verified" && stage.key === "verified") || undefined}
+                data-focus={
+                  focusedStage === stage.key ||
+                  (focus === "verified" && stage.key === "verified") ||
+                  undefined
+                }
               >
                 <Pip tone={stageTone(stage.status)} />
                 <strong>{stage.label}</strong>
@@ -1296,21 +1701,41 @@ function DeliveryRecord({
             ))}
           </ol>
         </section>
-        <section ref={verdictRef} className="tr-dsection" data-focus={focus === "matched" || undefined} aria-label="Rule verdicts">
+        <section
+          ref={verdictRef}
+          className="tr-dsection"
+          data-focus={focus === "matched" || undefined}
+          aria-label="Rule verdicts"
+        >
           <h3 className="tr-dlabel">Every rule's verdict</h3>
           {delivery.evaluations.length === 0 ? (
             <p className="tr-muted">
-              No rules were evaluated. {delivery.stages.find((stage) => stage.status === "fail")?.detail}.
+              No rules were evaluated.{" "}
+              {delivery.stages.find((stage) => stage.status === "fail")?.detail}
+              .
             </p>
           ) : (
             <ul className="tr-verdicts">
               {delivery.evaluations.map((evaluation) => {
                 const binding = bindingById(evaluation.bindingId);
                 return (
-                  <li key={evaluation.bindingId} data-matched={evaluation.matched}>
-                    {evaluation.matched ? <CircleCheck size={15} aria-label="Matched" /> : <CircleX size={15} aria-label="Not matched" />}
+                  <li
+                    key={evaluation.bindingId}
+                    data-matched={evaluation.matched}
+                  >
+                    {evaluation.matched ? (
+                      <CircleCheck size={15} aria-label="Matched" />
+                    ) : (
+                      <CircleX size={15} aria-label="Not matched" />
+                    )}
                     <span>
-                      <button type="button" className="tr-linkish" onClick={() => go({ to: "binding", id: evaluation.bindingId })}>
+                      <button
+                        type="button"
+                        className="tr-linkish"
+                        onClick={() =>
+                          go({ to: "binding", id: evaluation.bindingId })
+                        }
+                      >
                         {binding?.name ?? evaluation.bindingId}
                       </button>
                       <small>{evaluation.reason}</small>
@@ -1350,7 +1775,10 @@ function DeliveryRecord({
                 </tbody>
               </table>
             </div>
-            <p className="tr-muted">Bodies of rejected deliveries are never read or stored. Last good delivery: yesterday 6:14 PM ET.</p>
+            <p className="tr-muted">
+              Bodies of rejected deliveries are never read or stored. Last good
+              delivery: yesterday 6:14 PM ET.
+            </p>
           </section>
         )}
         {delivery.changedPaths.length > 0 && (
@@ -1373,7 +1801,10 @@ function DeliveryRecord({
                 const run = runById(runId)!;
                 return (
                   <li key={runId}>
-                    <button type="button" onClick={() => go({ to: "run", runId })}>
+                    <button
+                      type="button"
+                      onClick={() => go({ to: "run", runId })}
+                    >
                       <StateChip state={run.state} size="sm" />
                       <span className="tr-mono">{run.check}</span>
                       <small>Run {run.number}</small>
@@ -1385,25 +1816,50 @@ function DeliveryRecord({
             </ul>
           </section>
         )}
-        <AskSection title="Ask about this delivery" assistant={assistant} go={go} />
+        <AskSection
+          title="Ask about this delivery"
+          assistant={assistant}
+          go={go}
+        />
       </div>
     </>
   );
 }
 
-function ChecksRecord({ commit, go, live }: { commit: string; go: Go; live: LiveState }) {
+function ChecksRecord({
+  commit,
+  go,
+  live,
+}: {
+  commit: string;
+  go: Go;
+  live: LiveState;
+}) {
   const list: CheckRecord[] =
     commit === "9c41e2a"
       ? checks.map((check): CheckRecord =>
           check.runId === liveRun.id
             ? {
                 ...check,
-                conclusion: live.state === "running" ? "in_progress" : "success",
-                summary: live.state === "running" ? liveSummary(live) : "Image built and pushed by digest",
+                conclusion:
+                  live.state === "running" ? "in_progress" : "success",
+                summary:
+                  live.state === "running"
+                    ? liveSummary(live)
+                    : "Image built and pushed by digest",
               }
             : check,
         )
-      : [{ name: "oyzu / build", commit, conclusion: "success", summary: "Built everything in 6m 53s", runId: runs[3].id, required: true }];
+      : [
+          {
+            name: "oyzu / build",
+            commit,
+            conclusion: "success",
+            summary: "Built everything in 6m 53s",
+            runId: runs[3].id,
+            required: true,
+          },
+        ];
   return (
     <>
       <header className="tr-dhead">
@@ -1412,14 +1868,17 @@ function ChecksRecord({ commit, go, live }: { commit: string; go: Go; live: Live
           Checks on <span className="tr-mono">{commit}</span>
         </DialogTitle>
         <DialogDescription className="tr-dsub">
-          Each rule action reports as its own GitHub check. Required checks for targets this change didn't touch report
-          skipped: not affected.
+          Each rule action reports as its own GitHub check. Required checks for
+          targets this change didn't touch report skipped: not affected.
         </DialogDescription>
       </header>
       <div className="tr-dbody">
         <ul className="tr-checks">
           {list.map((check) => (
-            <li key={check.name} data-dim={check.conclusion === "skipped" || undefined}>
+            <li
+              key={check.name}
+              data-dim={check.conclusion === "skipped" || undefined}
+            >
               <StateChip state={check.conclusion} size="sm" />
               <span className="tr-check-name">
                 <strong className="tr-mono">{check.name}</strong>
@@ -1427,7 +1886,11 @@ function ChecksRecord({ commit, go, live }: { commit: string; go: Go; live: Live
               </span>
               {check.required && <span className="tr-tag">required</span>}
               {check.runId ? (
-                <Button size="sm" variant="outline" onClick={() => go({ to: "run", runId: check.runId! })}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => go({ to: "run", runId: check.runId! })}
+                >
                   Open run <ArrowRight />
                 </Button>
               ) : (
@@ -1476,8 +1939,18 @@ function Drawer({
             phone={phone}
           />
         )}
-        {shown?.to === "delivery" && <DeliveryRecord key={`${shown.id}-${nonce}`} id={shown.id} focus={shown.focus} go={go} role={role} />}
-        {shown?.to === "checks" && <ChecksRecord commit={shown.commit} go={go} live={live} />}
+        {shown?.to === "delivery" && (
+          <DeliveryRecord
+            key={`${shown.id}-${nonce}`}
+            id={shown.id}
+            focus={shown.focus}
+            go={go}
+            role={role}
+          />
+        )}
+        {shown?.to === "checks" && (
+          <ChecksRecord commit={shown.commit} go={go} live={live} />
+        )}
       </DialogContent>
     </Dialog>
   );
@@ -1509,7 +1982,13 @@ export function Trace() {
   const home = useAssistant(HOME, role);
   const changes = buildChanges(live);
 
-  const drain = useCallback((id: string) => setDrained((current) => (current.includes(id) ? current : [...current, id])), []);
+  const drain = useCallback(
+    (id: string) =>
+      setDrained((current) =>
+        current.includes(id) ? current : [...current, id],
+      ),
+    [],
+  );
 
   const switchTab = useCallback((next: Tab) => {
     scrollRef.current?.scrollTo({ top: 0 });
@@ -1528,7 +2007,11 @@ export function Trace() {
     (target: GoTarget) => {
       const n = Date.now();
       setPalette(false);
-      if (target.to === "run" || target.to === "delivery" || target.to === "checks") {
+      if (
+        target.to === "run" ||
+        target.to === "delivery" ||
+        target.to === "checks"
+      ) {
         setDrawer(target);
         setNonce(n);
         return;
@@ -1542,7 +2025,12 @@ export function Trace() {
         setRuleFocus({ id: target.id, n });
         switchTab("rules");
       } else if (target.to === "pool") {
-        setPoolFocus({ id: target.id, job: target.job, manager: target.manager, n });
+        setPoolFocus({
+          id: target.id,
+          job: target.job,
+          manager: target.manager,
+          n,
+        });
         switchTab("capacity");
       } else {
         switchTab("ask");
@@ -1572,15 +2060,26 @@ export function Trace() {
             {tabs.map((item) => {
               const Icon = item.icon;
               return (
-                <button key={item.id} type="button" aria-current={tab === item.id ? "page" : undefined} onClick={() => pickTab(item.id)}>
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-current={tab === item.id ? "page" : undefined}
+                  onClick={() => pickTab(item.id)}
+                >
                   <Icon size={14} aria-hidden="true" />
                   {item.label}
-                  {item.id === "changes" && attention > 0 && <span className="tr-badge">{attention}</span>}
+                  {item.id === "changes" && attention > 0 && (
+                    <span className="tr-badge">{attention}</span>
+                  )}
                 </button>
               );
             })}
           </nav>
-          <button type="button" className="tr-kbar" onClick={() => setPalette(true)}>
+          <button
+            type="button"
+            className="tr-kbar"
+            onClick={() => setPalette(true)}
+          >
             <Search size={14} aria-hidden="true" />
             <span>Ask or jump to…</span>
             <kbd>{shortcutLabel}</kbd>
@@ -1599,7 +2098,9 @@ export function Trace() {
                 drain={drain}
               />
             )}
-            {tab === "rules" && <RulesView focus={ruleFocus} role={role} go={go} />}
+            {tab === "rules" && (
+              <RulesView focus={ruleFocus} role={role} go={go} />
+            )}
             {tab === "capacity" && (
               <CapacityView
                 role={role}
@@ -1610,11 +2111,17 @@ export function Trace() {
                 drain={drain}
               />
             )}
-            {tab === "ask" && <AskView assistant={home} go={go} drain={drain} />}
+            {tab === "ask" && (
+              <AskView assistant={home} go={go} drain={drain} />
+            )}
           </div>
         </div>
         {tab !== "ask" && (
-          <button type="button" className="tr-fab" onClick={() => setPalette(true)}>
+          <button
+            type="button"
+            className="tr-fab"
+            onClick={() => setPalette(true)}
+          >
             <Sparkles size={16} aria-hidden="true" />
             Ask or jump
           </button>
@@ -1623,18 +2130,40 @@ export function Trace() {
           {tabs.map((item) => {
             const Icon = item.icon;
             return (
-              <button key={item.id} type="button" aria-current={tab === item.id ? "page" : undefined} onClick={() => pickTab(item.id)}>
+              <button
+                key={item.id}
+                type="button"
+                aria-current={tab === item.id ? "page" : undefined}
+                onClick={() => pickTab(item.id)}
+              >
                 <span className="tr-bottom-icon">
                   <Icon size={19} aria-hidden="true" />
-                  {item.id === "changes" && attention > 0 && <span className="tr-badge">{attention}</span>}
+                  {item.id === "changes" && attention > 0 && (
+                    <span className="tr-badge">{attention}</span>
+                  )}
                 </span>
                 {item.label}
               </button>
             );
           })}
         </nav>
-        <Drawer target={drawer} nonce={nonce} onClose={() => setDrawer(null)} go={go} role={role} live={live} phone={phone} />
-        <CommandPalette open={palette} onOpenChange={setPalette} assistant={home} go={go} role={role} drain={drain} />
+        <Drawer
+          target={drawer}
+          nonce={nonce}
+          onClose={() => setDrawer(null)}
+          go={go}
+          role={role}
+          live={live}
+          phone={phone}
+        />
+        <CommandPalette
+          open={palette}
+          onOpenChange={setPalette}
+          assistant={home}
+          go={go}
+          role={role}
+          drain={drain}
+        />
       </div>
     </TooltipProvider>
   );
