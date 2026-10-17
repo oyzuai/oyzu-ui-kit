@@ -219,6 +219,11 @@
     max-width: none;
     height: 100dvh;
     max-height: 100dvh;
+    /* Dialog centers through Tailwind's individual translate variables.
+       Production optimization drops identity translate declarations, so
+       neutralize those variables in the more specific drawer rule too. */
+    --tw-translate-x: 0px;
+    --tw-translate-y: 0px;
     translate: none;
     transform: none;
     animation: none;
