@@ -69,14 +69,14 @@ export function ContextSwitcher({
         <DialogTrigger asChild>
           <button
             className={"context-trigger" + (compact ? " compact" : "")}
-            aria-label={`Switch context: ${value.organization}${value.project ? " / " + value.project : " / Organization"}`}
+            aria-label={`Switch context: ${value.organization} / ${value.project ?? "Organization overview"}`}
             title={`${value.organization} / ${value.project ?? "Organization"}`}
           >
             <Building2 size={18} />
             {!compact && (
               <>
                 <span>
-                  <small>{value.organization}</small>
+                  <small>{value.organization}</small>{" "}
                   <strong>{value.project ?? "Organization overview"}</strong>
                 </span>
                 <ChevronDown size={14} />

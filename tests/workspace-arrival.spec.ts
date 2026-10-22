@@ -76,7 +76,7 @@ test("defer invitation and browse an empty organization", async ({ page }) => {
     .click();
   await expect(
     page.getByRole("button", {
-      name: "Switch context: Research / Organization",
+      name: "Switch context: Research / Organization overview",
     }),
   ).toBeVisible();
 });
