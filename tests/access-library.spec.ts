@@ -9,7 +9,10 @@ test("directory filters and paginates fictional account members", async ({
   await expect(page.getByText("Showing 17–32 of 96")).toBeVisible();
   await page.getByLabel("Search users").fill("Alex Morgan");
   await expect(page.getByText("Showing 1–1 of 1")).toBeVisible();
-  await page.getByRole("button", { name: /Alex Morgan.*example.com/ }).click();
+  await page
+    .getByRole("main")
+    .getByRole("button", { name: /Alex Morgan.*example.com/ })
+    .click();
   await expect(
     page
       .getByRole("dialog")

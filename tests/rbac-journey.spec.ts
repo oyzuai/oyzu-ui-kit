@@ -134,7 +134,10 @@ test("mixed coverage, dirty protection and shared membership suppression", async
   ).toBeVisible();
   await d.getByRole("button", { name: "Save resource group draft" }).click();
   await page.getByRole("button", { name: /^Users/ }).click();
-  await page.getByRole("button", { name: /Alex Morgan.*example.com/ }).click();
+  await page
+    .getByRole("main")
+    .getByRole("button", { name: /Alex Morgan.*example.com/ })
+    .click();
   await d.getByText("Prototype controls", { exact: true }).click();
   await d.getByRole("button", { name: "Suspend membership" }).click();
   await expect(d.getByText(/Membership is suspended/)).toBeVisible();

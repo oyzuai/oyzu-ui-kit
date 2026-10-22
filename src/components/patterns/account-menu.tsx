@@ -33,16 +33,15 @@ export function AccountMenu({
       <DropdownMenuTrigger asChild>
         <button
           className={"sidebar-account " + (compact ? "compact" : "")}
-          aria-label={`Account menu for ${name}`}
+          aria-label={`Account menu for ${initials} ${name} ${email}`}
         >
           <span className="user-monogram" aria-hidden="true">
             {initials}
-          </span>
+          </span>{" "}
           {!compact && (
             <>
               <span className="sidebar-account-copy">
-                <strong>{name}</strong>
-                <small>{email}</small>
+                <strong>{name}</strong> <small>{email}</small>
               </span>
               <ChevronsUpDown size={15} />
             </>

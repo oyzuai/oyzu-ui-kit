@@ -360,7 +360,7 @@ export function DirectAccessEditor({
                     </div>
                     <Button
                       variant="ghost"
-                      aria-label={`Remove ${category.name.toLowerCase()} access ${i + 1}`}
+                      aria-label={`Remove access: ${category.name.toLowerCase()} ${i + 1}`}
                       onClick={() =>
                         onChange(entries.filter((x) => x.id !== e.id))
                       }

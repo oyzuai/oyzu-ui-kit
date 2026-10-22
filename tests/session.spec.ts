@@ -7,7 +7,7 @@ test("profile updates sidebar and logout/login handles retry and reload", async 
   await page.getByLabel("Full name").fill("Alex Rivera");
   await page.getByRole("button", { name: "Save profile" }).click();
   await page
-    .getByRole("button", { name: "Account menu for Alex Rivera" })
+    .getByRole("button", { name: "Account menu for AR Alex Rivera" })
     .click();
   await page.getByRole("menuitem", { name: "Log out", exact: true }).click();
   await page.getByRole("button", { name: "Log out of this session" }).click();
@@ -40,7 +40,7 @@ test("mobile account menu and signed out screen fit and are accessible", async (
   await page.goto("/#account/profile");
   await page.getByRole("button", { name: "Open navigation" }).click();
   await page
-    .getByRole("button", { name: "Account menu for Alex Morgan" })
+    .getByRole("button", { name: "Account menu for AM Alex Morgan" })
     .click();
   await page.screenshot({ path: "test-results/account-menu-mobile.png" });
   expect(
@@ -67,7 +67,7 @@ test("canceling logout retains a profile draft", async ({ page }) => {
   await page.goto("/#account/profile");
   await page.getByLabel("Full name").fill("Unfinished name");
   await page
-    .getByRole("button", { name: "Account menu for Alex Morgan" })
+    .getByRole("button", { name: "Account menu for AM Alex Morgan" })
     .click();
   await page.getByRole("menuitem", { name: "Log out", exact: true }).click();
   await page.getByRole("link", { name: "Stay signed in" }).click();
@@ -84,7 +84,7 @@ test("profile menu closes the mobile drawer on the current page", async ({
   await page.goto("/#account/profile");
   await page.getByRole("button", { name: "Open navigation" }).click();
   await page
-    .getByRole("button", { name: "Account menu for Alex Morgan" })
+    .getByRole("button", { name: "Account menu for AM Alex Morgan" })
     .click();
   await page.getByRole("menuitem", { name: "Your profile" }).click();
   await expect(page.getByRole("dialog")).toBeHidden();
