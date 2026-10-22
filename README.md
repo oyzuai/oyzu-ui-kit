@@ -251,6 +251,12 @@ PageLayout exposes workspace, discovery, entity and ledger variants. The provisi
 
 The People & access example (#pages/access-library) contains fictional account members, illustrative role bundles and resource-group drafts. It exercises search, pagination, category and individual permission selection, exact resources, explicit descendants, selector unions, account-owned definitions, and draft review. It is not an authoritative permission catalog or backend evaluator. Drafts live only in the mounted example; published revisions and live assignments are not changed. Owner-only mutations, query predicates and exclusions are intentionally absent. Validate with tests/access-library.spec.ts.
 
+Permission identifiers in these fictional examples use `resource-family:action`,
+with plural resource nouns and verb-first qualified actions, such as `scopes:read`
+and `user-groups:update-members`. Resource categories and read-only summaries use
+the same identifiers. The convention changes no sample authorization behavior;
+the examples remain separate from any server-owned permission catalog.
+
 ## Connected RBAC example
 
 `src/examples/rbac-model.ts` owns the fictional account's memberships, definition revisions, assignments, and session audit events. The directory, composer, explanation and audit pages subscribe to that same in-memory model; navigation preserves changes and a reload resets them. The old single-role membership study remains at `#pages/member-patterns`; `#pages/members` opens the unified directory.

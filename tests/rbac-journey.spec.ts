@@ -8,7 +8,7 @@ test("draft save, publish, assign, migrate and audit stay connected", async ({
   await page.getByRole("button", { name: "Create role", exact: true }).click();
   let d = page.getByRole("dialog");
   await d.getByLabel("Role name", { exact: true }).fill("Journey role");
-  await d.getByRole("checkbox", { name: /read scope.read/ }).check();
+  await d.getByRole("checkbox", { name: /read scopes:read/ }).check();
   await page.keyboard.press("Escape");
   await expect(
     page.getByRole("heading", { name: "Discard unsaved changes?" }),
@@ -56,7 +56,7 @@ test("draft save, publish, assign, migrate and audit stay connected", async ({
   await page.getByRole("button", { name: /^Roles/ }).click();
   await page.getByRole("button", { name: /Journey role/ }).click();
   d = page.getByRole("dialog");
-  await d.getByRole("checkbox", { name: /update scope.update/ }).check();
+  await d.getByRole("checkbox", { name: /update scopes:update/ }).check();
   await d.getByRole("button", { name: "Review role", exact: true }).click();
   await d.getByRole("button", { name: "Save role draft" }).click();
   await page

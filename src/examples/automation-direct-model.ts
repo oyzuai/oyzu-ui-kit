@@ -1,10 +1,10 @@
 import { matchingResources, type Selector } from "./rbac-model";
 // Fictional UI access vocabulary; not an authoritative platform schema.
 export const directActions = [
-  { id: "scope.read", label: "View details" },
-  { id: "scope.update", label: "Edit details" },
-  { id: "scope.suspend", label: "Suspend" },
-  { id: "scope.restore", label: "Restore" },
+  { id: "scopes:read", label: "View details" },
+  { id: "scopes:update", label: "Edit details" },
+  { id: "scopes:suspend", label: "Suspend" },
+  { id: "scopes:restore", label: "Restore" },
 ];
 export type DirectEntry = { id: string; selector: Selector; actions: string[] };
 export function newDirectEntry(root = "Checkout service"): DirectEntry {
