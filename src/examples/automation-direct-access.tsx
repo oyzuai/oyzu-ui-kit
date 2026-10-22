@@ -165,9 +165,9 @@ export function DirectAccessEditor({
                     .toLowerCase()
                     .includes((search[e.id] ?? "").toLowerCase()),
                 );
-                const level = e.actions.includes("scope.update")
+                const level = e.actions.includes("scopes:update")
                   ? "write"
-                  : e.actions.includes("scope.read")
+                  : e.actions.includes("scopes:read")
                     ? "read"
                     : "none";
                 return (
@@ -188,12 +188,12 @@ export function DirectAccessEditor({
                             actions: [
                               ...e.actions.filter(
                                 (a) =>
-                                  !["scope.read", "scope.update"].includes(a),
+                                  !["scopes:read", "scopes:update"].includes(a),
                               ),
                               ...(v.target.value === "write"
-                                ? ["scope.read", "scope.update"]
+                                ? ["scopes:read", "scopes:update"]
                                 : v.target.value === "read"
-                                  ? ["scope.read"]
+                                  ? ["scopes:read"]
                                   : []),
                             ],
                           })
@@ -208,7 +208,7 @@ export function DirectAccessEditor({
                       <summary>
                         Additional permissions
                         {e.actions.filter((a) =>
-                          ["scope.suspend", "scope.restore"].includes(a),
+                          ["scopes:suspend", "scopes:restore"].includes(a),
                         ).length
                           ? " · configured"
                           : ""}
@@ -216,7 +216,7 @@ export function DirectAccessEditor({
                       <p>These actions are not included in read and write.</p>
                       {directActions
                         .filter((a) =>
-                          ["scope.suspend", "scope.restore"].includes(a.id),
+                          ["scopes:suspend", "scopes:restore"].includes(a.id),
                         )
                         .map((a) => (
                           <label key={a.id}>

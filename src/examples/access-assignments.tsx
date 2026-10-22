@@ -67,12 +67,12 @@ function useCatalog() {
       id: definitionKey(r),
       actionKeys: r.actions,
       elevated: r.actions.some(
-        (a) => !a.endsWith(".read") && !a.endsWith("explain-self"),
+        (a) => !a.endsWith(":read") && !a.endsWith("explain-self"),
       ),
       actions: r.actions.map((a) =>
-        a === "scope.read"
+        a === "scopes:read"
           ? "Read scope metadata"
-          : a === "access.explain-self"
+          : a === "access:explain-self"
             ? "Explain own access"
             : a,
       ),
@@ -551,7 +551,7 @@ export function AccessAssignments() {
                   </ul>
                   {roles
                     .find((r) => r.id === item.role)
-                    ?.actionKeys.includes("scope.delete") && (
+                    ?.actionKeys.includes("scopes:delete") && (
                     <p className="access-risk-note">
                       Includes destructive actions on scopes.
                     </p>
@@ -1203,7 +1203,7 @@ function EffectiveAccess({
             : !roles
                   .find((r) => r.id === i.role)
                   ?.actionKeys.includes(
-                    action === "admin" ? "scope.update" : "scope.read",
+                    action === "admin" ? "scopes:update" : "scopes:read",
                   )
               ? "This role does not include the requested action."
               : !targetResource ||

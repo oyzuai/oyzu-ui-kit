@@ -31,11 +31,11 @@ test("role search preserves selection and draft review is explicit", async ({
   await expect(d.getByRole("alert")).toBeVisible();
   await d.getByLabel("Role name", { exact: true }).fill("Release observers");
   await d.getByLabel("Search permissions").fill("audit");
-  await d.getByRole("checkbox", { name: /read audit.read/ }).check();
+  await d.getByRole("checkbox", { name: /read audit:read/ }).check();
   await d.getByLabel("Search permissions").fill("scope");
-  await d.getByRole("checkbox", { name: /read scope.read/ }).check();
+  await d.getByRole("checkbox", { name: /read scopes:read/ }).check();
   await d.getByRole("button", { name: "Review role", exact: true }).click();
-  await expect(d.getByText("audit.read", { exact: true })).toBeVisible();
+  await expect(d.getByText("audit:read", { exact: true })).toBeVisible();
   await d.getByRole("button", { name: "Save role draft" }).click();
   await expect(
     page.getByRole("button", { name: /Release observers/ }),

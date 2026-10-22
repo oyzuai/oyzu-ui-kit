@@ -848,7 +848,7 @@ function RoleEditor({
                     <section key={d.name}>
                       <h3>{d.name}</h3>
                       {chosen
-                        .filter((id) => id.startsWith(d.prefix + "."))
+                        .filter((id) => id.startsWith(d.prefix + ":"))
                         .map((id) => (
                           <code key={id}>{id}</code>
                         ))}

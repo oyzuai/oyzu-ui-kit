@@ -3,7 +3,7 @@ import { useSyncExternalStore } from "react";
 export const domains = [
   {
     name: "Scopes",
-    prefix: "scope",
+    prefix: "scopes",
     actions: [
       "read",
       "create",
@@ -16,17 +16,17 @@ export const domains = [
   },
   {
     name: "Members",
-    prefix: "membership",
+    prefix: "account-memberships",
     actions: ["read", "invite", "suspend", "restore", "remove"],
   },
   {
     name: "User groups",
-    prefix: "group",
+    prefix: "user-groups",
     actions: [
       "read",
       "create",
       "update",
-      "membership.update",
+      "update-members",
       "suspend",
       "restore",
       "retire",
@@ -34,30 +34,30 @@ export const domains = [
   },
   {
     name: "Roles",
-    prefix: "role",
+    prefix: "roles",
     actions: ["read", "create", "update", "publish", "retire"],
   },
   {
     name: "Resource groups",
-    prefix: "resource-group",
+    prefix: "resource-scopes",
     actions: ["read", "create", "update", "publish", "retire"],
   },
   {
     name: "Assignments",
-    prefix: "binding",
+    prefix: "access-grants",
     actions: ["read", "create", "replace", "revoke"],
   },
-  { name: "Reviews", prefix: "access-change", actions: ["read", "review"] },
+  { name: "Reviews", prefix: "access-changes", actions: ["read", "review"] },
   {
     name: "Access explanations",
     prefix: "access",
     actions: ["explain-self", "explain"],
   },
-  { name: "Audit", prefix: "audit", actions: ["read", "export"] },
+  { name: "Audit", prefix: "audit", actions: ["read", "create-export"] },
 ];
 export const permissions = domains.flatMap((d) =>
   d.actions.map((action) => ({
-    id: `${d.prefix}.${action}`,
+    id: `${d.prefix}:${action}`,
     domain: d.name,
     action,
     sensitive: [
@@ -66,8 +66,8 @@ export const permissions = domains.flatMap((d) =>
       "suspend",
       "revoke",
       "review",
-      "export",
-      "membership.update",
+      "create-export",
+      "update-members",
       "publish",
       "replace",
       "create",
@@ -147,11 +147,11 @@ function roleActions(index: number) {
   const read = permissions.filter((p) => p.action === "read").map((p) => p.id);
   const inDomains = (names: string[]) =>
     permissions.filter((p) => names.includes(p.domain)).map((p) => p.id);
-  const self = ["scope.read", "access.explain-self"];
+  const self = ["scopes:read", "access:explain-self"];
   const bundles = [
     permissions.map((p) => p.id),
-    [...self, ...inDomains(["Members", "User groups"]), "access-change.read"],
-    [...self, ...inDomains(["Roles", "Resource groups"]), "access-change.read"],
+    [...self, ...inDomains(["Members", "User groups"]), "access-changes:read"],
+    [...self, ...inDomains(["Roles", "Resource groups"]), "access-changes:read"],
     [
       ...self,
       ...read,
@@ -168,7 +168,7 @@ function roleActions(index: number) {
       index < 9
         ? bundles[index]
         : index % 2
-          ? [...self, "audit.read"]
+          ? [...self, "audit:read"]
           : [...self, ...inDomains(["Scopes"])],
     ),
   );
