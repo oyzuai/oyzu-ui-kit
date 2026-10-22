@@ -25,6 +25,9 @@ test("desktop groups, rail, persistence and history", async ({ page }) => {
   ).toBeVisible();
   await nav.getByRole("link", { name: "Components", exact: true }).click();
   await expect(page).toHaveURL(/#components$/);
+  await expect(
+    page.getByRole("heading", { name: "The details, together.", exact: true }),
+  ).toBeVisible();
   await page.goBack();
   await expect(
     nav.getByRole("link", { name: "People & access" }),
@@ -44,6 +47,13 @@ test("mobile drawer dismissal, navigation, focus and resize", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/#pages/access-library");
   const menu = page.getByRole("button", { name: "Open navigation" });
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .include(".navigation-menu-button")
+        .analyze()
+    ).violations,
+  ).toEqual([]);
   await menu.click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");

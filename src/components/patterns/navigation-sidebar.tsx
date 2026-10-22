@@ -220,7 +220,7 @@ export function NavigationSidebar({
             <button
               type="button"
               className="navigation-menu-button"
-              aria-label="Open navigation"
+              aria-label="Open navigation menu"
             >
               <Menu size={21} />
               <span>Menu</span>
