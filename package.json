@@ -29,7 +29,7 @@
     "@uiw/react-codemirror": "^4.25.12",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.0",
-    "lucide-react": "^1.60.0",
+    "lucide-react": "^1.61.0",
     "radix-ui": "^1.8.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
@@ -42,7 +42,7 @@
     "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
     "@storybook/addon-a11y": "^10.6.3",
-    "@storybook/addon-docs": "^10.6.2",
+    "@storybook/addon-docs": "^10.6.3",
     "@storybook/react-vite": "^10.6.3",
     "@types/node": "^26.6.5",
     "@types/react": "^19.2.18",
@@ -52,6 +52,6 @@
     "prettier": "^3.9.10",
     "storybook": "^10.6.1",
     "typescript": "~7.0.2",
-    "vite": "^8.3.4"
+    "vite": "^8.3.5"
   }
 }
